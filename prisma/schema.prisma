@@ -40,6 +40,11 @@ model Session {
   user         User     @relation(fields: [userId], references: [id])
 }
 
+enum UserType {
+  User
+  Admin
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -50,6 +55,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+
+  userType  UserType  @default(User)
 }
 
 model VerificationRequest {

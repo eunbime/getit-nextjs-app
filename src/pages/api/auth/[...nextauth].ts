@@ -16,11 +16,20 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "jsmith",
+        },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
+        const user = {
+          id: "1",
+          name: "J Smith",
+          email: "jsmith@example.com",
+          role: "user",
+        };
 
         if (user) {
           return user;
@@ -34,9 +43,10 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
-    generateSessionToken: () => {
-      return randomUUID?.() ?? randomBytes(32).toString("hex");
-    },
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async jwt({ token, user }) {
