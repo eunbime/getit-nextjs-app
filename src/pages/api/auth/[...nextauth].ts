@@ -38,7 +38,15 @@ export const authOptions: NextAuthOptions = {
       return randomUUID?.() ?? randomBytes(32).toString("hex");
     },
   },
-
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+    async session({ session, token }) {
+      session.user = token;
+      return session;
+    },
+  },
   adapter: PrismaAdapter(prisma),
 };
 
