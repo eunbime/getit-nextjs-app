@@ -33,7 +33,7 @@ const NavBar = () => {
         </div>
 
         {/* nav-item: screen*/}
-        <div className="hidden sm:block">
+        <div className="hidden sm:block ">
           <NavItem />
         </div>
       </div>
