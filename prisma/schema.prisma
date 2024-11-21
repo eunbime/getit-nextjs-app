@@ -55,7 +55,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-
+  hashedPassword String?
+ 
   userType  UserType  @default(User)
 }
 
