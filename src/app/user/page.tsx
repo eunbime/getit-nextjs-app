@@ -1,6 +1,5 @@
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
-import getCurrentUser from "../actions/getCurrentUser";
 
 const UserPage = async () => {
   const session = await getServerSession(authOptions);
