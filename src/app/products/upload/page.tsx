@@ -4,6 +4,7 @@ import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import Input from "@/components/common/Input";
+import ImageUpload from "@/components/ImageUpload";
 import { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 
@@ -33,6 +34,13 @@ const ProductUploadPage = () => {
     },
   });
 
+  const imageSrc = watch("imageSrc");
+
+  const setCustomValue = (id: string, value: any) => {
+    console.log("value", id, value);
+    setValue(id, value);
+  };
+
   const onSubmit = () => {};
 
   return (
@@ -40,7 +48,10 @@ const ProductUploadPage = () => {
       <div className="max-w-screen-lg mx-auto">
         <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
           <Heading title="Product Upload" subtitle="upload your product" />
-          {/* Image Upload */}
+          <ImageUpload
+            onChange={(value) => setCustomValue("imageSrc", value)}
+            value={imageSrc}
+          />
           <hr />
           <Input
             id="title"
