@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 import { categories } from "@/components/categories/Categories";
 import CategoryInput from "@/components/categories/CategoryInput";
@@ -10,9 +12,11 @@ import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import Input from "@/components/common/Input";
 import ImageUpload from "@/components/ImageUpload";
-import dynamic from "next/dynamic";
+import axios from "axios";
 
 const ProductUploadPage = () => {
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -49,7 +53,22 @@ const ProductUploadPage = () => {
     setValue(id, value);
   };
 
-  const onSubmit = () => {};
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    setIsLoading(true);
+
+    axios
+      .post("/api/products", data)
+      .then((response) => {
+        router.push(`/products/${response.data.id}`);
+        reset();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   const KakaoMap = dynamic(() => import("../../../components/KakaoMap"), {
     ssr: false,
