@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import getCurrentUser from "./actions/getCurrentUser";
 import NavBar from "@/components/navigation/NavBar";
+import Script from "next/script";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,6 +35,10 @@ export default async function RootLayout({
       >
         <NavBar currentUser={currentUser} />
         {children}
+        <Script
+          type="text/javascript"
+          src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5b76dbf44c074d8fe2cfa952e9f1fcda&libraries=services,clusterer&autoload=false"
+        />
       </body>
     </html>
   );
