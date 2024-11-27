@@ -4,6 +4,7 @@ import { Product, User } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HeartButton from "../common/HeartButton";
+import { fromNow } from "@/helpers/dayjs";
 
 interface ProductCardProps {
   data: Product;
@@ -38,7 +39,7 @@ const ProductCard = ({ data, currentUser }: ProductCardProps) => {
           <div className="font-semibold">
             {data.price} <span className="font-light">원</span>
           </div>
-          <div>{/* createdAt */}</div>
+          <div>{fromNow(data.createdAt)}</div>
         </div>
       </div>
     </div>
