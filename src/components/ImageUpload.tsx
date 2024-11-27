@@ -1,12 +1,8 @@
 "use client";
 
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadWidget, getCldOgImageUrl } from "next-cloudinary";
 import Image from "next/image";
 import { TbPhotoPlus } from "react-icons/tb";
-
-// declare global {
-//   var cloudinary: any;
-// }
 
 const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
@@ -17,14 +13,19 @@ interface ImageUploadProps {
 
 const ImageUpload = ({ onChange, value }: ImageUploadProps) => {
   const handleUpload = (result: any) => {
-    const url = result?.info.secure_url;
+    // const url = result.info.secure_url;
+
+    // TODO: 이미지 URL 가져오기
+    const url = getCldOgImageUrl({
+      src: "avatar_gpjj8r",
+    });
+    console.log({ url });
     onChange(url);
   };
 
   return (
     <CldUploadWidget
       onUploadAdded={(result) => {
-        console.log("result!", result);
         handleUpload(result);
       }}
       uploadPreset={uploadPreset}

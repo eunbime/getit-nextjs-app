@@ -36,6 +36,10 @@ export default async function getProducts(params: ProductsParams) {
         createdAt: "desc",
       },
     });
+
+    return {
+      data: products,
+    };
   } catch (error: any) {
     throw new Error(error);
   }

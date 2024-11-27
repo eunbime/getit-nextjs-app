@@ -19,10 +19,6 @@ const ProductUploadPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
-  }, []);
-
   const {
     register,
     handleSubmit,
