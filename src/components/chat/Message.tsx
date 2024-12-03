@@ -1,6 +1,7 @@
 import { fromNow } from "@/helpers/dayjs";
 
 import Avatar from "@/components/common/Avatar";
+import Image from "next/image";
 
 interface MessageProps {
   isSender: boolean;
@@ -15,6 +16,7 @@ interface MessageProps {
 const Message = ({
   isSender,
   messageText,
+  messageImage,
   receiverImage,
   receiverName,
   senderImage,
@@ -35,6 +37,17 @@ const Message = ({
             {fromNow(time)}
           </span>
         </div>
+
+        {messageImage && (
+          <div className="overflow-hidden rounded-md mx-[0.2rem] max-w-[80%]">
+            <Image
+              width={300}
+              height={300}
+              src={messageImage}
+              alt="messageImage"
+            />
+          </div>
+        )}
 
         {messageText && (
           <div
