@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { TConversation, TUserWithChat } from "@/types/indes";
+
 import ChatHeader from "./ChatHeader";
 import Message from "./Message";
 import Input from "./Input";
@@ -18,6 +20,19 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
     currentUser?.conversations.find((conversation: TConversation) => {
       return conversation.users.find((user) => user.id === receiver.receiverId);
     });
+
+  // 메시지 작성 시 자동 스크롤
+  const messageEndRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messageEndRef?.current?.scrollIntoView({
+      behavior: "instant",
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  });
 
   if (!receiver.receiverName || !currentUser) {
     return <div className="w-full h-full"></div>;
@@ -39,7 +54,21 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
       </div>
 
       <div className="flex flex-col gap-8 overflow-auto h-[calc(100vh_-_60px_-_70px_-_80px)]">
-        <Message />
+        {conversation &&
+          conversation.messages.map((message) => (
+            <Message
+              key={message.id}
+              isSender={message.senderId === currentUser.id}
+              messageText={message.text}
+              messageImage={message.image}
+              receiverName={receiver.receiverName}
+              receiverImage={receiver.receiverImage}
+              senderImage={currentUser?.image}
+              time={message.createdAt}
+            />
+          ))}
+
+        <div ref={messageEndRef} />
       </div>
 
       <div className="flex items-center p-3">

@@ -1,12 +1,13 @@
 "use client";
 
-import Chat from "@/components/chat/Chat";
-import Contacts from "@/components/chat/Contacts";
-import { TUserWithChat } from "@/types/indes";
-import { User } from "@prisma/client";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import useSWR from "swr";
+import { User } from "@prisma/client";
+import Chat from "@/components/chat/Chat";
+import { TUserWithChat } from "@/types/indes";
+
+import Contacts from "@/components/chat/Contacts";
 
 interface ChatClientProps {
   currentUser?: User | null;

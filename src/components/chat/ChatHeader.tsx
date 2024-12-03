@@ -1,6 +1,7 @@
 import { formatTime } from "@/helpers/dayjs";
 import { IoChevronBackCircleSharp } from "react-icons/io5";
-import Avatar from "../common/Avatar";
+
+import Avatar from "@/components/common/Avatar";
 
 interface ChatHeaderProps {
   setLayout: (layout: boolean) => void;
