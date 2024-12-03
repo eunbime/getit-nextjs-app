@@ -20,11 +20,9 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
     receiverImage: "",
   });
 
-  useEffect(() => {
-    axios.get(`/api/chat`).then((res) => {
-      console.log(res);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`/api/chat`);
+  // }, []);
 
   const [layout, setLayout] = useState(false);
 
@@ -39,8 +37,6 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
   } = useSWR(`/api/chat`, fetcher, {
     refreshInterval: 1000,
   });
-
-  console.log(users);
 
   const currentUserWithMessage = users?.find(
     (user: TUserWithChat) => user.email === currentUser?.email
