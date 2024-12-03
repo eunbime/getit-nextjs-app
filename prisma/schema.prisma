@@ -62,7 +62,7 @@ model User {
   favoriteIds String[]
   products Product[]
 
-  conversation Conversation[]
+  conversations Conversation[]
   sentMessages Message[] @relation("sender")
   receiverMessages Message[] @relation("receiver")
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import Chat from "@/components/chat/Chat";
+import Contacts from "@/components/chat/Contacts";
 import { TUserWithChat } from "@/types/indes";
 import { User } from "@prisma/client";
 import axios from "axios";
@@ -11,23 +13,31 @@ interface ChatClientProps {
 }
 
 const ChatClient = ({ currentUser }: ChatClientProps) => {
-  const [receiver, serReceiver] = useState({
+  const [receiver, setReceiver] = useState({
     receiverId: "",
     receiverName: "",
     receiverImage: "",
   });
 
+  useEffect(() => {
+    axios.get(`/api/chat`).then((res) => {
+      console.log(res);
+    });
+  }, []);
+
   const [layout, setLayout] = useState(false);
 
   const fetcher = (url: string) => {
-    axios.get(url).then((res) => res.data);
+    return axios.get(url).then((res) => res.data);
   };
 
   const {
     data: users,
     error,
     isLoading,
-  } = useSWR(`/api/chat`, fetcher, { refreshInterval: 1000 });
+  } = useSWR(`/api/chat`, fetcher, {
+    refreshInterval: 1000,
+  });
 
   console.log(users);
 
@@ -38,22 +48,23 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error!!!</p>;
 
-  // useEffect(() => {
-  //   axios.get(`/api/chat`).then((res) => {
-  //     console.log(res);
-  //   });
-  // }, []);
-
   return (
     <main>
       <div className="grid grid-cols-[1fr] md:grid-cols-[300px_1fr]">
         <section className={`md:flex ${layout && "hidden"}`}>
-          contact
-          {/* Contact Component */}
+          <Contacts
+            users={users}
+            currentUser={currentUserWithMessage}
+            setLayout={setLayout}
+            setReceiver={setReceiver}
+          />
         </section>
         <section className={`md:flex ${!layout && "hidden"}`}>
-          chatclient
-          {/* Chat Component */}
+          <Chat
+            currentUser={currentUserWithMessage}
+            receiver={receiver}
+            setLayout={setLayout}
+          />
         </section>
       </div>
     </main>
