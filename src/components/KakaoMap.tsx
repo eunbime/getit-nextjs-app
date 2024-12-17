@@ -17,11 +17,20 @@ const KakaoMap = ({
 }: KakaoMapProps) => {
   // const handleClick = (mouseEvent: kakao.maps.event.MouseEvent) => {};
 
+  const handleClick = (mouseEvent: kakao.maps.event.MouseEvent) => {
+    if (detailPage) return;
+    setCustomValue!("latitude", mouseEvent.latLng.getLat());
+    setCustomValue!("longitude", mouseEvent.latLng.getLng());
+  };
+
   return (
     <Map
-      center={{ lat: 33.5563, lng: 126.79581 }}
+      center={{ lat: latitude, lng: longitude }}
       style={{ width: "100%", height: "360px" }}
-    ></Map>
+      onClick={(_, mouseEvent) => handleClick(mouseEvent)}
+    >
+      <MapMarker position={{ lat: latitude, lng: longitude }} />
+    </Map>
   );
 };
 
