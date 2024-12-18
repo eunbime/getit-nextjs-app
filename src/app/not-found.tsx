@@ -1,4 +1,5 @@
-// src/app/not-found.tsx
+export const dynamic = "force-dynamic";
+
 export default function NotFound() {
   return <h1>Sorry, Page Not Found.... ㅠ_ㅜ</h1>;
 }

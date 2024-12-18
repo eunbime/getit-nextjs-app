@@ -12,8 +12,8 @@ interface EmptyStateProps {
 
 const EmptyState = ({
   title = "일치하는 게 없습니다.",
-  showReset = "일부 필터를 변경하거나 제거해 보십시오,",
-  subtitle,
+  subtitle = "일부 필터를 변경하거나 제거해 보십시오,",
+  showReset,
 }: EmptyStateProps) => {
   const router = useRouter();
 

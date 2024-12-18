@@ -24,11 +24,14 @@ export async function POST(request: Request) {
 
     Object.keys(body).forEach((value: any) => {
       if (!body[value]) {
-        NextResponse.error();
+        return NextResponse.json(
+          { error: `${value} is required` },
+          { status: 400 }
+        );
       }
     });
 
-    const product = await prisma?.product.create({
+    const product = await prisma.product.create({
       data: {
         title,
         description,
