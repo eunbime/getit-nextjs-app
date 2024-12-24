@@ -16,6 +16,7 @@ export async function POST(request: Request) {
       title,
       description,
       imageSrc,
+      subCategory,
       category,
       latitude,
       longitude,
@@ -61,12 +62,28 @@ export async function POST(request: Request) {
       }
     }
 
+    // 서브카테고리 찾기
+    const subCategoryRecord = await prisma.subcategory.findFirst({
+      where: {
+        name: subCategory,
+        categoryId: categoryRecord!.id,
+      },
+    });
+
+    if (!subCategoryRecord) {
+      return NextResponse.json(
+        { error: `Subcategory not found: ${subCategory}` },
+        { status: 400 }
+      );
+    }
+
     const product = await prisma.product.create({
       data: {
         title,
         description,
         imageSrc,
         categoryId: categoryRecord!.id,
+        subcategoryId: subCategoryRecord!.id,
         latitude,
         longitude,
         price: Number(price),

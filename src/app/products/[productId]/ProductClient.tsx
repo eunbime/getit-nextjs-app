@@ -1,11 +1,10 @@
 "use client";
 
-import { categories } from "@/components/categories/Categories";
 import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import ProductHead from "@/components/products/ProductHead";
 import ProductInfo from "@/components/products/ProductInfo";
-import { User } from "@prisma/client";
+import { Category, User } from "@prisma/client";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -18,6 +17,14 @@ interface ProductClientProps {
 
 const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
   const router = useRouter();
+
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/categories");
+      return data;
+    },
+  });
 
   const {
     data: product,
@@ -47,7 +54,9 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
     return <div>Product not found</div>;
   }
 
-  const category = categories.find((items) => items.path === product.category);
+  const category = categories.find(
+    (item: Category) => item.name === product.category
+  );
 
   return (
     <Container>

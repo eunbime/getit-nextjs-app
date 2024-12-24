@@ -1,7 +1,4 @@
-import { IconType } from "react-icons";
-
 interface CategoryInputProps {
-  icon: IconType;
   label: string;
   selected?: boolean;
   path: string;
@@ -9,7 +6,6 @@ interface CategoryInputProps {
 }
 
 const CategoryInput = ({
-  icon: Icon,
   label,
   selected,
   path,
@@ -23,7 +19,6 @@ const CategoryInput = ({
         hover:border-zinc-600 transition cursor-pointer
         ${selected ? "border-rose-400" : "border-neutral-200"}`}
     >
-      <Icon size={30} />
       <div className="font-semibold">{label}</div>
     </div>
   );
