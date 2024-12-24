@@ -5,6 +5,7 @@ import Container from "@/components/common/Container";
 import EmptyState from "@/components/EmptyState";
 import Categories from "@/components/categories/Categories";
 import Products from "@/components/products/Product";
+import Sidebar from "@/components/navigation/Sidebar";
 
 interface HomeProps {
   searchParams: ProductsParams;
@@ -21,12 +22,14 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <Container>
       <Categories />
-
-      {products?.data.length === 0 ? (
-        <EmptyState showReset />
-      ) : (
-        <Products searchParams={searchParams} currentUser={currentUser} />
-      )}
+      <div className="flex flex-col md:flex-row w-full">
+        {Object.keys(searchParams).length !== 0 && <Sidebar />}
+        {products?.data.length === 0 ? (
+          <EmptyState showReset />
+        ) : (
+          <Products searchParams={searchParams} currentUser={currentUser} />
+        )}
+      </div>
     </Container>
   );
 }
