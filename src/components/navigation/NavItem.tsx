@@ -17,11 +17,15 @@ const NavItem = ({ mobile, currentUser }: NavItemProps) => {
       {/* <li className="py-2 text-center border-b-4 cursor-pointer">
         <Link href={"/admin"}>Admin</Link>
       </li> */}
+
       <li className="py-2 text-center border-b-4 cursor-pointer">
-        <Link href={"/user "}>User</Link>
+        <Link href={"/user/favorites"}>Like</Link>
       </li>
       <li className="py-2 text-center border-b-4 cursor-pointer">
-        <Link href={"/chat "}>Chat</Link>
+        <Link href={"/chat"}>Chat</Link>
+      </li>
+      <li className="py-2 text-center border-b-4 cursor-pointer">
+        <Link href={"/user"}>My Page</Link>
       </li>
 
       {currentUser ? (

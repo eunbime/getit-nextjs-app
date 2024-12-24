@@ -15,7 +15,11 @@ const HeartButton = ({ productId, currentUser }: HeartButtonProps) => {
 
   return (
     <div
-      onClick={toggleFavorite}
+      onClick={(e) => {
+        e.stopPropagation(); // 이벤트 버블링 중지
+        e.preventDefault(); // 기본 동작 중지
+        toggleFavorite();
+      }}
       className="relative transition cursor-pointer hover-opacity-80"
     >
       <AiOutlineHeart

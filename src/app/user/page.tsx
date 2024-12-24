@@ -1,5 +1,5 @@
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export const dynamic = "force-dynamic";
 

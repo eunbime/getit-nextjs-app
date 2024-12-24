@@ -1,13 +1,9 @@
-import { Product } from "@prisma/client";
 import getCurrentUser from "../actions/getCurrentUser";
 import getProducts, { ProductsParams } from "../actions/getProducts";
 
 import Container from "@/components/common/Container";
 import EmptyState from "@/components/EmptyState";
-import FloatingButton from "@/components/common/FloatingButton";
-import ProductCard from "@/components/products/ProductCard";
 import Categories from "@/components/categories/Categories";
-import { TProductWithCategory } from "@/types";
 import Products from "@/components/products/Product";
 
 interface HomeProps {

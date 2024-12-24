@@ -8,10 +8,10 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   // 로그인 된 유저만 접근 가능
-  if (
-    pathname.startsWith("/user") ||
-    (pathname.startsWith("/chat") && !session)
-  ) {
+  if (pathname.startsWith("/chat") && !session) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
+  }
+  if (pathname.startsWith("/user") && !session) {
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
