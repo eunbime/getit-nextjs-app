@@ -1,6 +1,6 @@
 "use client";
 
-import { Product, User, Category } from "@prisma/client";
+import { User } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HeartButton from "../common/HeartButton";

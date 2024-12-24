@@ -83,3 +83,51 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
+    const latitude = searchParams.get("latitude");
+    const longitude = searchParams.get("longitude");
+
+    const query: any = {};
+
+    if (category) {
+      query.category = {
+        name: category,
+      };
+    }
+
+    if (latitude) {
+      query.latitude = {
+        gte: Number(latitude) - 0.01,
+        lte: Number(latitude) + 0.01,
+      };
+    }
+
+    if (longitude) {
+      query.longitude = {
+        gte: Number(longitude) - 0.01,
+        lte: Number(longitude) + 0.01,
+      };
+    }
+
+    const products = await prisma.product.findMany({
+      where: query,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        category: true,
+      },
+    });
+
+    return NextResponse.json({ data: products });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

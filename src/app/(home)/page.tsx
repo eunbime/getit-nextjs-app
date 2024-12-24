@@ -8,6 +8,7 @@ import FloatingButton from "@/components/common/FloatingButton";
 import ProductCard from "@/components/products/ProductCard";
 import Categories from "@/components/categories/Categories";
 import { TProductWithCategory } from "@/types";
+import Products from "@/components/products/Product";
 
 interface HomeProps {
   searchParams: ProductsParams;
@@ -28,25 +29,7 @@ export default async function Home({ searchParams }: HomeProps) {
       {products?.data.length === 0 ? (
         <EmptyState showReset />
       ) : (
-        <>
-          <div
-            className="grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3
-          lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5"
-          >
-            {products?.data.map((product: Product) => (
-              <ProductCard
-                key={product.id}
-                data={product as TProductWithCategory}
-                currentUser={currentUser}
-              />
-            ))}
-          </div>
-
-          {/* Pagination */}
-
-          {/* FloatingButton */}
-          <FloatingButton href="/products/upload">+</FloatingButton>
-        </>
+        <Products searchParams={searchParams} currentUser={currentUser} />
       )}
     </Container>
   );

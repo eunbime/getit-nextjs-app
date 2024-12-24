@@ -5,25 +5,49 @@ import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import ProductHead from "@/components/products/ProductHead";
 import ProductInfo from "@/components/products/ProductInfo";
-import { Product, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 interface ProductClientProps {
-  product: Product & {
-    user: User;
-  };
+  productId: string;
   currentUser?: User | null;
 }
 
-const ProductClient = ({ product, currentUser }: ProductClientProps) => {
+const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
   const router = useRouter();
 
-  const category = categories.find((items) => items.path === product.category);
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["product", productId],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/products/${productId}`);
+      return data;
+    },
+  });
 
   const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
     ssr: false,
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading product</div>;
+  }
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
+  const category = categories.find((items) => items.path === product.category);
 
   return (
     <Container>
