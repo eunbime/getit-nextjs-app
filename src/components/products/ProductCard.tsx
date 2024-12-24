@@ -1,17 +1,18 @@
 "use client";
 
-import { Product, User } from "@prisma/client";
+import { Product, User, Category } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HeartButton from "../common/HeartButton";
 import { fromNow } from "@/helpers/dayjs";
+import { TProductWithCategory } from "@/types";
 
 interface ProductCardProps {
-  data: Product;
-  currentUser?: User | null;
+  data: TProductWithCategory;
+  currentUser: User | null;
 }
 
-const ProductCard = ({ data, currentUser }: ProductCardProps) => {
+const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
   const router = useRouter();
   return (
     <div
@@ -33,7 +34,7 @@ const ProductCard = ({ data, currentUser }: ProductCardProps) => {
         </div>
 
         <div className="text-lg font-semibold">{data.title}</div>
-        <div className="font-light text-neutral-500">{data.category}</div>
+        <div className="font-light text-neutral-500">{data.category?.name}</div>
 
         <div className="flex flex-row items-center justify-between gap-1">
           <div className="font-semibold">

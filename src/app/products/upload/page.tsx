@@ -59,7 +59,8 @@ const ProductUploadPage = () => {
         reset();
       })
       .catch((error) => {
-        console.log(error);
+        console.error("Error details:", error.response?.data);
+        alert(error.response?.data?.error || "Something went wrong!");
       })
       .finally(() => {
         setIsLoading(false);

@@ -7,6 +7,7 @@ import EmptyState from "@/components/EmptyState";
 import FloatingButton from "@/components/common/FloatingButton";
 import ProductCard from "@/components/products/ProductCard";
 import Categories from "@/components/categories/Categories";
+import { TProductWithCategory } from "@/types";
 
 interface HomeProps {
   searchParams: ProductsParams;
@@ -18,7 +19,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const products = await getProducts(searchParams);
   const currentUser = await getCurrentUser();
 
-  console.log(products);
+  console.log("product", Object.keys(searchParams).length === 0);
 
   return (
     <Container>
@@ -35,7 +36,7 @@ export default async function Home({ searchParams }: HomeProps) {
             {products?.data.map((product: Product) => (
               <ProductCard
                 key={product.id}
-                data={product}
+                data={product as TProductWithCategory}
                 currentUser={currentUser}
               />
             ))}

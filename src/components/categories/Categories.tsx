@@ -34,10 +34,16 @@ export const categories = [
     description: "여성의류 카테고리 입니다.",
   },
   {
-    label: "남성패션/잡화",
-    path: "men-fashion",
+    label: "남성의류",
+    path: "men-clothing",
     icon: TbPool,
-    description: "남성패션/잡화 카테고리 입니다.",
+    description: "남성의류 카테고리 입니다.",
+  },
+  {
+    label: "패션/잡화",
+    path: "accessories",
+    icon: FaSkiing,
+    description: "패션/잡화 카테고리 입니다.",
   },
   {
     label: "뷰티/미용",
@@ -46,16 +52,10 @@ export const categories = [
     description: "뷰티/미용 카테고리 입니다.",
   },
   {
-    label: "스포츠/레저",
+    label: "스포츠/헬스",
     path: "sports",
     icon: GiBoatFishing,
-    description: "스포츠/레저 카테고리 입니다.",
-  },
-  {
-    label: "중고차",
-    path: "user-car",
-    icon: FaSkiing,
-    description: "중고차 카테고리 입니다.",
+    description: "스포츠/헬스 카테고리 입니다.",
   },
 ];
 
@@ -64,14 +64,14 @@ const Categories = () => {
   const category = params?.get("category");
 
   return (
-    <div className="flex flex-row items-center justify-between pt-4 overflow-x-auto">
+    <div className="flex flex-row flex-wrap items-center justify-around overflow-x-auto">
       {categories.map((item) => (
         <CategoryBox
           key={item.label}
           label={item.label}
           path={item.path}
           icon={item.icon}
-          selected={category === item.label}
+          selected={category === item.path}
         />
       ))}
     </div>

@@ -13,7 +13,9 @@ export default async function getProducts(params: ProductsParams) {
     const query: any = {};
 
     if (category) {
-      query.category = category;
+      query.category = {
+        name: category,
+      };
     }
 
     if (latitude) {
@@ -34,6 +36,9 @@ export default async function getProducts(params: ProductsParams) {
       where: query,
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        category: true,
       },
     });
 

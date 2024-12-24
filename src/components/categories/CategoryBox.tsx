@@ -2,7 +2,7 @@ import Link from "next/link";
 import { IconType } from "react-icons";
 
 interface CategoryBoxProps {
-  icon: IconType;
+  icon?: IconType | null;
   label: string;
   path: string;
   selected?: boolean;
@@ -26,7 +26,7 @@ const CategoryBox = ({
         }
         `}
     >
-      <Icon size={26} />
+      {/* <Icon size={26} /> */}
       <div className="text-sm font-medium">{label}</div>
     </Link>
   );

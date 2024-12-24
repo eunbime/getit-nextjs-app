@@ -36,10 +36,15 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
 
       await request();
       router.refresh();
-      toast.success("성공했습니다");
+
+      if (hasFavorited) {
+        toast.success("찜한 목록에서 삭제되었습니다.");
+      } else {
+        toast.success("찜한 목록에 추가되었습니다.");
+      }
     } catch (error) {
       console.log(error);
-      toast.error("실패했습니다.");
+      toast.error("오류가 발생했습니다.");
     }
   };
 

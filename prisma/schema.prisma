@@ -78,12 +78,36 @@ model VerificationRequest {
   @@unique([identifier, token])
 }
 
+model Category {
+  id String @id @default(cuid())
+  name String
+  description String?
+  subcategories Subcategory[]
+  products Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subcategory {
+  id String @id @default(cuid())
+  name String
+  description String?
+  categoryId String
+  products Product[]
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
 model Product {
-  id  String @id @default(cuid())
+  id String @id @default(cuid())
   title String
   description String
   imageSrc String
-  category String
+  categoryId String
+  subcategoryId String?
   userId String
   price Int
   latitude Float
@@ -92,7 +116,11 @@ model Product {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+  subcategory Subcategory? @relation(fields: [subcategoryId], references: [id])
 
+  @@index([categoryId])
+  @@index([subcategoryId])
 }
 
 model Conversation {

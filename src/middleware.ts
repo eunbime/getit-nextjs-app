@@ -8,7 +8,10 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   // 로그인 된 유저만 접근 가능
-  if (pathname.startsWith("/user") && !session) {
+  if (
+    pathname.startsWith("/user") ||
+    (pathname.startsWith("/chat") && !session)
+  ) {
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
@@ -24,3 +27,12 @@ export async function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: [
+    "/auth/login",
+    "/auth/register",
+    "/auth/error",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
+};
