@@ -3,69 +3,62 @@
 import previewImage from "@/helpers/previewImage";
 import uploadImage from "@/helpers/uploadImage";
 import axios from "axios";
-import { FormEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
 import { IoImageOutline } from "react-icons/io5";
 import { RiSendPlaneLine } from "react-icons/ri";
-import useSWRMutation from "swr/mutation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface InputProps {
   receiverId: string;
   currentUserId: string;
 }
 
-const sendRequest = async (
-  url: string,
-  {
-    arg,
-  }: {
-    arg: {
-      text: string;
-      image: string;
-      receiverId: string;
-      senderId: string;
-    };
-  }
-) => {
-  return axios.post("/api/chat", JSON.stringify(arg));
-};
-
 const Input = ({ receiverId, currentUserId }: InputProps) => {
   const imageRef = useRef<null | HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { trigger } = useSWRMutation("/api/chat", sendRequest);
+  const formSchema = z.object({
+    text: z.string().optional(),
+    image: z.any(),
+  });
 
-  const [message, setMessage] = useState<string>("");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const { register, handleSubmit, reset, setValue } = useForm<
+    z.infer<typeof formSchema>
+  >({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      text: "",
+      image: null,
+    },
+  });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
 
-    const imgUrl = image ? await uploadImage(image as File) : null;
+    const imgUrl = values.image
+      ? await uploadImage(values.image as File)
+      : null;
 
-    if (message || imgUrl) {
+    console.log(imgUrl);
+
+    if (values.text || imgUrl) {
       try {
-        trigger({
-          text: message,
+        await axios.post("/api/chat", {
+          text: values.text,
           image: imgUrl,
           receiverId: receiverId,
           senderId: currentUserId,
         });
-        // await axios.post("/api/chat", {
-        //   text: message,
-        //   image: imgUrl,
-        //   receiverId: receiverId,
-        //   senderId: currentUserId,
-        // });
       } catch (error) {
         console.log(error);
       }
     }
 
-    setMessage("");
+    reset();
     setImagePreview(null);
-    setImage(null);
   };
 
   const chooseImage = () => {
@@ -74,12 +67,12 @@ const Input = ({ receiverId, currentUserId }: InputProps) => {
 
   const removeImage = () => {
     setImagePreview(null);
-    setImage(null);
+    setValue("image", null);
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="relative flex items-center justify-between w-full gap-4 p-2 pl-4 border-[1px] border-gray-300 rounded-md shadow-sm"
     >
       {imagePreview && (
@@ -98,13 +91,18 @@ const Input = ({ receiverId, currentUserId }: InputProps) => {
         className="w-full text-base outline-none"
         type="text"
         placeholder="메시지를 입력해주세요."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        {...register("text")}
       />
       <input
         className="hidden"
         type="file"
-        onChange={(e) => previewImage(e, setImagePreview, setImage)}
+        onChange={(e) =>
+          previewImage({
+            e,
+            setImagePreview,
+            setValue: (_, file) => setValue("image", file),
+          })
+        }
         ref={imageRef}
         accept="image/*"
         multiple={false}

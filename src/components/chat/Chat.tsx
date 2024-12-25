@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { TConversation, TUserWithChat } from "@/types/indes";
+import { TConversation, TUserWithChat } from "@/types/index";
 
 import ChatHeader from "./ChatHeader";
 import Message from "./Message";

@@ -1,4 +1,4 @@
-import { TUserWithChat } from "@/types/indes";
+import { TUserWithChat } from "@/types/index";
 import User from "./User";
 
 interface ContactsProps {

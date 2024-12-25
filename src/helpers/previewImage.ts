@@ -1,11 +1,19 @@
-const previewImage = (e: any, setImagePreview: any, setImage: any) => {
-  const file = e.target.files[0];
-  setImage(file);
+interface PreviewImageProps {
+  e: React.ChangeEvent<HTMLInputElement>;
+  setImagePreview: (value: string | null) => void;
+  setValue: (name: string, value: File) => void;
+}
+
+const previewImage = ({ e, setImagePreview, setValue }: PreviewImageProps) => {
+  const file = e.target?.files?.[0];
+  if (!file) return;
+
+  setValue("image", file);
 
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onloadend = () => {
-    setImagePreview(reader.result);
+    setImagePreview(reader.result as string);
   };
 };
 

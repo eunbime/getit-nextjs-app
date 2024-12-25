@@ -6,6 +6,7 @@ import NavBar from "@/components/navigation/NavBar";
 import Script from "next/script";
 import ToastProvider from "@/components/providers/ToastProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
+import { SocketProvider } from "@/components/providers/SocketProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,9 +37,11 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          <NavBar currentUser={currentUser} />
-          <ToastProvider />
-          {children}
+          <SocketProvider>
+            <NavBar currentUser={currentUser} />
+            <ToastProvider />
+            {children}
+          </SocketProvider>
           <Script
             type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5b76dbf44c074d8fe2cfa952e9f1fcda&libraries=services,clusterer&autoload=false"

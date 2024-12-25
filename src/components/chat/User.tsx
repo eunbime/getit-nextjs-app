@@ -1,5 +1,5 @@
 import { fromNow } from "@/helpers/dayjs";
-import { TConversation, TUserWithChat } from "@/types/indes";
+import { TConversation, TUserWithChat } from "@/types/index";
 
 import Avatar from "@/components/common/Avatar";
 

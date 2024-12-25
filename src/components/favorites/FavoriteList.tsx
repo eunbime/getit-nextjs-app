@@ -51,7 +51,7 @@ const FavoritesList: React.FC<FavoritesListProps> = ({ currentUser }) => {
         <ProductCard
           key={product.id}
           data={product}
-          currentUser={currentUser}
+          currentUser={currentUser ?? null}
         />
       ))}
     </div>
