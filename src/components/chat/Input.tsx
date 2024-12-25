@@ -10,6 +10,7 @@ import { IoImageOutline } from "react-icons/io5";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface InputProps {
   receiverId: string;
@@ -17,8 +18,24 @@ interface InputProps {
 }
 
 const Input = ({ receiverId, currentUserId }: InputProps) => {
+  const queryClient = useQueryClient();
+
   const imageRef = useRef<null | HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: async (values: { text?: string; image?: string }) => {
+      return axios.post("/api/socket/chat", {
+        text: values.text || "",
+        image: values.image || "",
+        receiverId,
+        senderId: currentUserId,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chat"] });
+    },
+  });
 
   const formSchema = z.object({
     text: z.string().optional(),
@@ -36,26 +53,24 @@ const Input = ({ receiverId, currentUserId }: InputProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-
     const imgUrl = values.image
       ? await uploadImage(values.image as File)
       : null;
 
-    console.log(imgUrl);
+    if (values)
+      if (values.text || imgUrl) {
+        try {
+          console.log("111", values);
+          mutation.mutate({
+            text: values.text,
+            image: imgUrl,
+          });
 
-    if (values.text || imgUrl) {
-      try {
-        await axios.post("/api/chat", {
-          text: values.text,
-          image: imgUrl,
-          receiverId: receiverId,
-          senderId: currentUserId,
-        });
-      } catch (error) {
-        console.log(error);
+          console.log("222", values);
+        } catch (error) {
+          console.log(error);
+        }
       }
-    }
 
     reset();
     setImagePreview(null);

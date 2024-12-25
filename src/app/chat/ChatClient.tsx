@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import axios from "axios";
-import useSWR from "swr";
 import { User } from "@prisma/client";
 import Chat from "@/components/chat/Chat";
 import { TUserWithChat } from "@/types/index";
 
 import Contacts from "@/components/chat/Contacts";
+import { useQuery } from "@tanstack/react-query";
 
 interface ChatClientProps {
   currentUser?: User | null;
@@ -19,23 +19,19 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
     receiverName: "",
     receiverImage: "",
   });
-
-  // useEffect(() => {
-  //   axios.get(`/api/chat`);
-  // }, []);
-
   const [layout, setLayout] = useState(false);
-
-  const fetcher = (url: string) => {
-    return axios.get(url).then((res) => res.data);
-  };
 
   const {
     data: users,
-    error,
     isLoading,
-  } = useSWR(`/api/chat`, fetcher, {
-    refreshInterval: 1000,
+    error,
+  } = useQuery({
+    queryKey: ["chat"],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/chat`);
+      return data;
+    },
+    refetchInterval: 1000,
   });
 
   const currentUserWithMessage = users?.find(

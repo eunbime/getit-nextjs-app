@@ -2,6 +2,7 @@ import { formatTime } from "@/helpers/dayjs";
 import { IoChevronBackCircleSharp } from "react-icons/io5";
 
 import Avatar from "@/components/common/Avatar";
+import { SocketIndicator } from "../socket/SocketIndicator";
 
 interface ChatHeaderProps {
   setLayout: (layout: boolean) => void;
@@ -35,6 +36,7 @@ const ChatHeader = ({
               <p className="text-gray-600">{formatTime(lastMessageTime)}</p>
             )}
           </div>
+          <SocketIndicator />
         </div>
       </div>
     </div>
