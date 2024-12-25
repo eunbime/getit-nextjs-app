@@ -23,8 +23,6 @@ export async function POST(request: Request) {
       price,
     } = body;
 
-    console.log("Received body:", body); // 요청 데이터 로깅
-
     Object.keys(body).forEach((value: any) => {
       if (!body[value]) {
         return NextResponse.json(
@@ -41,25 +39,13 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("Found category:", categoryRecord); // 카테고리 검색 결과 로깅
+    console.log("Category found:", categoryRecord); // 카테고리 조회 결과 확인
 
     if (!categoryRecord) {
-      // 카테고리가 없으면 생성
-      try {
-        const newCategory = await prisma.category.create({
-          data: {
-            name: category,
-            description: `Category for ${category}`,
-          },
-        });
-        console.log("Created new category:", newCategory);
-      } catch (error) {
-        console.error("Error creating category:", error);
-        return NextResponse.json(
-          { error: `Failed to create category: ${category}` },
-          { status: 400 }
-        );
-      }
+      return NextResponse.json(
+        { error: `Category not found: ${category}` },
+        { status: 400 }
+      );
     }
 
     // 서브카테고리 찾기
@@ -70,32 +56,39 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log("subCategoryRecord", subCategoryRecord);
+
     if (!subCategoryRecord) {
+      console.log("4. Category not found for:", category);
       return NextResponse.json(
         { error: `Subcategory not found: ${subCategory}` },
         { status: 400 }
       );
     }
 
+    // 상품 생성
+    const productData = {
+      title,
+      description,
+      imageSrc,
+      categoryId: categoryRecord.id,
+      subcategoryId: subCategoryRecord.id,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      price: parseInt(price),
+      userId: currentUser.id,
+    };
+    console.log("Creating product with data:", productData); // 생성할 상품 데이터 확인
+
     const product = await prisma.product.create({
-      data: {
-        title,
-        description,
-        imageSrc,
-        categoryId: categoryRecord!.id,
-        subcategoryId: subCategoryRecord!.id,
-        latitude,
-        longitude,
-        price: Number(price),
-        userId: currentUser.id,
-      },
+      data: productData,
     });
 
     return NextResponse.json(product);
-  } catch (error) {
-    console.log("[PRODUCTS_POST]", error);
+  } catch (error: any) {
+    console.error("[PRODUCTS_POST] Detailed error:", error); // 자세한 에러 로깅
     return NextResponse.json(
-      { error: error || "Internal Server Error" },
+      { error: error.message || "Internal Server Error" },
       { status: 500 }
     );
   }
@@ -105,6 +98,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
+    const subcategoryId = searchParams.get("subcategory");
     const latitude = searchParams.get("latitude");
     const longitude = searchParams.get("longitude");
 
@@ -113,6 +107,12 @@ export async function GET(request: Request) {
     if (category) {
       query.category = {
         name: category,
+      };
+    }
+
+    if (subcategoryId) {
+      query.subcategory = {
+        id: subcategoryId,
       };
     }
 
@@ -137,6 +137,7 @@ export async function GET(request: Request) {
       },
       include: {
         category: true,
+        subcategory: true,
       },
     });
 

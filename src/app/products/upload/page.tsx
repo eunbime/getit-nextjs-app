@@ -67,15 +67,23 @@ const ProductUploadPage = () => {
   });
 
   const setCustomValue = (id: string, value: any) => {
-    console.log("value", id, value);
     setValue(id, value);
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
+    const productData = {
+      ...data,
+      price: parseInt(data.price),
+      latitude: parseFloat(data.latitude),
+      longitude: parseFloat(data.longitude),
+    };
+
+    console.log("productData", productData);
+
     axios
-      .post("/api/products", data)
+      .post("/api/products", productData)
       .then((response) => {
         router.push(`/products/${response.data.id}`);
         reset();

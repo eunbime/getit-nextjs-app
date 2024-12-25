@@ -5,7 +5,7 @@ import axios from "axios";
 import useSWR from "swr";
 import { User } from "@prisma/client";
 import Chat from "@/components/chat/Chat";
-import { TUserWithChat } from "@/types/indes";
+import { TUserWithChat } from "@/types/index";
 
 import Contacts from "@/components/chat/Contacts";
 

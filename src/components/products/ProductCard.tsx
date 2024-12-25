@@ -24,7 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
           <Image
             fill
             sizes="auto"
-            className="object-cover w-full h-full trasition group-hover:scale-110"
+            className="object-cover w-full h-full transition group-hover:scale-110"
             src={data.imageSrc}
             alt="Listing"
           />

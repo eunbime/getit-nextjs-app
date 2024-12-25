@@ -5,6 +5,7 @@ import { CATEGORY_TITLE } from "../categories/Categories";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Subcategory } from "@prisma/client";
+import Link from "next/link";
 
 const Sidebar = () => {
   const params = useSearchParams();
@@ -29,7 +30,11 @@ const Sidebar = () => {
       </h3>
       <ul className="flex gap-2 mt-1 md:mt-5 ml-2 md:flex-col w-full justify-center overflow-x-scroll md:overflow-x-auto">
         {subCategories?.map((subCategory: Subcategory) => (
-          <li key={subCategory.id}>{subCategory.name}</li>
+          <li key={subCategory.id}>
+            <Link href={`/?category=${category}&subcategory=${subCategory.id}`}>
+              {subCategory.name}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>

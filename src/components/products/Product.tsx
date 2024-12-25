@@ -15,7 +15,7 @@ interface ProductsProps {
 
 const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
   const { data: products, isLoading } = useQuery({
-    queryKey: ["products", searchParams],
+    queryKey: ["products", searchParams.category, searchParams.subcategory],
     queryFn: async () => {
       const { data } = await axios.get("/api/products", {
         params: searchParams,

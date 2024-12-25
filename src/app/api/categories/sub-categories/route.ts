@@ -22,9 +22,6 @@ export async function GET(request: Request) {
       where: {
         categoryId: category.id,
       },
-      orderBy: {
-        name: "asc",
-      },
     });
 
     return NextResponse.json(subCategories);
