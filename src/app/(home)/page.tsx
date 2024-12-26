@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <Container>
       <Categories />
-      <div className="flex flex-col md:flex-row w-full">
+      <div className="flex flex-col w-full">
         {Object.keys(searchParams).length !== 0 && <Sidebar />}
         {products?.data.length === 0 ? (
           <EmptyState showReset />

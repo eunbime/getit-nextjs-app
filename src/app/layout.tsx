@@ -44,7 +44,7 @@ export default async function RootLayout({
           </SocketProvider>
           <Script
             type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5b76dbf44c074d8fe2cfa952e9f1fcda&libraries=services,clusterer&autoload=false"
+            src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services,clusterer&autoload=false`}
           />
         </QueryProvider>
       </body>

@@ -31,7 +31,6 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
       const { data } = await axios.get(`/api/chat`);
       return data;
     },
-    refetchInterval: 1000,
   });
 
   const currentUserWithMessage = users?.find(
