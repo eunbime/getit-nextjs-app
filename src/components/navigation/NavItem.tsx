@@ -14,10 +14,6 @@ const NavItem = ({ mobile, currentUser }: NavItemProps) => {
         mobile && "flex-col h-full"
       }`}
     >
-      {/* <li className="py-2 text-center border-b-4 cursor-pointer">
-        <Link href={"/admin"}>Admin</Link>
-      </li> */}
-
       <li className="py-2 text-center border-b-4 cursor-pointer">
         <Link href={"/user/favorites"}>Like</Link>
       </li>
@@ -25,7 +21,7 @@ const NavItem = ({ mobile, currentUser }: NavItemProps) => {
         <Link href={"/chat"}>Chat</Link>
       </li>
       <li className="py-2 text-center border-b-4 cursor-pointer">
-        <Link href={"/user"}>My Page</Link>
+        <Link href={"/user/profile"}>My Page</Link>
       </li>
 
       {currentUser ? (

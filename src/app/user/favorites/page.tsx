@@ -9,7 +9,12 @@ const FavoritesPage = async () => {
     return <EmptyState title="로그인이 필요합니다" />;
   }
 
-  return <FavoritesList currentUser={currentUser} />;
+  return (
+    <section className="flex-1 p-8">
+      <h1 className="text-2xl font-semibold mb-8">관심 목록</h1>
+      <FavoritesList currentUser={currentUser} />
+    </section>
+  );
 };
 
 export default FavoritesPage;
