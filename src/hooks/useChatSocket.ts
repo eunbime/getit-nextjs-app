@@ -1,5 +1,6 @@
 import { useSocket } from "@/components/providers/SocketProvider";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 type ChatSocketProps = {
@@ -15,9 +16,17 @@ export const useChatSocket = ({
 }: ChatSocketProps) => {
   const { socket, isConnected } = useSocket();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!socket) return;
+
+    // chat 페이지나 쿼리 파라미터가 있는 경우에만 소켓 이벤트 리스너 등록
+    const isChatPage = pathname === "/chat";
+    const hasChatParams = searchParams?.has("id") && searchParams.has("name");
+
+    if (!isChatPage && !hasChatParams) return;
 
     // 메시지 업데이트 이벤트 리스너
     socket.on(updateKey, (message: any) => {

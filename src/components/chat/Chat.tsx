@@ -38,8 +38,6 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
       paramValue: conversation?.id || "",
     });
 
-  console.log(data?.pages[0].items);
-
   // 실시간 메시지 업데이트를 위한 소켓 설정
   useChatSocket({
     addKey,

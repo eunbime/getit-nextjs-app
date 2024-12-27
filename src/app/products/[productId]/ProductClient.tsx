@@ -58,6 +58,25 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
     (item: Category) => item.name === product.category
   );
 
+  const handleChatClick = async () => {
+    try {
+      // 새로운 대화 생성 또는 기존 대화 확인
+      const response = await axios.post("/api/chat", {
+        senderId: currentUser?.id,
+        receiverId: product?.user?.id,
+        text: `안녕하세요. ${product.title} 상품에 대해 문의드립니다`,
+      });
+
+      // 채팅 페이지로 이동
+      router.push(
+        `/chat?id=${product?.user?.id}&name=${product?.user?.name}&open=true`
+      );
+      router.refresh();
+    } catch (error) {
+      console.error("채팅 시작 중 오류 발생:", error);
+    }
+  };
+
   return (
     <Container>
       <div className="max-w-screen-lg mx-auto">
@@ -88,14 +107,7 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
 
           {currentUser?.id !== product?.user?.id && (
             <div>
-              <Button
-                onClick={() =>
-                  router.push(
-                    `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${product?.user?.image}`
-                  )
-                }
-                label="이 유저와 채팅하기"
-              />
+              <Button onClick={handleChatClick} label="이 유저와 채팅하기" />
             </div>
           )}
         </div>

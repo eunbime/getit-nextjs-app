@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { User } from "@prisma/client";
 import Chat from "@/components/chat/Chat";
@@ -8,18 +8,40 @@ import { TUserWithChat } from "@/types/index";
 
 import Contacts from "@/components/chat/Contacts";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 interface ChatClientProps {
   currentUser?: User | null;
 }
 
 const ChatClient = ({ currentUser }: ChatClientProps) => {
+  const searchParams = useSearchParams();
   const [receiver, setReceiver] = useState({
     receiverId: "",
     receiverName: "",
     receiverImage: "",
   });
   const [layout, setLayout] = useState(false);
+
+  useEffect(() => {
+    // URL 파라미터에서 채팅 정보 가져오기
+    const id = searchParams?.get("id");
+    const name = searchParams?.get("name");
+    const open = searchParams?.get("open");
+
+    // 파라미터가 있으면 채팅창 열기
+    if (id && name) {
+      setReceiver({
+        receiverId: id,
+        receiverName: name,
+        receiverImage: "",
+      });
+
+      if (open === "true") {
+        setLayout(true);
+      }
+    }
+  }, [searchParams]);
 
   const {
     data: users,

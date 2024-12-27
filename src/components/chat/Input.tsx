@@ -45,8 +45,6 @@ const Input = ({ receiverId, currentUserId, apiUrl }: InputProps) => {
     if (values)
       if (values.text || imgUrl) {
         try {
-          console.log("111", values);
-
           const url = qs.stringifyUrl({
             url: apiUrl,
             query: {
@@ -61,8 +59,6 @@ const Input = ({ receiverId, currentUserId, apiUrl }: InputProps) => {
             receiverId,
             senderId: currentUserId,
           });
-
-          console.log("222", values);
         } catch (error) {
           console.log(error);
         }

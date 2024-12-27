@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { io as ClientIO } from "socket.io-client";
@@ -23,9 +24,20 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<any | null>(null);
   // 클라이언트가 서버에 연결되었는지 여부를 나타내는 상태
   const [isConnected, setIsConnected] = useState(false);
+  const pathname = usePathname();
 
   // socket.io 초기화
   useEffect(() => {
+    // 채팅 관련 경로에서만 소켓 연결
+    if (!pathname?.startsWith("/chat")) {
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+        setIsConnected(false);
+      }
+      return;
+    }
+
     // socket.io 클라이언트 인스턴스 생성
     const socketInstance = new (ClientIO as any)(
       process.env.NEXT_PUBLIC_SITE_URL!,
