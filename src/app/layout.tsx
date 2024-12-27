@@ -36,17 +36,17 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-          <SocketProvider>
+        <SocketProvider>
+          <QueryProvider>
             <NavBar currentUser={currentUser} />
             <ToastProvider />
             {children}
-          </SocketProvider>
-          <Script
-            type="text/javascript"
-            src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services,clusterer&autoload=false`}
-          />
-        </QueryProvider>
+            <Script
+              type="text/javascript"
+              src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services,clusterer&autoload=false`}
+            />
+          </QueryProvider>
+        </SocketProvider>
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import qs from "query-string";
 import previewImage from "@/helpers/previewImage";
 import uploadImage from "@/helpers/uploadImage";
 import axios from "axios";
@@ -10,32 +11,16 @@ import { IoImageOutline } from "react-icons/io5";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface InputProps {
   receiverId: string;
   currentUserId: string;
+  apiUrl: string;
 }
 
-const Input = ({ receiverId, currentUserId }: InputProps) => {
-  const queryClient = useQueryClient();
-
+const Input = ({ receiverId, currentUserId, apiUrl }: InputProps) => {
   const imageRef = useRef<null | HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const mutation = useMutation({
-    mutationFn: async (values: { text?: string; image?: string }) => {
-      return axios.post("/api/socket/chat", {
-        text: values.text || "",
-        image: values.image || "",
-        receiverId,
-        senderId: currentUserId,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["chat"] });
-    },
-  });
 
   const formSchema = z.object({
     text: z.string().optional(),
@@ -61,9 +46,20 @@ const Input = ({ receiverId, currentUserId }: InputProps) => {
       if (values.text || imgUrl) {
         try {
           console.log("111", values);
-          mutation.mutate({
-            text: values.text,
-            image: imgUrl,
+
+          const url = qs.stringifyUrl({
+            url: apiUrl,
+            query: {
+              receiverId,
+              senderId: currentUserId,
+            },
+          });
+
+          await axios.post(url, {
+            text: values.text || "",
+            image: values.image || "",
+            receiverId,
+            senderId: currentUserId,
           });
 
           console.log("222", values);

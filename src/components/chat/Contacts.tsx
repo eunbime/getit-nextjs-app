@@ -35,6 +35,15 @@ const Contacts = ({
     });
   };
 
+  // 사용자가 없을 때 표시할 컴포넌트
+  if (!users?.length) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <p className="text-gray-500">채팅 가능한 사용자가 없습니다.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full overflow-auto h-[calc(100vh_-_56px)] border-[1px]">
       <h1 className="m-4 text-2xl font-semibold">Chat</h1>

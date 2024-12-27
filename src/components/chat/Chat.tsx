@@ -6,6 +6,8 @@ import { TConversation, TUserWithChat } from "@/types/index";
 import ChatHeader from "./ChatHeader";
 import Message from "./Message";
 import Input from "./Input";
+import { useChatQuery } from "@/hooks/useChatQuery";
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 interface ChatProps {
   receiver: {
@@ -23,9 +25,30 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
       return conversation.users.find((user) => user.id === receiver.receiverId);
     });
 
+  const queryKey = `chat:${conversation?.id}`;
+  const addKey = `chat:${conversation?.id}:messages`;
+  const updateKey = `chat:${conversation?.id}:messages:update`;
+
+  // useChatQuery로 메시지 데이터 가져오기
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useChatQuery({
+      queryKey,
+      apiUrl: "/api/socket/messages",
+      paramKey: "conversationId",
+      paramValue: conversation?.id || "",
+    });
+
+  console.log(data?.pages[0].items);
+
+  // 실시간 메시지 업데이트를 위한 소켓 설정
+  useChatSocket({
+    addKey,
+    updateKey,
+    queryKey,
+  });
+
   // 메시지 작성 시 자동 스크롤
   const messageEndRef = useRef<null | HTMLDivElement>(null);
-
   const scrollToBottom = () => {
     messageEndRef?.current?.scrollIntoView({
       behavior: "instant",
@@ -56,17 +79,19 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
       </div>
 
       <div className="flex flex-col gap-8 overflow-auto h-[calc(100vh_-_60px_-_70px_-_80px)]">
-        {conversation &&
-          conversation.messages.map((message) => (
+        {data?.pages?.[0].items
+          .slice()
+          .reverse()
+          .map((item: any) => (
             <Message
-              key={message.id}
-              isSender={message.senderId === currentUser.id}
-              messageText={message.text}
-              messageImage={message.image}
+              key={item.id}
+              isSender={item.senderId === currentUser.id}
+              messageText={item.text}
+              messageImage={item.image}
               receiverName={receiver.receiverName}
               receiverImage={receiver.receiverImage}
               senderImage={currentUser?.image}
-              time={message.createdAt}
+              time={item.createdAt}
             />
           ))}
 
@@ -77,6 +102,7 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
         <Input
           receiverId={receiver?.receiverId}
           currentUserId={currentUser?.id}
+          apiUrl="/api/socket/messages"
         />
       </div>
     </div>
