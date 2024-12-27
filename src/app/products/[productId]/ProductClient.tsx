@@ -67,9 +67,11 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
         text: `안녕하세요. ${product.title} 상품에 대해 문의드립니다`,
       });
 
+      const userImage = product?.user?.image ? product?.user?.image : "";
+
       // 채팅 페이지로 이동
       router.push(
-        `/chat?id=${product?.user?.id}&name=${product?.user?.name}&open=true`
+        `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${userImage}&open=true`
       );
       router.refresh();
     } catch (error) {

@@ -55,7 +55,7 @@ const Input = ({ receiverId, currentUserId, apiUrl }: InputProps) => {
 
           await axios.post(url, {
             text: values.text || "",
-            image: values.image || "",
+            image: imgUrl || "",
             receiverId,
             senderId: currentUserId,
           });

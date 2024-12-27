@@ -23,6 +23,17 @@ export default async function handler(
         return res.status(400).json({ error: "Conversation ID missing" });
       }
 
+      // conversationId 유효성 검증 추가
+      const conversation = await prisma.conversation.findUnique({
+        where: {
+          id: conversationId as string,
+        },
+      });
+
+      if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+
       let messages;
 
       if (cursor) {

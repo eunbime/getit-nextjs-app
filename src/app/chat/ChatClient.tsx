@@ -28,13 +28,14 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
     const id = searchParams?.get("id");
     const name = searchParams?.get("name");
     const open = searchParams?.get("open");
+    const image = searchParams?.get("image");
 
     // 파라미터가 있으면 채팅창 열기
     if (id && name) {
       setReceiver({
         receiverId: id,
         receiverName: name,
-        receiverImage: "",
+        receiverImage: image || "",
       });
 
       if (open === "true") {
