@@ -9,6 +9,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProductClientProps {
   productId: string;
@@ -62,12 +64,28 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
   }
 
   if (isLoading || categoriesLoading || subCategoriesLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full justify-center items-center">
+        <div className="flex flex-col py-10 space-y-2 w-[90%] mx-auto">
+          <Skeleton className="h-[30px] w-1/5 rounded-xl" />
+          <Skeleton className="h-[400px] w-full rounded-xl" />
+          <div className="flex items-center justify-center w-full gap-2">
+            <Skeleton className="h-[300px] w-1/2" />
+            <Skeleton className="h-[300px] w-1/2" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const category = categories?.find((item) => item.id === product?.categoryId);
 
   const handleChatClick = async () => {
+    if (!currentUser) {
+      toast.warning("로그인 후 이용해주세요");
+      return;
+    }
+
     try {
       // 새로운 대화 생성 또는 기존 대화 확인
       await axios.post("/api/chat", {
