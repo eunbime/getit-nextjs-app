@@ -18,6 +18,7 @@ const nextConfig = {
   },
   experimental: {
     serverActions: true,
+    appDir: true,
   },
   // 동적 렌더링 경고 무시
   eslint: {

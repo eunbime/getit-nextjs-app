@@ -41,9 +41,11 @@ export default function UpdateName({ currentUser }: UpdateNameProps) {
 
   const { mutate: updateName, isLoading } = useMutation({
     mutationFn: async (data: UpdateNameFormData) => {
+      console.log(data.name);
       const response = await axios.patch("/api/user/profile", {
-        name: data.name, // 명시적으로 name 필드를 지정
+        name: data.name,
       });
+      console.log(response.data);
       return response.data;
     },
     onSuccess: () => {
@@ -51,7 +53,7 @@ export default function UpdateName({ currentUser }: UpdateNameProps) {
       window.location.reload();
     },
     onError: (error: any) => {
-      console.error("Update error:", error); // 에러 로깅 추가
+      console.error("Update error:", error);
       setError("name", {
         type: "manual",
         message: "닉네임 업데이트에 실패했습니다.",
@@ -60,7 +62,6 @@ export default function UpdateName({ currentUser }: UpdateNameProps) {
   });
 
   const onSubmit = (data: UpdateNameFormData) => {
-    console.log(data.name);
     updateName(data);
   };
 

@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import NavItem from "./NavItem";
 import { User } from "@prisma/client";
+import { usePathname } from "next/navigation";
 
 interface NavBarProps {
   currentUser?: User | null;
@@ -12,6 +13,11 @@ interface NavBarProps {
 
 const NavBar = ({ currentUser }: NavBarProps) => {
   const [menu, setMenu] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setMenu(false);
+  }, [pathname]);
 
   const handleMenu = () => {
     setMenu(!menu);
