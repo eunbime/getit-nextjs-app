@@ -60,7 +60,13 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
     (user: TUserWithChat) => user.email === currentUser?.email
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen -mt-12 w-full flex items-center justify-center">
+        <p>채팅을 불러오는 중입니다...</p>
+      </div>
+    );
+  }
   if (error) return <p>Error!!!</p>;
 
   return (

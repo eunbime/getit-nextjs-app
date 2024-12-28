@@ -5,6 +5,7 @@ import axios from "axios";
 import EmptyState from "@/components/EmptyState";
 import ProductCard from "@/components/products/ProductCard";
 import { User } from "@prisma/client";
+import { Skeleton } from "../ui/skeleton";
 
 interface FavoritesListProps {
   currentUser?: User | null;
@@ -24,7 +25,23 @@ const FavoritesList: React.FC<FavoritesListProps> = ({ currentUser }) => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        {[...Array(8)].map((_, index) => (
+          <div
+            key={index}
+            className="flex flex-col space-y-3 justify-center items-center"
+          >
+            <Skeleton className="md:h-[150px] h-[300px] md:w-[150px] w-[300px] rounded-xl" />
+            <div className="space-y-2">
+              <Skeleton className="md:h-4 h-6 md:w-[100px] w-[250px]" />
+              <Skeleton className="md:h-4 h-6 md:w-[50px] w-[200px]" />
+              <Skeleton className="md:h-4 h-6 md:w-[150px] w-[300px]" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (error) {

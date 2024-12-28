@@ -20,11 +20,11 @@ const updateNameSchema = z.object({
 
 type UpdateNameFormData = z.infer<typeof updateNameSchema>;
 
-interface UpdateNameProps {
+interface UserNameProps {
   currentUser: User | null;
 }
 
-export default function UpdateName({ currentUser }: UpdateNameProps) {
+export default function UserName({ currentUser }: UserNameProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   const {
@@ -39,7 +39,7 @@ export default function UpdateName({ currentUser }: UpdateNameProps) {
     },
   });
 
-  const { mutate: updateName, isLoading } = useMutation({
+  const { mutate: updateName } = useMutation({
     mutationFn: async (data: UpdateNameFormData) => {
       console.log(data.name);
       const response = await axios.patch("/api/user/profile", {
@@ -80,18 +80,11 @@ export default function UpdateName({ currentUser }: UpdateNameProps) {
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
           {isEditing ? (
-            <Input
-              id="nickname"
-              {...register("name")}
-              className="w-full"
-              disabled={isLoading}
-            />
+            <Input id="nickname" {...register("name")} className="w-full" />
           ) : (
             <p>{currentUser?.name}</p>
           )}
-          <Button onClick={handleEditToggle} disabled={isLoading}>
-            {isLoading ? "처리중..." : "수정"}
-          </Button>
+          <Button onClick={handleEditToggle}>수정</Button>
         </div>
         {errors.name && (
           <p className="text-sm text-red-500">{errors.name.message}</p>

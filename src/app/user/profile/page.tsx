@@ -1,7 +1,7 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import UpdateName from "@/components/profile/UpdataName";
 import { Label } from "@/components/ui/label";
 import UserImage from "@/components/profile/UserImage";
+import UserName from "@/components/profile/UserName";
 export default async function Profile() {
   const currentUser = await getCurrentUser();
 
@@ -13,7 +13,7 @@ export default async function Profile() {
         <UserImage currentUser={currentUser} />
 
         <div className="space-y-4">
-          <UpdateName currentUser={currentUser} />
+          <UserName currentUser={currentUser} />
 
           <div className="grid gap-2">
             <Label htmlFor="email">이메일</Label>

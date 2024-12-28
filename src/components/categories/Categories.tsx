@@ -6,6 +6,7 @@ import { Category } from "@prisma/client";
 
 import CategoryBox from "./CategoryBox";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "../ui/skeleton";
 
 export const CATEGORY_TITLE: { [key: string]: string } = {
   digital: "디지털 기기",
@@ -31,7 +32,17 @@ const Categories = () => {
   });
 
   if (isLoading) {
-    return <div>카테고리를 불러오는 중...</div>;
+    return (
+      <div className="flex flex-row flex-wrap items-center justify-around overflow-x-auto">
+        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+      </div>
+    );
   }
 
   return (
