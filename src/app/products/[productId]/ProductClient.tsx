@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import ProductHead from "@/components/products/ProductHead";
 import ProductInfo from "@/components/products/ProductInfo";
-import { Category, Product, Subcategory, User } from "@prisma/client";
+import { Category, Subcategory, User } from "@prisma/client";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -70,7 +70,7 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
   const handleChatClick = async () => {
     try {
       // 새로운 대화 생성 또는 기존 대화 확인
-      const response = await axios.post("/api/chat", {
+      await axios.post("/api/chat", {
         senderId: currentUser?.id,
         receiverId: product?.user?.id,
         text: `안녕하세요. ${product.title} 상품에 대해 문의드립니다`,
@@ -85,6 +85,23 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
       router.refresh();
     } catch (error) {
       console.error("채팅 시작 중 오류 발생:", error);
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    try {
+      await axios.delete(`/api/products/${productId}`);
+      router.push("/");
+    } catch (error) {
+      console.error("상품 삭제 중 오류 발생:", error);
+    }
+  };
+
+  const handleUpdateClick = async () => {
+    try {
+      router.push(`/products/upload?productId=${productId}`);
+    } catch (error) {
+      console.error("상품 수정 중 오류 발생:", error);
     }
   };
 
@@ -104,7 +121,7 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
               category={category}
               createdAt={product?.createdAt}
               description={product?.description}
-              subCategory={subCategory?.name}
+              subCategory={subCategory?.name as string}
             />
 
             {/* Kakao Map */}
@@ -120,6 +137,12 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
           {currentUser?.id !== product?.user?.id && (
             <div>
               <Button onClick={handleChatClick} label="이 유저와 채팅하기" />
+            </div>
+          )}
+          {currentUser?.id === product?.user?.id && (
+            <div className="flex gap-2">
+              <Button onClick={handleDeleteClick} label="삭제" />
+              <Button onClick={handleUpdateClick} label="수정" />
             </div>
           )}
         </div>

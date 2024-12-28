@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import CategoryInput from "@/components/categories/CategoryInput";
 import Button from "@/components/common/Button";
@@ -18,8 +18,21 @@ import { CATEGORY_TITLE } from "@/components/categories/Categories";
 
 const ProductUploadPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const productId = searchParams?.get("productId");
 
   const [isLoading, setIsLoading] = useState(false);
+
+  // 상품 데이터 불러오기 추가
+  const { data: productData } = useQuery({
+    queryKey: ["product", productId],
+    queryFn: async () => {
+      if (!productId) return null;
+      const { data } = await axios.get(`/api/products/${productId}`);
+      return data;
+    },
+    enabled: !!productId,
+  });
 
   const { data: categories } = useQuery({
     queryKey: ["categories"],
@@ -49,6 +62,21 @@ const ProductUploadPage = () => {
     },
   });
 
+  useEffect(() => {
+    if (productData) {
+      reset({
+        title: productData.title,
+        description: productData.description,
+        category: productData.category,
+        subCategory: productData.subCategory,
+        latitude: productData.latitude,
+        longitude: productData.longitude,
+        imageSrc: productData.imageSrc,
+        price: productData.price,
+      });
+    }
+  }, [productData, reset]);
+
   const imageSrc = watch("imageSrc");
   const category = watch("category");
   const subCategory = watch("subCategory");
@@ -73,6 +101,8 @@ const ProductUploadPage = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
+    console.log(data);
+
     const productData = {
       ...data,
       price: parseInt(data.price),
@@ -80,17 +110,18 @@ const ProductUploadPage = () => {
       longitude: parseFloat(data.longitude),
     };
 
-    console.log("productData", productData);
+    const request = productId
+      ? axios.patch(`/api/products/${productId}`, productData)
+      : axios.post("/api/products", productData);
 
-    axios
-      .post("/api/products", productData)
+    request
       .then((response) => {
         router.push(`/products/${response.data.id}`);
         reset();
       })
       .catch((error) => {
         console.error("Error details:", error.response?.data);
-        alert(error.response?.data?.error || "Something went wrong!");
+        alert(error.response?.data?.error || "오류가 발생했습니다!");
       })
       .finally(() => {
         setIsLoading(false);
@@ -189,7 +220,11 @@ const ProductUploadPage = () => {
             latitude={latitude}
             longitude={longitude}
           />
-          <Button label="상품 생성하기" />
+          {productId ? (
+            <Button label="상품 수정하기" />
+          ) : (
+            <Button label="상품 생성하기" />
+          )}
         </form>
       </div>
     </Container>

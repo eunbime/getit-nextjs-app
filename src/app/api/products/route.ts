@@ -32,14 +32,11 @@ export async function POST(request: Request) {
       }
     });
 
-    // 먼저 카테고리를 찾거나 생성합니다
     const categoryRecord = await prisma.category.findFirst({
       where: {
         name: category,
       },
     });
-
-    console.log("Category found:", categoryRecord); // 카테고리 조회 결과 확인
 
     if (!categoryRecord) {
       return NextResponse.json(
@@ -55,8 +52,6 @@ export async function POST(request: Request) {
         categoryId: categoryRecord!.id,
       },
     });
-
-    console.log("subCategoryRecord", subCategoryRecord);
 
     if (!subCategoryRecord) {
       console.log("4. Category not found for:", category);
