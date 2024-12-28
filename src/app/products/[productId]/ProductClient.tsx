@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import ProductHead from "@/components/products/ProductHead";
 import ProductInfo from "@/components/products/ProductInfo";
-import { Category, User } from "@prisma/client";
+import { Category, Product, Subcategory, User } from "@prisma/client";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -18,13 +18,27 @@ interface ProductClientProps {
 const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
   const router = useRouter();
 
-  const { data: categories } = useQuery({
+  const { data: categories, isLoading: categoriesLoading } = useQuery<
+    Category[]
+  >({
     queryKey: ["categories"],
     queryFn: async () => {
       const { data } = await axios.get("/api/categories");
       return data;
     },
   });
+
+  const { data: subCategory, isLoading: subCategoriesLoading } =
+    useQuery<Subcategory>({
+      queryKey: ["subCategory", productId],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `/api/categories/sub-categories/${productId}`
+        );
+        return data[0];
+      },
+      enabled: !!productId,
+    });
 
   const {
     data: product,
@@ -40,23 +54,18 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
 
   const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
     ssr: false,
+    loading: () => <p>Loading...</p>,
   });
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>Error loading product</div>;
   }
 
-  if (!product) {
-    return <div>Product not found</div>;
+  if (isLoading || categoriesLoading || subCategoriesLoading) {
+    return <div>Loading...</div>;
   }
 
-  const category = categories.find(
-    (item: Category) => item.name === product.category
-  );
+  const category = categories?.find((item) => item.id === product?.categoryId);
 
   const handleChatClick = async () => {
     try {
@@ -84,25 +93,26 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
       <div className="max-w-screen-lg mx-auto">
         <div className="flex flex-col gap-6">
           <ProductHead
-            title={product.title}
-            imageSrc={product.imageSrc}
-            id={product.id}
+            title={product?.title}
+            imageSrc={product?.imageSrc}
+            id={product?.id}
             currentUser={currentUser}
           />
           <div className="grid grid-cols-1 mt-6 md:grid-cols-2 md:gap-10">
             <ProductInfo
-              user={product.user}
+              user={product?.user}
               category={category}
-              createdAt={product.createdAt}
-              description={product.description}
+              createdAt={product?.createdAt}
+              description={product?.description}
+              subCategory={subCategory?.name}
             />
 
             {/* Kakao Map */}
             <div>
               <KakaoMap
                 detailPage
-                latitude={product.latitude}
-                longitude={product.longitude}
+                latitude={product?.latitude}
+                longitude={product?.longitude}
               />
             </div>
           </div>

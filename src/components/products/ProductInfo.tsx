@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Category, User } from "@prisma/client";
 import { IconType } from "react-icons";
 import Avatar from "../common/Avatar";
 import { formatTime } from "@/helpers/dayjs";
@@ -6,15 +6,10 @@ import ProductCategory from "./ProductCategory";
 
 interface ProductInfoProps {
   user: User;
-  category:
-    | {
-        icon: IconType;
-        label: string;
-        description: string;
-      }
-    | undefined;
+  category: Category | undefined;
   createdAt: Date;
   description: string;
+  subCategory: string;
 }
 
 const ProductInfo = ({
@@ -22,6 +17,7 @@ const ProductInfo = ({
   category,
   createdAt,
   description,
+  subCategory,
 }: ProductInfoProps) => {
   return (
     <div className="flex flex-col gap-8">
@@ -37,9 +33,9 @@ const ProductInfo = ({
       <hr />
       {category && (
         <ProductCategory
-          icon={category.icon}
-          label={category?.label}
-          description={category?.description}
+          label={category?.name}
+          description={category?.description || ""}
+          subCategory={subCategory}
         />
       )}
       <hr />

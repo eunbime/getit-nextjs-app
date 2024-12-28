@@ -1,4 +1,5 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import UpdateName from "@/components/profile/UpdataName";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 
@@ -21,10 +22,7 @@ export default async function Profile() {
         </div>
 
         <div className="space-y-4">
-          <div className="grid gap-2">
-            <Label htmlFor="nickname">닉네임</Label>
-            <p>{currentUser?.name}</p>
-          </div>
+          <UpdateName currentUser={currentUser} />
 
           <div className="grid gap-2">
             <Label htmlFor="email">이메일</Label>
