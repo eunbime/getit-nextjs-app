@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import NavItem from "./NavItem";
 import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
+import { IoSearch } from "react-icons/io5";
 
 interface NavBarProps {
   currentUser?: User | null;
@@ -35,7 +36,10 @@ const NavBar = ({ currentUser }: NavBarProps) => {
         </div>
 
         {/* menu */}
-        <div className="text-2xl sm:hidden">
+        <div className="text-2xl sm:hidden flex items-center gap-2">
+          <Link href={"/search"}>
+            <IoSearch className="text-2xl" />
+          </Link>
           {menu === false ? (
             <button onClick={handleMenu}>+</button>
           ) : (
@@ -44,7 +48,10 @@ const NavBar = ({ currentUser }: NavBarProps) => {
         </div>
 
         {/* nav-item: screen*/}
-        <div className="hidden sm:block ">
+        <div className="hidden sm:block relative">
+          <Link href={"/search"} className="absolute top-3 -left-12">
+            <IoSearch className="text-2xl" />
+          </Link>
           <NavItem currentUser={currentUser} />
         </div>
       </div>

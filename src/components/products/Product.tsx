@@ -8,13 +8,15 @@ import EmptyState from "../EmptyState";
 import ProductCard from "./ProductCard";
 import FloatingButton from "../common/FloatingButton";
 import { Skeleton } from "../ui/skeleton";
+import { usePathname } from "next/navigation";
 
 interface ProductsProps {
-  searchParams: any;
+  searchParams?: any;
   currentUser: any;
 }
 
 const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
+  const pathname = usePathname();
   const { data: products, isLoading } = useQuery({
     queryKey: ["products", searchParams.category, searchParams.subcategory],
     queryFn: async () => {
@@ -35,7 +37,8 @@ const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
             key={index}
             className="flex flex-col space-y-3 justify-center items-center"
           >
-            {Object.keys(searchParams).length === 0 ? (
+            {Object.keys(searchParams).length === 0 ||
+            pathname === "/search" ? (
               <>
                 <Skeleton className="md:h-[250px] h-[300px] md:w-[250px] w-[350px] rounded-xl" />
                 <div className="space-y-2">
