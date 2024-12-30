@@ -15,10 +15,20 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
+          scope: "openid email profile",
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
         },
+      },
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          emailVerified: profile.email_verified,
+        };
       },
     }),
     GithubProvider({
@@ -26,10 +36,19 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
       authorization: {
         params: {
+          scope: "read:user user:email",
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
         },
+      },
+      profile(profile) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+        };
       },
     }),
     CredentialsProvider({
@@ -43,7 +62,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid Credentials");
+          throw new Error("이메일과 비밀번호를 입력해주세요.");
         }
 
         const user = await prisma.user.findUnique({
@@ -53,7 +72,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user?.hashedPassword) {
-          throw new Error("Invalid credentials");
+          throw new Error("존재하지 않는 사용자입니다.");
         }
 
         const isCorrectPassword = await bcrypt.compare(
@@ -62,7 +81,7 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (!isCorrectPassword) {
-          throw new Error("Invalid credentials");
+          throw new Error("비밀번호가 일치하지 않습니다.");
         }
 
         return user;
@@ -93,8 +112,21 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/error",
   },
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account, profile }) {
       // 인증 실패 시 false를 반환하면 에러 메시지와 함께 로그인 페이지에 머무름
+      console.log("Sign in callback", { user, account, profile });
+
+      if (account?.type === "oauth") {
+        if (!user.email) {
+          console.error("이메일 정보가 없습니다");
+          return false;
+        }
+        if (!user.name) {
+          console.error("사용자 이름 정보가 없습니다");
+          return false;
+        }
+      }
+
       if (!user) {
         return false;
       }

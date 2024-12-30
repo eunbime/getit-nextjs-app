@@ -1,17 +1,22 @@
-import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  FieldValues,
+  Path,
+  UseFormRegister,
+} from "react-hook-form";
 
-interface InputProps {
-  id: string;
+interface InputProps<T extends FieldValues> {
+  id: Path<T>;
   label: string;
   type?: string;
   disabled?: boolean;
   formatPrice?: boolean;
   required?: boolean;
-  register: UseFormRegister<FieldValues>;
-  errors: FieldErrors;
+  register: UseFormRegister<T>;
+  errors: FieldErrors<T>;
 }
 
-const Input = ({
+const Input = <T extends FieldValues>({
   id,
   label,
   type,
@@ -20,7 +25,7 @@ const Input = ({
   register,
   required,
   errors,
-}: InputProps) => {
+}: InputProps<T>) => {
   return (
     <div className="relative w-full">
       {formatPrice && (
@@ -34,8 +39,16 @@ const Input = ({
         type={type}
         className={`w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition disabled:opacity-70 disabled:cursor-not-allowed
           ${formatPrice ? "pl-9" : "pl-4"}
-          ${errors[id] ? "border-rose-500" : "border-neutral-300"}
-          ${errors[id] ? "focus:border-rose-500" : "focus:border-black"}`}
+          ${
+            errors[id as string as keyof T]
+              ? "border-rose-500"
+              : "border-neutral-300"
+          }
+          ${
+            errors[id as string as keyof T]
+              ? "focus:border-rose-500"
+              : "focus:border-black"
+          }`}
       />
 
       <label
@@ -46,7 +59,7 @@ const Input = ({
       peer-placeholder-shown:translate-y-0
       peer-focus:scale-75
       peer-focus:-translate-y-4
-      ${errors[id] ? "text-rose-500" : "text-zinc-400"}
+      ${errors[id as string as keyof T] ? "text-rose-500" : "text-zinc-400"}
       `}
       >
         {label}

@@ -5,6 +5,8 @@ const nextConfig = {
       "res.cloudinary.com",
       "res-console.cloudinary.com",
       "via.placeholder.com",
+      "avatars.githubusercontent.com",
+      "lh3.googleusercontent.com",
     ],
   },
   webpack: (config) => {

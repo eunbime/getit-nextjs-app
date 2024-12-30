@@ -4,19 +4,21 @@ import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  FieldValues,
-  SubmitHandler,
-  useForm,
-  UseFormRegister,
-} from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LoginSchema } from "@/schemas";
+import Social from "./social";
 
 const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams?.get("error") === "OAuthAccountNotLinked"
+      ? "이미 다른 계정에서 사용중인 이메일입니다."
+      : "";
+
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -96,8 +98,9 @@ const LoginForm = () => {
 
         <Button label="Login" />
         <p className="text-red-500 w-full text-center">
-          {errors.root?.message}
+          {errors.root?.message || urlError}
         </p>
+        <Social />
         <div className="text-center">
           <p className="text-gray-400">
             Not a member?{" "}
