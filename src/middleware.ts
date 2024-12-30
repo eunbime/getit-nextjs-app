@@ -14,6 +14,9 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/user") && !session) {
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
+  if (pathname.startsWith("/products/upload") && !session) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
+  }
 
   // 관리자 유저만 접근 가능
   if (pathname.startsWith("/admin") && session?.role !== "admin") {

@@ -31,7 +31,9 @@ export default async function Home({ searchParams }: HomeProps) {
           <Products searchParams={searchParams} currentUser={currentUser} />
         )}
       </div>
-      <FloatingButton href="/products/upload">+</FloatingButton>
+      <FloatingButton currentUser={currentUser} href="/products/upload">
+        +
+      </FloatingButton>
     </Container>
   );
 }

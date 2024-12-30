@@ -26,11 +26,16 @@ const UserImage = ({ currentUser }: UserImageProps) => {
         userId: currentUser?.id,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+    onSuccess: (response) => {
+      queryClient.setQueryData(["profile"], (oldData: any) => ({
+        ...oldData,
+        image: response.data.image,
+      }));
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (error) => {
       console.error("이미지 업로드 에러:", error);
+      setPreviewImage(null);
     },
   });
 

@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import Loader from "@/components/common/Loader";
 import { RotatingLines } from "react-loader-spinner";
+import EmptyState from "@/components/EmptyState";
 
 interface ChatClientProps {
   currentUser?: User | null;
@@ -77,6 +78,18 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
     );
   }
   if (error) return <p>Error!!!</p>;
+
+  // 사용자가 없을 때 표시할 컴포넌트
+  if (!users?.length) {
+    return (
+      <div className="w-full min-h-[calc(100vh-64px)] flex items-center justify-center ">
+        <EmptyState
+          title="현재 진행 중인 채팅이 없습니다."
+          subtitle="사용자와 채팅으로 소통해보세요."
+        />
+      </div>
+    );
+  }
 
   return (
     <main>
