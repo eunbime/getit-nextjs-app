@@ -2,6 +2,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { Label } from "@/components/ui/label";
 import UserImage from "@/components/profile/UserImage";
 import UserName from "@/components/profile/UserName";
+
 export default async function Profile() {
   const currentUser = await getCurrentUser();
 

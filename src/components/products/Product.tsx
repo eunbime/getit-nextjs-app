@@ -6,9 +6,7 @@ import { Product } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
 import EmptyState from "../EmptyState";
 import ProductCard from "./ProductCard";
-import FloatingButton from "../common/FloatingButton";
 import { Skeleton } from "../ui/skeleton";
-import { usePathname } from "next/navigation";
 
 interface ProductsProps {
   searchParams?: any;
@@ -16,7 +14,6 @@ interface ProductsProps {
 }
 
 const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
-  const pathname = usePathname();
   const { data: products, isLoading } = useQuery({
     queryKey: ["products", searchParams.category, searchParams.subcategory],
     queryFn: async () => {
@@ -27,8 +24,6 @@ const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
     },
   });
 
-  console.log(Object.keys(searchParams).length === 0);
-
   if (isLoading) {
     return (
       <div className="w-full grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
@@ -37,8 +32,7 @@ const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
             key={index}
             className="flex flex-col space-y-3 justify-center items-center"
           >
-            {Object.keys(searchParams).length === 0 ||
-            pathname === "/search" ? (
+            {Object.keys(searchParams).length === 0 ? (
               <>
                 <Skeleton className="md:h-[250px] h-[300px] md:w-[250px] w-[350px] rounded-xl" />
                 <div className="space-y-2">
@@ -81,8 +75,6 @@ const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
           />
         ))}
       </div>
-
-      <FloatingButton href="/products/upload">+</FloatingButton>
     </>
   );
 };

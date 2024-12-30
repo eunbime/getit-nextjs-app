@@ -36,7 +36,7 @@ const NavBar = ({ currentUser }: NavBarProps) => {
         </div>
 
         {/* menu */}
-        <div className="text-2xl sm:hidden flex items-center gap-2">
+        <div className="text-2xl sm:hidden flex items-center gap-4">
           <Link href={"/search"}>
             <IoSearch className="text-2xl" />
           </Link>

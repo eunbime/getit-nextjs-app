@@ -6,7 +6,15 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import {
+  FieldValues,
+  SubmitHandler,
+  useForm,
+  UseFormRegister,
+} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { LoginSchema } from "@/schemas";
 
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,8 +23,10 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm<FieldValues>({
+  } = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -34,7 +44,9 @@ const LoginForm = () => {
 
       if (result?.error) {
         console.log("Login error:", result.error);
-        // 여기에 에러 처리 로직 추가
+        setError("root", {
+          message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+        });
         return;
       }
       router.push("/");
@@ -42,6 +54,9 @@ const LoginForm = () => {
       router.refresh();
     } catch (error) {
       console.log("[Sign In]", error);
+      setError("root", {
+        message: "로그인 중 오류가 발생했습니다",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -67,6 +82,7 @@ const LoginForm = () => {
           errors={errors}
           required
         />
+        <p className="text-red-500">{errors.email?.message}</p>
         <Input
           id="password"
           label="Password"
@@ -76,8 +92,12 @@ const LoginForm = () => {
           errors={errors}
           required
         />
+        <p className="text-red-500">{errors.password?.message}</p>
 
         <Button label="Login" />
+        <p className="text-red-500 w-full text-center">
+          {errors.root?.message}
+        </p>
         <div className="text-center">
           <p className="text-gray-400">
             Not a member?{" "}

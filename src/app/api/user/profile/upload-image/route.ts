@@ -4,9 +4,9 @@ import prisma from "@/helpers/prismadb";
 export async function POST(req: NextRequest) {
   console.log("API 호출됨");
   try {
-    const { image, userId } = await req.json();
+    const data = await req.json();
+    const { image, userId } = data;
 
-    // 입력 유효성 검사 강화
     if (!image || typeof image !== "string") {
       return NextResponse.json(
         { error: "유효한 이미지가 필요합니다" },

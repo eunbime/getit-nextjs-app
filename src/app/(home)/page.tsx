@@ -6,6 +6,7 @@ import EmptyState from "@/components/EmptyState";
 import Categories from "@/components/categories/Categories";
 import Products from "@/components/products/Product";
 import Sidebar from "@/components/navigation/Sidebar";
+import FloatingButton from "@/components/common/FloatingButton";
 
 interface HomeProps {
   searchParams: ProductsParams;
@@ -30,6 +31,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <Products searchParams={searchParams} currentUser={currentUser} />
         )}
       </div>
+      <FloatingButton href="/products/upload">+</FloatingButton>
     </Container>
   );
 }

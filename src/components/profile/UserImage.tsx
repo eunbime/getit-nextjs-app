@@ -26,13 +26,10 @@ const UserImage = ({ currentUser }: UserImageProps) => {
       console.log("이미지 URL 생성됨:", imageUrl); // 디버깅 2
       setIsUploading(true);
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/profile/upload-image`,
-        {
-          image: imageUrl,
-          userId: currentUser?.id,
-        }
-      );
+      const response = await axios.post(`/api/user/profile/upload-image`, {
+        image: imageUrl,
+        userId: currentUser?.id,
+      });
 
       console.log("API 응답:", response.data); // 디버깅 4
     } catch (error) {
@@ -58,12 +55,14 @@ const UserImage = ({ currentUser }: UserImageProps) => {
           ref={fileInputRef}
           onChange={handleImageUpload}
           className="hidden"
+          disabled={isUploading}
         />
       </div>
       <Button
         size="sm"
         className="w-20"
         onClick={() => fileInputRef.current?.click()}
+        disabled={isUploading}
       >
         이미지 변경
       </Button>
