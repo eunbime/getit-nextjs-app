@@ -13,20 +13,25 @@ export const config = {
 };
 
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
-  // 서버에 연결되어 있지 않다면 socket.io 서버 초기화
-  if (!res.socket.server.io) {
-    const path = "/api/socket/io"; // 웹소켓 연결을 처리할 경로
-    const httpServer: NetServer = res.socket.server as any;
-    const io = new ServerIO(httpServer, {
-      path: path,
-      //@ts-ignore
-      addTrailingSlash: false, // 타입 오류 방지
-    });
+  try {
+    // 서버에 연결되어 있지 않다면 socket.io 서버 초기화
+    if (!res.socket.server.io) {
+      const path = "/api/socket/io"; // 웹소켓 연결을 처리할 경로
+      const httpServer: NetServer = res.socket.server as any;
+      const io = new ServerIO(httpServer, {
+        path: path,
+        //@ts-ignore
+        addTrailingSlash: false, // 타입 오류 방지
+      });
 
-    res.socket.server.io = io;
+      res.socket.server.io = io;
+    }
+
+    res.end(); // 응답 종료
+  } catch (error) {
+    console.error("Socket.io 서버 초기화 중 오류 발생", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
-  res.end(); // 응답 종료
 };
 
 export default ioHandler;

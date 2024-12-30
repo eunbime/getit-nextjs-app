@@ -28,8 +28,12 @@ const KakaoMap = ({
           const lng = position.coords.longitude;
 
           setCurrentLocation({ lat, lng });
+
           if (!latitude && !longitude) {
             setCenter({ lat, lng });
+
+            setCustomValue?.("latitude", lat);
+            setCustomValue?.("longitude", lng);
           }
         },
         (error) => {
@@ -39,7 +43,7 @@ const KakaoMap = ({
     } else {
       console.log("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
     }
-  }, [detailPage]);
+  }, [detailPage, latitude, longitude]);
 
   // latitude, longitude가 변경될 때 center 업데이트
   useEffect(() => {

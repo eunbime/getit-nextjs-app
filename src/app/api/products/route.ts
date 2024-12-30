@@ -104,7 +104,9 @@ export async function GET(request: Request) {
 
     if (category) {
       query.category = {
-        name: category,
+        name: {
+          equals: category,
+        },
       };
     }
 

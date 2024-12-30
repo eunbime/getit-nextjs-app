@@ -4,23 +4,22 @@ import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
+import { Category, Subcategory } from "@prisma/client";
 import CategoryInput from "@/components/categories/CategoryInput";
 import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import Input from "@/components/common/Input";
 import ImageUpload from "@/components/ImageUpload";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { Category, Subcategory } from "@prisma/client";
 import { CATEGORY_TITLE } from "@/components/categories/Categories";
 
 const ProductUploadPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const productId = searchParams?.get("productId");
-
   const [isLoading, setIsLoading] = useState(false);
 
   // 상품 데이터 불러오기 추가
@@ -67,8 +66,8 @@ const ProductUploadPage = () => {
       reset({
         title: productData.title,
         description: productData.description,
-        category: productData.category,
-        subCategory: productData.subCategory,
+        category: productData.category?.name || productData.category,
+        subCategory: productData.subcategory?.name || productData.subCategory,
         latitude: productData.latitude,
         longitude: productData.longitude,
         imageSrc: productData.imageSrc,
@@ -100,8 +99,6 @@ const ProductUploadPage = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
-
-    console.log(data);
 
     const productData = {
       ...data,
