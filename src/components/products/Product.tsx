@@ -1,81 +1,83 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Product } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
 import EmptyState from "../EmptyState";
 import ProductCard from "./ProductCard";
-import { Skeleton } from "../ui/skeleton";
-
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
+import LoadingCards from "./LoadingCards";
 interface ProductsProps {
   searchParams?: any;
   currentUser: any;
 }
 
 const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
-  const { data: products, isLoading } = useQuery({
+  const [ref, inView] = useInView();
+
+  const {
+    data: products,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["products", searchParams.category, searchParams.subcategory],
-    queryFn: async () => {
+    queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axios.get("/api/products", {
-        params: searchParams,
+        params: {
+          ...searchParams,
+          page: pageParam,
+          limit: 10,
+        },
       });
       return data;
     },
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage.hasMore) {
+        return lastPage.currentPage + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
   });
 
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
   if (isLoading) {
-    return (
-      <div className="w-full grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {[...Array(8)].map((_, index) => (
-          <div
-            key={index}
-            className="flex flex-col space-y-3 justify-center items-center"
-          >
-            {Object.keys(searchParams).length === 0 ? (
-              <>
-                <Skeleton className="md:h-[250px] h-[300px] md:w-[250px] w-[350px] rounded-xl" />
-                <div className="space-y-2">
-                  <Skeleton className="md:h-4 h-6 md:w-[200px] w-[300px]" />
-                  <Skeleton className="md:h-4 h-6 md:w-[150px] w-[250px]" />
-                  <Skeleton className="md:h-4 h-6 md:w-[250px] w-[350px]" />
-                </div>
-              </>
-            ) : (
-              <>
-                <Skeleton className="md:h-[200px] h-[300px] md:w-[200px] w-[350px] rounded-xl" />
-                <div className="space-y-2">
-                  <Skeleton className="md:h-4 h-6 md:w-[150px] w-[300px]" />
-                  <Skeleton className="md:h-4 h-6 md:w-[100px] w-[250px]" />
-                  <Skeleton className="md:h-4 h-6 md:w-[200px] w-[350px]" />
-                </div>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-    );
+    return <LoadingCards searchParams={searchParams} />;
   }
 
-  if (products?.data.length === 0) {
+  if (products?.pages[0]?.length === 0) {
     return <EmptyState showReset />;
   }
 
   return (
-    <>
+    <div className="flex flex-col w-full">
       <div
         className="w-full grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3
         lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
       >
-        {products?.data.map((product: Product) => (
-          <ProductCard
-            key={product.id}
-            data={product as TProductWithCategory}
-            currentUser={currentUser}
-          />
-        ))}
+        {products?.pages.flatMap((page) =>
+          page.data.map((product: Product) => (
+            <ProductCard
+              key={product.id}
+              data={product as TProductWithCategory}
+              currentUser={currentUser}
+            />
+          ))
+        )}
       </div>
-    </>
+      <div ref={ref} className="flex w-full justify-center p-4">
+        {isFetchingNextPage && <LoadingCards searchParams={searchParams} />}
+      </div>
+    </div>
   );
 };
 

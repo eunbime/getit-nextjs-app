@@ -96,6 +96,9 @@ export async function GET(request: Request) {
     const subcategoryId = searchParams.get("subcategory");
     const latitude = searchParams.get("latitude");
     const longitude = searchParams.get("longitude");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "12");
+    const skip = (page - 1) * limit;
 
     const query: any = {};
 
@@ -125,6 +128,11 @@ export async function GET(request: Request) {
       };
     }
 
+    // 전체 상품 수 조회
+    const totalCount = await prisma.product.count({
+      where: query,
+    });
+
     const products = await prisma.product.findMany({
       where: query,
       orderBy: {
@@ -134,9 +142,16 @@ export async function GET(request: Request) {
         category: true,
         subcategory: true,
       },
+      skip,
+      take: limit,
     });
 
-    return NextResponse.json({ data: products });
+    return NextResponse.json({
+      data: products,
+      currentPage: page,
+      hasMore: skip + products.length < totalCount,
+      totalCount,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: "Internal Server Error" },

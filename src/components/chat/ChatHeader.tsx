@@ -36,7 +36,6 @@ const ChatHeader = ({
               <p className="text-gray-600">{formatTime(lastMessageTime)}</p>
             )}
           </div>
-          <SocketIndicator />
         </div>
       </div>
     </div>

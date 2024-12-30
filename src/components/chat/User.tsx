@@ -18,8 +18,8 @@ const User = ({ user, currentUserId }: UserProps) => {
 
   return (
     <div
-      className="grid grid-cols-[40px_1fr_50px] grid-rows-[40px] gap-3 py-3 px-4
-  border-b-[1px] hover:cursor-pointer hover:bg-rose-400"
+      className="grid grid-cols-[40px_1fr_50px] grid-rows-[40px] gap-3 pt-2 pb-5 px-4
+  border-b-[1px] hover:cursor-pointer hover:bg-rose-400 "
     >
       <div>
         <Avatar src={user.image} />
@@ -27,7 +27,7 @@ const User = ({ user, currentUserId }: UserProps) => {
       <div>
         <h3 className="overflow-hidden text-base font-medium">{user.name}</h3>
         {latestMessage && (
-          <p className="overflow-hidden text-xs font-medium text-gray-600 break-words whitespace-pre-wrap">
+          <p className="overflow-hidden text-xs font-medium text-gray-600 break-words whitespace-pre-wrap line-clamp-2">
             {latestMessage.text}
           </p>
         )}

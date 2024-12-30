@@ -6,45 +6,53 @@ import { Button } from "../ui/button";
 import { useRef, useState } from "react";
 import uploadImage from "@/helpers/uploadImage";
 import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UserImageProps {
   currentUser: User | null;
 }
 
 const UserImage = ({ currentUser }: UserImageProps) => {
-  const [isUploading, setIsUploading] = useState(false);
+  const queryClient = useQueryClient();
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      console.log("파일 선택됨:", file); // 디버깅 1
-
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (file: File) => {
       const imageUrl = await uploadImage(file);
-      console.log("이미지 URL 생성됨:", imageUrl); // 디버깅 2
-      setIsUploading(true);
-
-      const response = await axios.post(`/api/user/profile/upload-image`, {
+      return axios.post(`/api/profile/upload-image`, {
         image: imageUrl,
         userId: currentUser?.id,
       });
-
-      console.log("API 응답:", response.data); // 디버깅 4
-    } catch (error) {
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    },
+    onError: (error) => {
       console.error("이미지 업로드 에러:", error);
-      // 에러 처리 로직 추가 필요
-    } finally {
-      setIsUploading(false);
-    }
+    },
+  });
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setPreviewImage(previewUrl);
+
+    mutate(file);
   };
 
   return (
     <div className="flex flex-col gap-4">
       <div className="w-48 h-48 bg-gray-200 rounded-lg overflow-hidden">
         <Image
-          src={currentUser?.image || "/placeholder.svg"}
+          src={
+            previewImage ||
+            currentUser?.image ||
+            "/images/profile_placeholder.png"
+          }
           alt="Profile"
           width={192}
           height={192}
@@ -55,14 +63,14 @@ const UserImage = ({ currentUser }: UserImageProps) => {
           ref={fileInputRef}
           onChange={handleImageUpload}
           className="hidden"
-          disabled={isUploading}
+          disabled={isPending}
         />
       </div>
       <Button
         size="sm"
         className="w-20"
         onClick={() => fileInputRef.current?.click()}
-        disabled={isUploading}
+        disabled={isPending}
       >
         이미지 변경
       </Button>

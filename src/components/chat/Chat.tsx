@@ -76,7 +76,7 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
         />
       </div>
 
-      <div className="flex flex-col gap-8 overflow-auto h-[calc(100vh_-_60px_-_70px_-_80px)]">
+      <div className="flex flex-col gap-8 overflow-auto h-[calc(100vh_-_60px_-_70px_-_80px)] px-5 pt-5">
         {data?.pages?.[0].items
           .slice()
           .reverse()

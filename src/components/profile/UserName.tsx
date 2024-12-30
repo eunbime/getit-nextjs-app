@@ -42,7 +42,7 @@ export default function UserName({ currentUser }: UserNameProps) {
   const { mutate: updateName } = useMutation({
     mutationFn: async (data: UpdateNameFormData) => {
       console.log(data.name);
-      const response = await axios.patch("/api/user/profile", {
+      const response = await axios.patch("/api/profile", {
         name: data.name,
       });
       console.log(response.data);

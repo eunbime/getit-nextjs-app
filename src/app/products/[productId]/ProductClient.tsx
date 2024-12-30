@@ -69,9 +69,9 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
         <div className="flex flex-col py-10 space-y-2 w-[90%] mx-auto">
           <Skeleton className="h-[30px] w-1/5 rounded-xl" />
           <Skeleton className="h-[400px] w-full rounded-xl" />
-          <div className="flex items-center justify-center w-full gap-2">
-            <Skeleton className="h-[300px] w-1/2" />
-            <Skeleton className="h-[300px] w-1/2" />
+          <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
+            <Skeleton className="h-[300px] w-full md:w-1/2" />
+            <Skeleton className="h-[300px] w-full md:w-1/2" />
           </div>
         </div>
       </div>
