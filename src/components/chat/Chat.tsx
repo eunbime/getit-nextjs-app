@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TConversation, TUserWithChat } from "@/types/index";
 
 import ChatHeader from "./ChatHeader";
@@ -8,6 +8,8 @@ import Message from "./Message";
 import Input from "./Input";
 import { useChatQuery } from "@/hooks/useChatQuery";
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { useInView } from "react-intersection-observer";
+import { Message as MessageType } from "@prisma/client";
 
 interface ChatProps {
   receiver: {
@@ -20,6 +22,9 @@ interface ChatProps {
 }
 
 const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
+  const { ref, inView } = useInView();
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const conversation: TConversation | undefined =
     currentUser?.conversations.find((conversation: TConversation) => {
       return conversation.users.find((user) => user.id === receiver.receiverId);
@@ -30,13 +35,14 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
   const updateKey = `chat:${conversation?.id}:messages:update`;
 
   // useChatQuery로 메시지 데이터 가져오기
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useChatQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatQuery(
+    {
       queryKey,
       apiUrl: "/api/socket/messages",
       paramKey: "conversationId",
       paramValue: conversation?.id || "",
-    });
+    }
+  );
 
   // 실시간 메시지 업데이트를 위한 소켓 설정
   useChatSocket({
@@ -45,8 +51,9 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
     queryKey,
   });
 
-  // 메시지 작성 시 자동 스크롤
   const messageEndRef = useRef<null | HTMLDivElement>(null);
+  const [lastMessageId, setLastMessageId] = useState<string | null>(null);
+
   const scrollToBottom = () => {
     messageEndRef?.current?.scrollIntoView({
       behavior: "instant",
@@ -54,8 +61,39 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
   };
 
   useEffect(() => {
-    scrollToBottom();
-  });
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container && isFetchingNextPage) {
+      const scrollHeight = container.scrollHeight;
+
+      const handleScroll = () => {
+        const newScrollHeight = container.scrollHeight;
+        const heightDifference = newScrollHeight - scrollHeight;
+        container.scrollTop = heightDifference;
+      };
+
+      setTimeout(handleScroll, 0);
+    }
+  }, [isFetchingNextPage, data]);
+
+  // 새 메시지가 추가될 때만 스크롤
+  useEffect(() => {
+    const lastPage = data?.pages[0];
+    const firstMessage = lastPage?.items[0];
+
+    if (firstMessage && (!lastMessageId || firstMessage.id !== lastMessageId)) {
+      setLastMessageId(firstMessage.id);
+      // 이전 메시지 로드가 아닌 새 메시지 추가일 때만 스크롤
+      if (!isFetchingNextPage) {
+        scrollToBottom();
+      }
+    }
+  }, [data?.pages[0]?.items[0], isFetchingNextPage]);
 
   if (!receiver.receiverName || !currentUser) {
     return <div className="w-full h-full"></div>;
@@ -76,21 +114,39 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
         />
       </div>
 
-      <div className="flex flex-col gap-8 overflow-auto h-[calc(100vh_-_60px_-_70px_-_80px)] px-5 pt-5">
-        {data?.pages?.[0].items
+      <div
+        ref={containerRef}
+        className="flex flex-col gap-8 overflow-auto h-[calc(100vh_-_60px_-_70px_-_80px)] px-5 pt-5"
+      >
+        {hasNextPage && (
+          <div ref={ref} className="flex justify-center py-2 mb-4">
+            {isFetchingNextPage && (
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900" />
+            )}
+          </div>
+        )}
+
+        {data?.pages
           .slice()
           .reverse()
-          .map((item: any) => (
-            <Message
-              key={item.id}
-              isSender={item.senderId === currentUser.id}
-              messageText={item.text}
-              messageImage={item.image}
-              receiverName={receiver.receiverName}
-              receiverImage={receiver.receiverImage}
-              senderImage={currentUser?.image}
-              time={item.createdAt}
-            />
+          .map((page, i) => (
+            <div key={i} className="flex flex-col gap-4">
+              {page.items
+                .slice()
+                .reverse()
+                .map((item: MessageType) => (
+                  <Message
+                    key={item.id}
+                    isSender={item.senderId === currentUser.id}
+                    messageText={item.text}
+                    messageImage={item.image}
+                    receiverName={receiver.receiverName}
+                    receiverImage={receiver.receiverImage}
+                    senderImage={currentUser?.image}
+                    time={item.createdAt}
+                  />
+                ))}
+            </div>
           ))}
 
         <div ref={messageEndRef} />

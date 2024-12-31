@@ -30,12 +30,13 @@ export const useChatQuery = ({
     );
 
     const res = await fetch(url);
+    const data = await res.json();
 
     if (!res.ok) {
       throw new Error("Failed to fetch messages");
     }
 
-    return await res.json();
+    return data;
   };
 
   const {

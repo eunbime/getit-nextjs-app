@@ -24,8 +24,9 @@ const Message = ({
 }: MessageProps) => {
   return (
     <div
-      className={`grid w-full grid-cols-[40px_1fr] gap-3 mx-auto`}
-      style={{ direction: `${isSender ? "rtl" : "ltr"}` }}
+      className={`flex gap-3 w-full ${
+        isSender ? "flex-row-reverse" : "flex-row"
+      }`}
     >
       <div className="mt-2">
         <Avatar src={senderImage && isSender ? senderImage : receiverImage} />
