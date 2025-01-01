@@ -11,6 +11,7 @@ import { TUserWithChat } from "@/types/index";
 import Chat from "@/components/chat/Chat";
 import Contacts from "@/components/chat/Contacts";
 import EmptyState from "@/components/EmptyState";
+import dynamic from "next/dynamic";
 
 interface ChatClientProps {
   currentUser?: User | null;
@@ -61,6 +62,12 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
     (user: TUserWithChat) => user.email === currentUser?.email
   );
 
+  // 채팅 컴포넌트 동적 임포트
+  const ChatComponent = dynamic(() => import("@/components/chat/Chat"), {
+    loading: () => <div>Loading...</div>,
+    ssr: false, // WebSocket은 클라이언트에서만 필요
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen -mt-12 w-full flex flex-col gap-2 items-center justify-center">
@@ -102,7 +109,7 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
           />
         </section>
         <section className={`md:flex ${!layout && "hidden"}`}>
-          <Chat
+          <ChatComponent
             currentUser={currentUserWithMessage}
             receiver={receiver}
             setLayout={setLayout}

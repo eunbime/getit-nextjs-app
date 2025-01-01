@@ -9,6 +9,7 @@ import { Product } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 import LoadingCards from "@/components/products/LoadingCards";
+import EmptyState from "../EmptyState";
 
 interface ProductsProps {
   searchParams?: any;
@@ -53,6 +54,12 @@ const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
 
   if (isLoading) {
     return <LoadingCards searchParams={searchParams} />;
+  }
+
+  console.log(products?.pages[0].data.length === 0);
+
+  if (products?.pages[0].data.length === 0) {
+    return <EmptyState showCategoryReset params={searchParams.category} />;
   }
 
   return (

@@ -21,8 +21,9 @@ const nextConfig = {
   experimental: {
     serverActions: true,
     appDir: true,
+    optimizeCss: true,
+    scrollRestoration: true,
   },
-  // 동적 렌더링 경고 무시
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -37,6 +38,29 @@ const nextConfig = {
       {
         source: "/api/socket/:path*",
         destination: `${socketUrl}/:path*`,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value:
+              "interest-cohort=(), browsing-topics=(), join-ad-interest-group=(), run-ad-auction=()",
+          },
+        ],
+      },
+      {
+        source: "/chat",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "private, must-revalidate",
+          },
+        ],
       },
     ];
   },

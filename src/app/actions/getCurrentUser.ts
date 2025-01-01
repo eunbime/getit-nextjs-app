@@ -3,7 +3,9 @@ import prisma from "@/helpers/prismadb";
 import { authOptions } from "@/lib/auth";
 
 export async function getSession() {
-  return await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
+
+  return session;
 }
 
 export default async function getCurrentUser() {

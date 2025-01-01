@@ -27,6 +27,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
             className="object-cover w-full h-full transition group-hover:scale-110"
             src={data.imageSrc}
             alt="Listing"
+            priority
+            loading="eager"
           />
           <div className="absolute top-3 right-3">
             <HeartButton productId={data.id} currentUser={currentUser} />
