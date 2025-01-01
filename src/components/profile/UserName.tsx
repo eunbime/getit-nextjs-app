@@ -1,21 +1,22 @@
 "use client";
 
-import { User } from "@prisma/client";
+import { useState } from "react";
 import { Label } from "@radix-ui/react-label";
-import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+
+import { User } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const updateNameSchema = z.object({
   name: z
     .string()
     .min(1, "닉네임을 입력해주세요")
-    .max(25, "닉네임은 15자 이내로 입력해주세요"),
+    .max(15, "닉네임은 15자 이내로 입력해주세요"),
 });
 
 type UpdateNameFormData = z.infer<typeof updateNameSchema>;
@@ -84,7 +85,9 @@ export default function UserName({ currentUser }: UserNameProps) {
           ) : (
             <p>{currentUser?.name}</p>
           )}
-          <Button onClick={handleEditToggle}>수정</Button>
+          <Button variant="primary" size="sm" onClick={handleEditToggle}>
+            수정
+          </Button>
         </div>
         {errors.name && (
           <p className="text-sm text-red-500">{errors.name.message}</p>

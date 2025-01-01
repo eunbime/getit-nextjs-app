@@ -1,6 +1,7 @@
-import useFavorite from "@/hooks/useFavorite";
-import { User } from "@prisma/client";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+
+import { User } from "@prisma/client";
+import useFavorite from "@/hooks/useFavorite";
 
 interface HeartButtonProps {
   productId: string;
@@ -16,8 +17,8 @@ const HeartButton = ({ productId, currentUser }: HeartButtonProps) => {
   return (
     <div
       onClick={(e) => {
-        e.stopPropagation(); // 이벤트 버블링 중지
-        e.preventDefault(); // 기본 동작 중지
+        e.stopPropagation();
+        e.preventDefault();
         toggleFavorite();
       }}
       className="relative transition cursor-pointer hover-opacity-80"

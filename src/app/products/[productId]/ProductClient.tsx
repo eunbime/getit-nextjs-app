@@ -1,15 +1,16 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import Container from "@/components/common/Container";
-import ProductHead from "@/components/products/ProductHead";
-import ProductInfo from "@/components/products/ProductInfo";
-import { Category, Subcategory, User } from "@prisma/client";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
+
+import { Category, Subcategory, User } from "@prisma/client";
+import Button from "@/components/common/Button";
+import Container from "@/components/common/Container";
+import ProductHead from "@/components/products/ProductHead";
+import ProductInfo from "@/components/products/ProductInfo";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProductClientProps {
@@ -56,11 +57,11 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
 
   const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
     ssr: false,
-    loading: () => <p>Loading...</p>,
+    loading: () => <p>카카오맵 로딩중...</p>,
   });
 
   if (error) {
-    return <div>Error loading product</div>;
+    return <div>상품 로딩 중 오류가 발생했습니다.</div>;
   }
 
   if (isLoading || categoriesLoading || subCategoriesLoading) {
@@ -91,12 +92,11 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
       await axios.post("/api/chat", {
         senderId: currentUser?.id,
         receiverId: product?.user?.id,
-        text: `안녕하세요. ${product.title} 상품에 대해 문의드립니다`,
+        text: `안녕하세요. ${product.title} 상품에 대해 문의드립니다.`,
       });
 
       const userImage = product?.user?.image ? product?.user?.image : "";
 
-      // 채팅 페이지로 이동
       router.push(
         `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${userImage}&open=true`
       );
@@ -142,7 +142,6 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
               subCategory={subCategory?.name as string}
             />
 
-            {/* Kakao Map */}
             <div>
               <KakaoMap
                 detailPage

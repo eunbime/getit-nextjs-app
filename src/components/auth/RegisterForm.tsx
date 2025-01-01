@@ -1,15 +1,16 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { RegisterSchema } from "@/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { RegisterSchema } from "@/schemas";
+import Button from "@/components/common/Button";
+import Input from "@/components/common/Input";
 
 const RegisterForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +47,7 @@ const RegisterForm = () => {
     } catch (error) {
       console.log("submit", error);
       setError("root", {
-        message: "이미 가입된 이메일입니다.",
+        message: "회원가입 중 오류가 발생했습니다.",
       });
     } finally {
       setIsLoading(false);
@@ -59,7 +60,7 @@ const RegisterForm = () => {
         className="flex flex-col justify-center gap-4 min-w-[350px]"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-2xl">Register</h1>
+        <h1 className="text-2xl">회원가입</h1>
         <Input
           id="email"
           label="Email"
@@ -88,15 +89,15 @@ const RegisterForm = () => {
           required
         />
         <p className="text-red-500">{errors.password?.message}</p>
-        <Button label="Register" />
+        <Button label="회원가입" />
         <p className="text-red-500 w-full text-center">
           {errors.root?.message}
         </p>
         <div className="text-center">
           <p className="text-gray-400">
-            Already a member?{" "}
+            이미 계정이 있으신가요?{" "}
             <Link href={"/auth/login"} className="text-black hover:underline">
-              Login
+              로그인
             </Link>
           </p>
         </div>

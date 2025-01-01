@@ -2,15 +2,14 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { User } from "@prisma/client";
-import Chat from "@/components/chat/Chat";
-import { TUserWithChat } from "@/types/index";
-
-import Contacts from "@/components/chat/Contacts";
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import Loader from "@/components/common/Loader";
+import { useQuery } from "@tanstack/react-query";
 import { RotatingLines } from "react-loader-spinner";
+
+import { User } from "@prisma/client";
+import { TUserWithChat } from "@/types/index";
+import Chat from "@/components/chat/Chat";
+import Contacts from "@/components/chat/Contacts";
 import EmptyState from "@/components/EmptyState";
 
 interface ChatClientProps {
@@ -27,7 +26,6 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
   const [layout, setLayout] = useState(false);
 
   useEffect(() => {
-    // URL 파라미터에서 채팅 정보 가져오기
     const id = searchParams?.get("id");
     const name = searchParams?.get("name");
     const open = searchParams?.get("open");
@@ -77,7 +75,8 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
       </div>
     );
   }
-  if (error) return <p>Error!!!</p>;
+
+  if (error) return <p>채팅 불러오기 중 오류가 발생했습니다.</p>;
 
   // 사용자가 없을 때 표시할 컴포넌트
   if (!users?.length) {

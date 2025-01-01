@@ -12,6 +12,10 @@ export async function GET() {
 
     const products = await prisma.product.findMany({
       where: { userId: currentUser.id },
+      include: {
+        user: true,
+        category: true,
+      },
     });
 
     return NextResponse.json(products);

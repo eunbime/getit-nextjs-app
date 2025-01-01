@@ -1,7 +1,8 @@
-import { User } from "@prisma/client";
-import Heading from "../common/Heading";
 import Image from "next/image";
-import HeartButton from "../common/HeartButton";
+
+import { User } from "@prisma/client";
+import Heading from "@/components/common/Heading";
+import HeartButton from "@/components/common/HeartButton";
 
 interface ProductHeadProps {
   title: string;

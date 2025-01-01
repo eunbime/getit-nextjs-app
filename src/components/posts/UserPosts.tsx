@@ -1,12 +1,13 @@
 "use client";
 
-import { Product, User } from "@prisma/client";
-import ProductCard from "../products/ProductCard";
-import { TProductWithCategory } from "@/types";
-import { Skeleton } from "../ui/skeleton";
-import EmptyState from "../EmptyState";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+
+import { Product, User } from "@prisma/client";
+import { TProductWithCategory } from "@/types";
+import ProductCard from "@/components/products/ProductCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import EmptyState from "@/components/EmptyState";
 
 interface UserPostsProps {
   currentUser: User | null;

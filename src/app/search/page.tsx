@@ -1,5 +1,5 @@
-import SearchForm from "@/components/search/SearchForm";
 import getCurrentUser from "../actions/getCurrentUser";
+import SearchForm from "@/components/search/SearchForm";
 
 export default async function Search() {
   const currentUser = await getCurrentUser();

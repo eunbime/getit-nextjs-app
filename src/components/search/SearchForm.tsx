@@ -6,8 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 
 import { Product, User } from "@prisma/client";
-import ProductCard from "../products/ProductCard";
-import EmptyState from "../EmptyState";
+import ProductCard from "@/components/products/ProductCard";
+import EmptyState from "@/components/EmptyState";
 
 interface SearchFormProps {
   currentUser: User | null;
@@ -60,13 +60,11 @@ const SearchForm = ({ currentUser }: SearchFormProps) => {
     debouncedSearch(value);
   };
 
-  // 최근 검색어 클릭 핸들러
   const handleRecentSearchClick = (search: string) => {
     setKeyword(search);
     debouncedSearch(search);
   };
 
-  // submit 핸들러 추가
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!keyword.trim()) return;

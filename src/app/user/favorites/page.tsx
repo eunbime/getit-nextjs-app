@@ -2,6 +2,8 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import EmptyState from "@/components/EmptyState";
 import FavoritesList from "@/components/favorites/FavoriteList";
 
+export const dynamic = "force-dynamic";
+
 const FavoritesPage = async () => {
   const currentUser = await getCurrentUser();
 

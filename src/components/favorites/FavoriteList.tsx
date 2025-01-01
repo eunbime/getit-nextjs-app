@@ -2,10 +2,11 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+
+import { User } from "@prisma/client";
 import EmptyState from "@/components/EmptyState";
 import ProductCard from "@/components/products/ProductCard";
-import { User } from "@prisma/client";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface FavoritesListProps {
   currentUser?: User | null;

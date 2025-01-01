@@ -1,6 +1,8 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import UserPosts from "@/components/posts/UserPosts";
 
+export const dynamic = "force-dynamic";
+
 export default async function UserPostsPage() {
   const currentUser = await getCurrentUser();
 

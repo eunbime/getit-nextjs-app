@@ -1,12 +1,12 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import axios from "axios";
-import { Category } from "@prisma/client";
-
-import CategoryBox from "./CategoryBox";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "../ui/skeleton";
+
+import { Category } from "@prisma/client";
+import CategoryBox from "@/components/categories/CategoryBox";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const CATEGORY_TITLE: { [key: string]: string } = {
   digital: "디지털 기기",
@@ -31,16 +31,14 @@ const Categories = () => {
     },
   });
 
+  const categoryLength = categories?.length ?? 7;
+
   if (isLoading) {
     return (
       <div className="flex flex-row flex-wrap items-center justify-around overflow-x-auto">
-        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
-        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
-        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
-        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
-        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
-        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
-        <Skeleton className="h-10 md:w-24 w-20 mb-2" />
+        {Array.from({ length: categoryLength }).map((_, index) => (
+          <Skeleton className="h-10 md:w-24 w-20 mb-2" key={index} />
+        ))}
       </div>
     );
   }

@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { TConversation, TUserWithChat } from "@/types/index";
+import { useInView } from "react-intersection-observer";
 
+import { Message as MessageType } from "@prisma/client";
+import { TConversation, TUserWithChat } from "@/types/index";
 import ChatHeader from "./ChatHeader";
 import Message from "./Message";
 import Input from "./Input";
 import { useChatQuery } from "@/hooks/useChatQuery";
 import { useChatSocket } from "@/hooks/useChatSocket";
-import { useInView } from "react-intersection-observer";
-import { Message as MessageType } from "@prisma/client";
 
 interface ChatProps {
   receiver: {
@@ -34,7 +34,6 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
   const addKey = `chat:${conversation?.id}:messages`;
   const updateKey = `chat:${conversation?.id}:messages:update`;
 
-  // useChatQuery로 메시지 데이터 가져오기
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatQuery(
     {
       queryKey,

@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { User } from "@prisma/client";
-import { Button } from "../ui/button";
 import { useRef, useState } from "react";
-import uploadImage from "@/helpers/uploadImage";
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { User } from "@prisma/client";
+import uploadImage from "@/helpers/uploadImage";
+import { Button } from "@/components/ui/button";
 
 interface UserImageProps {
   currentUser: User | null;
@@ -76,6 +77,7 @@ const UserImage = ({ currentUser }: UserImageProps) => {
         className="w-20"
         onClick={() => fileInputRef.current?.click()}
         disabled={isPending}
+        variant="primary"
       >
         이미지 변경
       </Button>

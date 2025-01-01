@@ -1,13 +1,23 @@
-import { User } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
 
+import { User } from "@prisma/client";
+
 interface UseFavoriteProps {
   productId: string;
   currentUser?: User | null;
+}
+
+interface FavoriteProduct {
+  id: string;
+  favorited: boolean;
+}
+
+interface ProductsResponse {
+  data: FavoriteProduct[];
 }
 
 const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
@@ -22,7 +32,7 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
   const { mutate: toggleFavorite } = useMutation({
     mutationFn: async () => {
       if (!currentUser) {
-        toast.warn("먼저 로그인을 해주세요");
+        toast.warn("로그인 후 이용해주세요");
         return;
       }
 
@@ -48,31 +58,46 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
         : [...(currentUser?.favoriteIds || []), productId];
 
       // 낙관적으로 캐시 업데이트
-      queryClient.setQueryData(["favorites"], (old: any) => {
-        if (!old) return [];
-        return hasFavorited
-          ? old.filter((product: any) => product.id !== productId)
-          : [...old, { id: productId }];
-      });
+      queryClient.setQueryData(
+        ["favorites"],
+        (old: ProductsResponse[] | undefined) => {
+          if (!old) return [];
+          return hasFavorited
+            ? old.filter((product: any) => product.id !== productId)
+            : [...old, { id: productId }];
+        }
+      );
 
       // products 쿼리 캐시도 업데이트
-      queryClient.setQueryData(["products"], (old: any) => {
-        if (!old) return { data: [] };
+      queryClient.setQueryData(
+        ["products"],
+        (old: ProductsResponse | undefined) => {
+          if (!old) return { data: [] };
+          return {
+            ...old,
+            data: old.data.map((product: FavoriteProduct) => {
+              if (product.id === productId) {
+                return {
+                  ...product,
+                  favorited: !hasFavorited,
+                };
+              }
+              return product;
+            }),
+          };
+        }
+      );
+
+      // currentUser 상태도 업데이트
+      queryClient.setQueryData(["currentUser"], (old: User | undefined) => {
+        if (!old) return;
         return {
           ...old,
-          data: old.data.map((product: any) => {
-            if (product.id === productId) {
-              return {
-                ...product,
-                favorited: !hasFavorited,
-              };
-            }
-            return product;
-          }),
+          favoriteIds: newFavoriteIds,
         };
       });
 
-      // 이전 상태 반환 (롤백을 위해)
+      // 이전 상태 반환
       return { previousFavorites, previousProducts };
     },
     onSuccess: () => {
@@ -88,10 +113,10 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
       router.refresh();
     },
     onError: (error, variables, context) => {
-      console.log(error);
+      console.log("찜 목록 오류", error);
       queryClient.setQueryData(["favorites"], context!.previousFavorites);
       queryClient.setQueryData(["products"], context!.previousProducts);
-      toast.error("오류가 발생했습니다.");
+      toast.error("일시적인 오류가 발생했습니다.");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["favorites"] });

@@ -1,14 +1,15 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+
 import { Product } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
-import EmptyState from "../EmptyState";
-import ProductCard from "./ProductCard";
-import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
-import LoadingCards from "./LoadingCards";
+import ProductCard from "@/components/products/ProductCard";
+import LoadingCards from "@/components/products/LoadingCards";
+
 interface ProductsProps {
   searchParams?: any;
   currentUser: any;
@@ -52,10 +53,6 @@ const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
 
   if (isLoading) {
     return <LoadingCards searchParams={searchParams} />;
-  }
-
-  if (products?.pages[0]?.length === 0) {
-    return <EmptyState showReset />;
   }
 
   return (

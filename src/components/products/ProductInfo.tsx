@@ -1,8 +1,7 @@
 import { Category, User } from "@prisma/client";
-import { IconType } from "react-icons";
-import Avatar from "../common/Avatar";
 import { formatTime } from "@/helpers/dayjs";
 import ProductCategory from "./ProductCategory";
+import Avatar from "@/components/common/Avatar";
 
 interface ProductInfoProps {
   user: User;

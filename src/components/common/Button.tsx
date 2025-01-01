@@ -26,8 +26,8 @@ const Button = ({
         relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full
         ${
           outline
-            ? "bg-white border-black text-black"
-            : "bg-rose-500 border-rose-500 text-white"
+            ? "bg-white border-[#0d0c8f] text-[#0d0c8f]"
+            : "bg-[#0d0c8f] border-[#0d0c8f] text-white"
         }
         ${
           small

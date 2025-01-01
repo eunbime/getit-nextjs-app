@@ -29,7 +29,7 @@ const SideBarSubCategories = ({
       {subCategories?.map((subCategory: Subcategory) => (
         <li
           key={subCategory.id}
-          className="bg-gray-200 md:bg-transparent py-1 px-3 md:py-0 md:px-0 rounded-full md:rounded-none md:text-sm min-w-fit"
+          className="bg-gray-200 md:bg-transparent py-1 px-3 md:py-0 md:px-0 rounded-full md:rounded-none md:text-sm min-w-fit hover:text-gray-500 transition-all"
         >
           <Link href={`/?category=${category}&subcategory=${subCategory.id}`}>
             {subCategory.name}

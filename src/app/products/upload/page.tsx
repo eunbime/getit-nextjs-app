@@ -22,7 +22,6 @@ const ProductUploadPage = () => {
   const productId = searchParams?.get("productId");
   const [isLoading, setIsLoading] = useState(false);
 
-  // 상품 데이터 불러오기 추가
   const { data: productData } = useQuery({
     queryKey: ["product", productId],
     queryFn: async () => {

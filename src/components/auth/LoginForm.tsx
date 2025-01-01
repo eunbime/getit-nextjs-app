@@ -1,16 +1,17 @@
 "use client";
 
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { signIn } from "next-auth/react";
+import { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { LoginSchema } from "@/schemas";
 import Social from "./social";
+import Button from "@/components/common/Button";
+import Input from "@/components/common/Input";
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -64,18 +65,13 @@ const LoginForm = () => {
     }
   };
 
-  useEffect(() => {
-    // 페이지가 클라이언트에서만 렌더링되도록 로그 추가 (디버깅용)
-    console.log("LoginPage rendered on client side");
-  }, []);
-
   return (
     <section className="grid h-[calc(100vh_-_56px)] place-items-center">
       <form
         className="flex flex-col justify-center gap-4 min-w-[350px]"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-2xl">Login</h1>
+        <h1 className="text-2xl">로그인</h1>
         <Input
           id="email"
           label="Email"
@@ -96,19 +92,19 @@ const LoginForm = () => {
         />
         <p className="text-red-500">{errors.password?.message}</p>
 
-        <Button label="Login" />
+        <Button label="로그인" />
         <p className="text-red-500 w-full text-center">
           {errors.root?.message || urlError}
         </p>
         <Social />
         <div className="text-center">
           <p className="text-gray-400">
-            Not a member?{" "}
+            아직 계정이 없으신가요?{" "}
             <Link
               href={"/auth/register"}
               className="text-black hover:underline"
             >
-              Register
+              회원가입
             </Link>
           </p>
         </div>

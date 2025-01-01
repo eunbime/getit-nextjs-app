@@ -1,19 +1,12 @@
 import Link from "next/link";
-import { IconType } from "react-icons";
 
 interface CategoryBoxProps {
-  icon?: IconType | null;
   label: string;
   path: string;
   selected?: boolean;
 }
 
-const CategoryBox = ({
-  icon: Icon,
-  label,
-  path,
-  selected,
-}: CategoryBoxProps) => {
+const CategoryBox = ({ label, path, selected }: CategoryBoxProps) => {
   return (
     <Link
       href={`/?category=${path}`}
@@ -26,7 +19,6 @@ const CategoryBox = ({
         }
         `}
     >
-      {/* <Icon size={26} /> */}
       <div className="text-sm font-medium">{label}</div>
     </Link>
   );

@@ -17,7 +17,7 @@ const CategoryInput = ({
       className={`
         rounded-xl border-2 p-4 flex flex-col gap-3
         hover:border-zinc-600 transition cursor-pointer
-        ${selected ? "border-rose-400" : "border-neutral-200"}`}
+        ${selected ? "border-[#0978f6]" : "border-neutral-200"}`}
     >
       <div className="font-semibold">{label}</div>
     </div>

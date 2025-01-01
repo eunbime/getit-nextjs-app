@@ -37,7 +37,6 @@ export async function DELETE(
   request: Request,
   { params }: { params: { productId: string } }
 ) {
-  // 삭제 로직 추가
   try {
     const { productId } = params;
     await prisma.product.delete({

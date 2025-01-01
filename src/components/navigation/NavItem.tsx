@@ -15,22 +15,22 @@ const NavItem = ({ mobile, currentUser }: NavItemProps) => {
       }`}
     >
       <li className="py-2 text-center border-b-4 cursor-pointer">
-        <Link href={"/user/favorites"}>Like</Link>
+        <Link href={"/user/favorites"}>관심</Link>
       </li>
       <li className="py-2 text-center border-b-4 cursor-pointer">
-        <Link href={"/chat"}>Chat</Link>
+        <Link href={"/chat"}>채팅</Link>
       </li>
       <li className="py-2 text-center border-b-4 cursor-pointer">
-        <Link href={"/user/profile"}>My Page</Link>
+        <Link href={"/user/profile"}>마이페이지</Link>
       </li>
 
       {currentUser ? (
         <li className="py-2 text-center border-b-4 cursor-pointer">
-          <button onClick={() => signOut()}>Sign out</button>
+          <button onClick={() => signOut()}>로그아웃</button>
         </li>
       ) : (
         <li className="py-2 text-center border-b-4 cursor-pointer">
-          <button onClick={() => signIn()}>Sign in</button>
+          <button onClick={() => signIn()}>로그인</button>
         </li>
       )}
     </ul>
