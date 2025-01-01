@@ -20,9 +20,6 @@ const nextConfig = {
   },
   experimental: {
     serverActions: true,
-    appDir: true,
-    optimizeCss: true,
-    scrollRestoration: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
