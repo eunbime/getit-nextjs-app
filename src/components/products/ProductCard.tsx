@@ -23,12 +23,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
         <div className="relative w-full overflow-hidden aspect-square rounded-xl">
           <Image
             fill
-            sizes="auto"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover w-full h-full transition group-hover:scale-110"
             src={data.imageSrc}
-            alt="Listing"
+            alt="Product Image"
             priority
-            loading="eager"
+            quality={80}
           />
           <div className="absolute top-3 right-3">
             <HeartButton productId={data.id} currentUser={currentUser} />

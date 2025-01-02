@@ -22,6 +22,7 @@ const Button = ({
       type="submit"
       disabled={disabled}
       onClick={onClick}
+      aria-label={label}
       className={`
         relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full
         ${

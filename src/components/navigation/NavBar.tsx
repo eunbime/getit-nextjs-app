@@ -37,8 +37,8 @@ const NavBar = ({ currentUser }: NavBarProps) => {
 
         {/* menu */}
         <div className="text-2xl sm:hidden flex items-center gap-4">
-          <Link href={"/search"}>
-            <IoSearch className="text-2xl" />
+          <Link href={"/search"} aria-label="search">
+            <IoSearch className="text-2xl" aria-label="search" />
           </Link>
           {menu === false ? (
             <button onClick={handleMenu}>+</button>
@@ -49,8 +49,12 @@ const NavBar = ({ currentUser }: NavBarProps) => {
 
         {/* nav-item: screen*/}
         <div className="hidden sm:block relative">
-          <Link href={"/search"} className="absolute top-3 -left-12">
-            <IoSearch className="text-2xl" />
+          <Link
+            href={"/search"}
+            className="absolute top-3 -left-12"
+            aria-label="search"
+          >
+            <IoSearch className="text-2xl" aria-label="search" />
           </Link>
           <NavItem currentUser={currentUser} />
         </div>

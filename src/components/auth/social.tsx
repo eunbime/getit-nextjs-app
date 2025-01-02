@@ -8,7 +8,6 @@ import { FaGithub } from "react-icons/fa";
 const Social = () => {
   const onClick = (provider: "google" | "github") => {
     try {
-      console.log("111");
       signIn(provider, {
         callbackUrl: "/",
         redirect: true,
@@ -26,6 +25,7 @@ const Social = () => {
         variant="outline"
         onClick={() => onClick("google")}
         type="button"
+        label="google로 로그인"
       >
         <FcGoogle className="h-5 w-5" />
       </Button>
@@ -35,6 +35,7 @@ const Social = () => {
         variant="outline"
         onClick={() => onClick("github")}
         type="button"
+        label="github로 로그인"
       >
         <FaGithub className="h-5 w-5" />
       </Button>

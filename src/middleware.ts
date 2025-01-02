@@ -28,7 +28,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // bfcache를 위한 Cache-Control 헤더 설정
+  response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+
+  return response;
 }
 
 export const config = {

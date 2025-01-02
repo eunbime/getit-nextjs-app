@@ -22,6 +22,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Super",
   description: "Super 홈페이지",
+  other: {
+    "Cache-Control": "public, max-age=0, must-revalidate",
+  },
 };
 
 export default async function RootLayout({
@@ -38,16 +41,30 @@ export default async function RootLayout({
           httpEquiv="Permissions-Policy"
           content="interest-cohort=(), browsing-topics=(), join-ad-interest-group=(), run-ad-auction=()"
         />
-        <meta name="back-forward-cache" content="enabled" />
+
         <meta charSet="utf-8" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+          content="width=device-width, initial-scale=1, maximum-scale=5"
         />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         {/* iOS 관련 메타 태그 */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+        <meta name="back-forward-cache" content="enabled" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.addEventListener('pageshow', function(event) {
+              if (event.persisted) {
+                // bfcache에서 복원된 경우
+                window.location.reload();
+              }
+            });
+          `,
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
