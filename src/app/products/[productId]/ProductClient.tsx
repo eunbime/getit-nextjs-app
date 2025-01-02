@@ -60,25 +60,6 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
     loading: () => <p>카카오맵 로딩중...</p>,
   });
 
-  if (error) {
-    return <div>상품 로딩 중 오류가 발생했습니다.</div>;
-  }
-
-  if (isLoading || categoriesLoading || subCategoriesLoading) {
-    return (
-      <div className="w-full justify-center items-center">
-        <div className="flex flex-col py-10 space-y-2 w-[90%] mx-auto">
-          <Skeleton className="h-[30px] w-1/5 rounded-xl" />
-          <Skeleton className="h-[400px] w-full rounded-xl" />
-          <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
-            <Skeleton className="h-[300px] w-full md:w-1/2" />
-            <Skeleton className="h-[300px] w-full md:w-1/2" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const category = categories?.find((item) => item.id === product?.categoryId);
 
   const handleChatClick = async () => {
@@ -100,9 +81,9 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
       router.push(
         `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${userImage}&open=true`
       );
-      router.refresh();
     } catch (error) {
       console.error("채팅 시작 중 오류 발생:", error);
+      toast.error("채팅 시작 중 오류 발생했습니다.");
     }
   };
 
@@ -112,6 +93,7 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
       router.push("/");
     } catch (error) {
       console.error("상품 삭제 중 오류 발생:", error);
+      toast.error("상품 삭제 중 오류가 발생했습니다.");
     }
   };
 
@@ -120,8 +102,28 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
       router.push(`/products/upload?productId=${productId}`);
     } catch (error) {
       console.error("상품 수정 중 오류 발생:", error);
+      toast.error("상품 수정 중 오류가 발생했습니다.");
     }
   };
+
+  if (error) {
+    return <div>상품 로딩 중 오류가 발생했습니다.</div>;
+  }
+
+  if (isLoading || categoriesLoading || subCategoriesLoading) {
+    return (
+      <div className="w-full justify-center items-center">
+        <div className="flex flex-col py-10 space-y-2 w-[90%] mx-auto">
+          <Skeleton className="h-[30px] w-1/5 rounded-xl" />
+          <Skeleton className="h-[400px] w-full rounded-xl" />
+          <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
+            <Skeleton className="h-[300px] w-full md:w-1/2" />
+            <Skeleton className="h-[300px] w-full md:w-1/2" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Container>

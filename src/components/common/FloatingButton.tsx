@@ -28,6 +28,7 @@ const FloatingButton = ({
     <Link
       href={href}
       onClick={handlerClick}
+      aria-label="upload product"
       className="fixed flex items-center justify-center text-lg text-center text-white
     transition-colors bg-[#0d0c8f] border-0 border-transparent
     rounded-full shadow-xl cursor-pointer hover:bg-opacity-80

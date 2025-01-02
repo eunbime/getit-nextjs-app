@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
+
 import "./globals.css";
 import getCurrentUser from "./actions/getCurrentUser";
 import NavBar from "@/components/navigation/NavBar";
-import Script from "next/script";
 import ToastProvider from "@/components/providers/ToastProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { SocketProvider } from "@/components/providers/SocketProvider";
@@ -21,9 +22,9 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Super",
-  description: "Super 홈페이지",
+  description: "Super 홈페이지입니다.",
   other: {
-    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Cache-Control": "public, max-age=3600, must-revalidate",
   },
 };
 
@@ -37,34 +38,18 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta
-          httpEquiv="Permissions-Policy"
-          content="interest-cohort=(), browsing-topics=(), join-ad-interest-group=(), run-ad-auction=()"
-        />
-
         <meta charSet="utf-8" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=5"
         />
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        {/* iOS 관련 메타 태그 */}
+        <meta
+          httpEquiv="Permissions-Policy"
+          content="interest-cohort=(), browsing-topics=(), join-ad-interest-group=(), run-ad-auction=()"
+        />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-
         <meta name="back-forward-cache" content="enabled" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-            window.addEventListener('pageshow', function(event) {
-              if (event.persisted) {
-                // bfcache에서 복원된 경우
-                window.location.reload();
-              }
-            });
-          `,
-          }}
-        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

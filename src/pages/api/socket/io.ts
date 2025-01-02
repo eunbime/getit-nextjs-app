@@ -1,5 +1,3 @@
-//pages/api/socket/io.ts
-
 import { NextApiResponseServerIo } from "@/types/socket";
 import { Server as NetServer } from "http";
 import { NextApiRequest } from "next";
@@ -22,6 +20,15 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
         path: path,
         //@ts-ignore
         addTrailingSlash: false, // 타입 오류 방지
+        pingTimeout: 60000,
+        pingInterval: 25000,
+        connectTimeout: 5000,
+        transports: ["websocket"],
+        cors: {
+          origin: process.env.NEXT_PUBLIC_SITE_URL,
+          methods: ["GET", "POST"],
+          credentials: true,
+        },
       });
 
       res.socket.server.io = io;

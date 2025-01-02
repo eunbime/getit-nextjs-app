@@ -34,6 +34,13 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
   const addKey = `chat:${conversation?.id}:messages`;
   const updateKey = `chat:${conversation?.id}:messages:update`;
 
+  // 실시간 메시지 업데이트를 위한 소켓 설정
+  useChatSocket({
+    addKey,
+    updateKey,
+    queryKey,
+  });
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatQuery(
     {
       queryKey,
@@ -43,21 +50,8 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
     }
   );
 
-  // 실시간 메시지 업데이트를 위한 소켓 설정
-  useChatSocket({
-    addKey,
-    updateKey,
-    queryKey,
-  });
-
   const messageEndRef = useRef<null | HTMLDivElement>(null);
   const [lastMessageId, setLastMessageId] = useState<string | null>(null);
-
-  const scrollToBottom = () => {
-    messageEndRef?.current?.scrollIntoView({
-      behavior: "instant",
-    });
-  };
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -65,6 +59,13 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+  const scrollToBottom = () => {
+    messageEndRef?.current?.scrollIntoView({
+      behavior: "instant",
+    });
+  };
+
+  // 이전 메시지 로드 시 스크롤 위치 유지
   useEffect(() => {
     const container = containerRef.current;
     if (container && isFetchingNextPage) {
@@ -95,7 +96,7 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
   }, [data?.pages[0]?.items[0], isFetchingNextPage]);
 
   if (!receiver.receiverName || !currentUser) {
-    return <div className="w-full h-full"></div>;
+    return <div className="w-full h-full" />;
   }
 
   return (

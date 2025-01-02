@@ -31,7 +31,12 @@ export async function middleware(req: NextRequest) {
   const response = NextResponse.next();
 
   // bfcache를 위한 Cache-Control 헤더 설정
-  response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+  if (!req.nextUrl.pathname.startsWith("/_next")) {
+    response.headers.set(
+      "Cache-Control",
+      "public, max-age=3600, must-revalidate"
+    );
+  }
 
   return response;
 }
