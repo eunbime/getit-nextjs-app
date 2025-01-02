@@ -1,5 +1,7 @@
 const nextConfig = {
   output: "standalone",
+  reactStrictMode: true,
+  crossOrigin: "anonymous",
   images: {
     domains: [
       "res.cloudinary.com",
@@ -8,6 +10,11 @@ const nextConfig = {
       "avatars.githubusercontent.com",
       "lh3.googleusercontent.com",
     ],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+  future: {
+    webpack5: true,
   },
   webpack: (config) => {
     // socket.io-client를 externals에서 제거하고 fallback 설정 추가
@@ -35,29 +42,6 @@ const nextConfig = {
       {
         source: "/api/socket/:path*",
         destination: `${socketUrl}/:path*`,
-      },
-    ];
-  },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Permissions-Policy",
-            value:
-              "interest-cohort=(), browsing-topics=(), join-ad-interest-group=(), run-ad-auction=()",
-          },
-        ],
-      },
-      {
-        source: "/chat",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "private, must-revalidate",
-          },
-        ],
       },
     ];
   },

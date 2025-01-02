@@ -1,6 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body,
+:root {
+  height: 100%;
+}
+
+/* 모바일 Safari에서 탭 하이라이트 제거 */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 스크롤 동작 통일 */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 입력 요소 스타일 통일 */
+input,
+textarea,
+button,
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* iOS에서 자동 확대 방지 */
+input,
+textarea {
+  font-size: 16px;
+}
+
+/* 모바일에서 폰트 크기 조정 방지 */
+body {
+  -webkit-text-size-adjust: 100%;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -27,7 +66,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -53,7 +92,7 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
 @layer base {

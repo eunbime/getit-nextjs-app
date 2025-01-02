@@ -39,6 +39,15 @@ export default async function RootLayout({
           content="interest-cohort=(), browsing-topics=(), join-ad-interest-group=(), run-ad-auction=()"
         />
         <meta name="back-forward-cache" content="enabled" />
+        <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+        />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        {/* iOS 관련 메타 태그 */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
