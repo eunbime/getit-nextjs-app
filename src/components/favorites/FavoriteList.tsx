@@ -23,6 +23,7 @@ const FavoritesList: React.FC<FavoritesListProps> = ({ currentUser }) => {
       const { data } = await axios.get("/api/favorites");
       return data;
     },
+    refetchInterval: 500,
   });
 
   if (isLoading) {

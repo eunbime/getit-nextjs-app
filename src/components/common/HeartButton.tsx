@@ -9,7 +9,7 @@ interface HeartButtonProps {
 }
 
 const HeartButton = ({ productId, currentUser }: HeartButtonProps) => {
-  const { hasFavorited, toggleFavorite } = useFavorite({
+  const { toggleFavorite, isFavorite } = useFavorite({
     productId,
     currentUser,
   });
@@ -29,7 +29,7 @@ const HeartButton = ({ productId, currentUser }: HeartButtonProps) => {
       />
       <AiFillHeart
         size={24}
-        className={hasFavorited ? "fill-rose-500" : "fill-neutral-500/70"}
+        className={isFavorite ? "fill-rose-500" : "fill-neutral-500/70"}
       />
     </div>
   );

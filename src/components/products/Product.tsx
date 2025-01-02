@@ -56,9 +56,10 @@ const Products: React.FC<ProductsProps> = ({ searchParams, currentUser }) => {
     return <LoadingCards searchParams={searchParams} />;
   }
 
-  console.log(products?.pages[0].data.length === 0);
-
   if (products?.pages[0].data.length === 0) {
+    if (!Object.keys(searchParams)[1]) {
+      return <EmptyState showReset />;
+    }
     return <EmptyState showCategoryReset params={searchParams.category} />;
   }
 

@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useMemo } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { User } from "@prisma/client";
 
@@ -11,23 +11,16 @@ interface UseFavoriteProps {
   currentUser?: User | null;
 }
 
-interface FavoriteProduct {
-  id: string;
-  favorited: boolean;
-}
-
-interface ProductsResponse {
-  data: FavoriteProduct[];
-}
-
 const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const hasFavorited = useMemo(() => {
+  const [isFavorite, setIsFavorite] = useState(() => {
     const list = currentUser?.favoriteIds || [];
     return list.includes(productId);
-  }, [currentUser, productId]);
+  });
+
+  console.log(currentUser?.favoriteIds);
 
   const { mutate: toggleFavorite } = useMutation({
     mutationFn: async () => {
@@ -36,96 +29,34 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
         return;
       }
 
-      if (hasFavorited) {
-        return axios.delete(`/api/favorites/${productId}`);
+      if (isFavorite) {
+        return await axios.post(`/api/favorites/${productId}`);
       } else {
-        return axios.post(`/api/favorites/${productId}`);
+        return await axios.delete(`/api/favorites/${productId}`);
       }
     },
-    // 낙관적 업데이트
-    onMutate: async () => {
-      // 진행 중인 refetch들을 취소
-      await queryClient.cancelQueries({ queryKey: ["favorites"] });
-      await queryClient.cancelQueries({ queryKey: ["products"] });
-
-      // 이전 상태 저장
-      const previousFavorites = queryClient.getQueryData(["favorites"]);
-      const previousProducts = queryClient.getQueryData(["products"]);
-
-      // 현재 사용자의 favoriteIds 업데이트
-      const newFavoriteIds = hasFavorited
-        ? (currentUser?.favoriteIds || []).filter((id) => id !== productId)
-        : [...(currentUser?.favoriteIds || []), productId];
-
-      // 낙관적으로 캐시 업데이트
-      queryClient.setQueryData(
-        ["favorites"],
-        (old: ProductsResponse[] | undefined) => {
-          if (!old) return [];
-          return hasFavorited
-            ? old.filter((product: any) => product.id !== productId)
-            : [...old, { id: productId }];
-        }
-      );
-
-      // products 쿼리 캐시도 업데이트
-      queryClient.setQueryData(
-        ["products"],
-        (old: ProductsResponse | undefined) => {
-          if (!old) return { data: [] };
-          return {
-            ...old,
-            data: old.data.map((product: FavoriteProduct) => {
-              if (product.id === productId) {
-                return {
-                  ...product,
-                  favorited: !hasFavorited,
-                };
-              }
-              return product;
-            }),
-          };
-        }
-      );
-
-      // currentUser 상태도 업데이트
-      queryClient.setQueryData(["currentUser"], (old: User | undefined) => {
-        if (!old) return;
-        return {
-          ...old,
-          favoriteIds: newFavoriteIds,
-        };
-      });
-
-      // 이전 상태 반환
-      return { previousFavorites, previousProducts };
+    onMutate: () => {
+      setIsFavorite(!isFavorite);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      if (currentUser) {
-        toast.success(
-          hasFavorited
-            ? "찜 목록에서 제거되었습니다."
-            : "찜 목록에 추가되었습니다."
-        );
-      }
+      toast.success(
+        !isFavorite
+          ? "찜 목록에서 제거되었습니다."
+          : "찜 목록에 추가되었습니다."
+      );
+
+      queryClient.invalidateQueries({ queryKey: ["favorite"] });
       router.refresh();
     },
-    onError: (error, variables, context) => {
-      console.log("찜 목록 오류", error);
-      queryClient.setQueryData(["favorites"], context!.previousFavorites);
-      queryClient.setQueryData(["products"], context!.previousProducts);
+    onError: (error) => {
+      console.log("좋아요 오류", error);
       toast.error("일시적인 오류가 발생했습니다.");
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
-      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setIsFavorite(isFavorite);
     },
   });
 
   return {
-    hasFavorited,
+    isFavorite,
     toggleFavorite,
   };
 };
