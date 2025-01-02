@@ -20,15 +20,8 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
     return list.includes(productId);
   });
 
-  console.log(currentUser?.favoriteIds);
-
   const { mutate: toggleFavorite } = useMutation({
     mutationFn: async () => {
-      if (!currentUser) {
-        toast.warn("로그인 후 이용해주세요");
-        return;
-      }
-
       if (isFavorite) {
         return await axios.post(`/api/favorites/${productId}`);
       } else {

@@ -47,7 +47,7 @@ const ImageUpload = ({ onChange, value }: ImageUploadProps) => {
               <div className="absolute inset-0 w-full h-full">
                 <Image
                   fill
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "contain" }}
                   src={value}
                   alt="House"
                 />

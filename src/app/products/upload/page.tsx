@@ -154,6 +154,7 @@ const ProductUploadPage = () => {
             register={register}
             errors={errors}
             required
+            isTextArea
           />
           <hr />
           <Input
@@ -163,10 +164,12 @@ const ProductUploadPage = () => {
             register={register}
             errors={errors}
             required
+            formatPrice
+            type="number"
           />
           <hr />
 
-          {/* 카테고리 선택` */}
+          {/* 카테고리 선택 */}
           <div
             className="
             grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto

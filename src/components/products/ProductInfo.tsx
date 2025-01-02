@@ -9,6 +9,7 @@ interface ProductInfoProps {
   createdAt: Date;
   description: string;
   subCategory: string;
+  price: number;
 }
 
 const ProductInfo = ({
@@ -17,9 +18,10 @@ const ProductInfo = ({
   createdAt,
   description,
   subCategory,
+  price,
 }: ProductInfoProps) => {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 w-full">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2 text-xl font-semibold">
           <Avatar src={user?.image} />
@@ -38,7 +40,13 @@ const ProductInfo = ({
         />
       )}
       <hr />
-      <div className="text-lg font-light text-neutral-500">{description}</div>
+      <div className="text-lg font-light text-neutral-800 ml-4">
+        {price.toLocaleString("ko-KR")}원
+      </div>
+      <hr />
+      <div className="text-lg font-light text-neutral-500 ml-4 break-words whitespace-pre-wrap">
+        {description}
+      </div>
     </div>
   );
 };

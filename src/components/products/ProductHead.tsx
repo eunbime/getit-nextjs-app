@@ -26,6 +26,7 @@ const ProductHead = ({
           fill
           className="object-cover w-full"
           alt="Image"
+          objectFit="contain"
         />
         <div className="absolute top-5 right-5">
           <HeartButton productId={id} currentUser={currentUser} />

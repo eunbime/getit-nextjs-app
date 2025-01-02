@@ -2,6 +2,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 import { User } from "@prisma/client";
 import useFavorite from "@/hooks/useFavorite";
+import { toast } from "react-toastify";
 
 interface HeartButtonProps {
   productId: string;
@@ -14,12 +15,20 @@ const HeartButton = ({ productId, currentUser }: HeartButtonProps) => {
     currentUser,
   });
 
+  const handleClick = () => {
+    if (!currentUser) {
+      toast.warn("로그인 후 이용해주세요");
+      return;
+    }
+    toggleFavorite();
+  };
+
   return (
     <div
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
-        toggleFavorite();
+        handleClick();
       }}
       className="relative transition cursor-pointer hover-opacity-80"
     >

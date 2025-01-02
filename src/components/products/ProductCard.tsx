@@ -40,7 +40,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
 
         <div className="flex flex-row items-center justify-between gap-1">
           <div className="font-semibold">
-            {data.price} <span className="font-light">원</span>
+            {data.price.toLocaleString("ko-KR")}{" "}
+            <span className="font-light">원</span>
           </div>
           <div>{fromNow(data.createdAt)}</div>
         </div>

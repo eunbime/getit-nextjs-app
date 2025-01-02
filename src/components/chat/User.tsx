@@ -19,7 +19,7 @@ const User = ({ user, currentUserId }: UserProps) => {
   return (
     <div
       className="grid grid-cols-[40px_1fr_50px] grid-rows-[40px] gap-3 pt-2 pb-5 px-4
-  border-b-[1px] hover:cursor-pointer hover:bg-rose-400 "
+  border-b-[1px] hover:cursor-pointer hover:bg-gray-100 "
     >
       <div>
         <Avatar src={user.image} />

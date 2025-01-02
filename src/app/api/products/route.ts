@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
     if (!categoryRecord) {
       return NextResponse.json(
-        { error: `Category not found: ${category}` },
+        { error: `카테고리를 선택해주세요. ${category}` },
         { status: 400 }
       );
     }
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     if (!subCategoryRecord) {
       console.log("4. Category not found for:", category);
       return NextResponse.json(
-        { error: `Subcategory not found: ${subCategory}` },
+        { error: `세부 카테고리를 선택해주세요. ${subCategory}` },
         { status: 400 }
       );
     }

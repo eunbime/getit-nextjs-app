@@ -47,7 +47,7 @@ const RegisterForm = () => {
     } catch (error) {
       console.log("submit", error);
       setError("root", {
-        message: "회원가입 중 오류가 발생했습니다.",
+        message: "이미 가입된 이메일입니다.",
       });
     } finally {
       setIsLoading(false);
