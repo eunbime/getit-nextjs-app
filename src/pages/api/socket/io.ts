@@ -23,12 +23,17 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
         pingTimeout: 60000,
         pingInterval: 25000,
         connectTimeout: 5000,
-        transports: ["websocket"],
+        transports: ["polling", "websocket"],
         cors: {
           origin: process.env.NEXT_PUBLIC_SITE_URL,
           methods: ["GET", "POST"],
           credentials: true,
         },
+      });
+
+      // 기본 연결 이벤트 핸들러
+      io.on("connection", (socket) => {
+        console.log("클라이언트 연결됨:", socket.id);
       });
 
       res.socket.server.io = io;

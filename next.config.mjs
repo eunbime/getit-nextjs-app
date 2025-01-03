@@ -16,13 +16,26 @@ const nextConfig = {
   future: {
     webpack5: true,
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     // socket.io-client를 externals에서 제거하고 fallback 설정 추가
     config.externals = [...config.externals, "bcrypt"];
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      net: false,
-    };
+
+    // 클라이언트 사이드에서만 적용되는 fallback 설정
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+
+    // socket.io 관련 설정
+    config.externals.push({
+      "utf-8-validate": "commonjs utf-8-validate",
+      bufferutil: "commonjs bufferutil",
+    });
+
     return config;
   },
   experimental: {

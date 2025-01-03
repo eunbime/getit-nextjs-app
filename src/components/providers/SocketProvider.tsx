@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import type { transports } from "engine.io-client";
 
 import { io, Socket } from "socket.io-client";
 
@@ -37,6 +38,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const socketInstance = io(process.env.NEXT_PUBLIC_SITE_URL!, {
       path: "/api/socket/io",
       addTrailingSlash: false,
+      transports: ["polling", "websocket"],
+      reconnection: true, // 재연결 활성화
+      reconnectionAttempts: 5, // 최대 재시도 횟수
+      reconnectionDelay: 1000, // 재연결 시도 간격 (ms)
+      timeout: 20000,
+      // autoConnect: false,
     });
 
     // 서버와 성공적으로 연결되었을 때
@@ -46,20 +53,28 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     // 서버와 연결이 끊어졌을 때
-    socketInstance.on("disconnect", () => {
-      console.log("Socket.io 연결 끊김");
+    socketInstance.on("disconnect", (reason: any) => {
+      console.log("Socket.io 연결 끊김", reason);
       setIsConnected(false);
     });
 
     socketInstance.on("connect_error", (err: any) => {
       console.error("Socket 연결 에러:", err);
       setIsConnected(false);
+
+      // 새로운 소켓 인스턴스 생성
+      const newSocket = io(process.env.NEXT_PUBLIC_SITE_URL!, {
+        ...socketInstance.io.opts,
+        transports: ["polling"],
+      });
+      setSocket(newSocket);
     });
 
     setSocket(socketInstance);
 
     // 컴포넌트가 언마운트될 때 socket.io 연결 해제
     return () => {
+      socketInstance.removeAllListeners();
       socketInstance.disconnect();
     };
   }, [pathname]);
