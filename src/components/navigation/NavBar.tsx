@@ -7,6 +7,7 @@ import NavItem from "./NavItem";
 import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { IoSearch } from "react-icons/io5";
+import { TbMinus, TbPlus } from "react-icons/tb";
 
 interface NavBarProps {
   currentUser?: User | null;
@@ -36,14 +37,18 @@ const NavBar = ({ currentUser }: NavBarProps) => {
         </div>
 
         {/* menu */}
-        <div className="text-2xl sm:hidden flex items-center gap-4">
+        <div className="sm:hidden flex items-center gap-4">
           <Link href={"/search"} aria-label="search">
             <IoSearch className="text-2xl" aria-label="search" />
           </Link>
           {menu === false ? (
-            <button onClick={handleMenu}>+</button>
+            <button onClick={handleMenu}>
+              <TbPlus className="text-2xl" />
+            </button>
           ) : (
-            <button onClick={handleMenu}>-</button>
+            <button onClick={handleMenu}>
+              <TbMinus className="text-2xl" />
+            </button>
           )}
         </div>
 

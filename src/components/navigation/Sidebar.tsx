@@ -1,12 +1,11 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { CATEGORY_TITLE } from "../categories/Categories";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Subcategory } from "@prisma/client";
-import Link from "next/link";
-import SideBarSubCategories from "./SideBarSubCategories";
+
+import { CATEGORY_TITLE } from "../categories/Categories";
+import SideBarSubCategories from "@/components/navigation/SideBarSubCategories";
 
 const Sidebar = () => {
   const params = useSearchParams();

@@ -135,7 +135,7 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
             id={product?.id}
             currentUser={currentUser}
           />
-          <div className="grid grid-cols-1 mt-6 md:grid-cols-2 md:gap-10 w-full mb-10">
+          <div className="grid grid-cols-1 mt-6 md:grid-cols-2 gap-10 w-full mb-10">
             <ProductInfo
               user={product?.user}
               category={category}

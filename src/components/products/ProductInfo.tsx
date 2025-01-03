@@ -44,7 +44,7 @@ const ProductInfo = ({
         {price.toLocaleString("ko-KR")}원
       </div>
       <hr />
-      <div className="text-lg font-light text-neutral-500 ml-4 break-words whitespace-pre-wrap">
+      <div className="text-lg font-light text-neutral-500 mx-4 break-words whitespace-pre-wrap">
         {description}
       </div>
     </div>

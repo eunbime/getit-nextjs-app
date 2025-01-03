@@ -19,7 +19,7 @@ const CategoryBox = ({ label, path, selected }: CategoryBoxProps) => {
         }
         `}
     >
-      <div className="text-sm font-medium">{label}</div>
+      <div className="text-sm md:text-base font-medium">{label}</div>
     </Link>
   );
 };

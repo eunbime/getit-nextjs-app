@@ -16,10 +16,12 @@ const SideBarSubCategories = ({
   if (isLoading) {
     return (
       <div className="flex gap-2 mt-1 md:mt-5 ml-2 md:flex-col w-full justify-start overflow-x-scroll md:overflow-x-auto">
-        <Skeleton className="h-[20px] w-[90px] rounded-xl" />
-        <Skeleton className="h-[20px] w-[90px] rounded-xl" />
-        <Skeleton className="h-[20px] w-[90px] rounded-xl" />
-        <Skeleton className="h-[20px] w-[90px] rounded-xl" />
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Skeleton
+            key={index}
+            className="h-[30px] md:h-[20px] w-[90px] rounded-xl"
+          />
+        ))}
       </div>
     );
   }
