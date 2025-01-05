@@ -2,17 +2,12 @@
 
 import { IoSearch } from "react-icons/io5";
 
-import { User } from "@prisma/client";
 import { useRecentSearches } from "@/hooks/search/useRecentSearches";
 import { useSearch } from "@/hooks/search/useSearch";
 import ProductCard from "@/components/products/ProductCard";
 import EmptyState from "@/components/EmptyState";
 
-interface SearchFormProps {
-  currentUser: User | null;
-}
-
-const SearchForm = ({ currentUser }: SearchFormProps) => {
+const SearchForm = () => {
   const {
     keyword,
     setKeyword,
@@ -75,11 +70,7 @@ const SearchForm = ({ currentUser }: SearchFormProps) => {
 
       <div className="w-full px-10 grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {searchProducts?.map((product: any) => (
-          <ProductCard
-            key={product.id}
-            data={product}
-            currentUser={currentUser}
-          />
+          <ProductCard key={product.id} data={product} />
         ))}
       </div>
       {searchProducts.length === 0 && (

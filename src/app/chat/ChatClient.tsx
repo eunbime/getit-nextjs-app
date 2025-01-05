@@ -4,17 +4,13 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 
-import { User } from "@prisma/client";
 import { TUserWithChat } from "@/types/index";
 import { useLayout } from "@/hooks/chat/useLayout";
 import { useChat } from "@/hooks/api/useChat";
 import Contacts from "@/components/chat/Contacts";
 import EmptyState from "@/components/EmptyState";
 import LoadingSpinner from "@/components/chat/LoadingSpinner";
-
-interface ChatClientProps {
-  currentUser?: User | null;
-}
+import { useUserStore } from "@/store/userStore";
 
 export interface Receiver {
   receiverId: string;
@@ -22,7 +18,9 @@ export interface Receiver {
   receiverImage: string;
 }
 
-const ChatClient = ({ currentUser }: ChatClientProps) => {
+const ChatClient = () => {
+  const currentUser = useUserStore((state) => state.currentUser);
+
   const searchParams = useSearchParams();
   const [receiver, setReceiver] = useState<Receiver>({
     receiverId: "",

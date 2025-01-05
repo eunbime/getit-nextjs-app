@@ -3,17 +3,16 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
-import { Product, User } from "@prisma/client";
+import { Product } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/components/EmptyState";
+import { useUserStore } from "@/store/userStore";
 
-interface UserPostsProps {
-  currentUser: User | null;
-}
+const UserPosts = () => {
+  const currentUser = useUserStore((state) => state.currentUser);
 
-const UserPosts = ({ currentUser }: UserPostsProps) => {
   const { data: products, isLoading } = useQuery({
     queryKey: ["products", currentUser?.id],
     queryFn: async () => {
@@ -59,7 +58,6 @@ const UserPosts = ({ currentUser }: UserPostsProps) => {
           <ProductCard
             key={product.id}
             data={product as TProductWithCategory}
-            currentUser={currentUser}
           />
         ))}
       </div>

@@ -1,21 +1,17 @@
 "use client";
 
+import { useUserStore } from "@/store/userStore";
 import Link from "next/link";
 import { toast } from "react-toastify";
-
-import { User } from "@prisma/client";
 
 interface FloatingButtonProps {
   children: React.ReactNode;
   href: string;
-  currentUser: User | null;
 }
 
-const FloatingButton = ({
-  children,
-  href,
-  currentUser,
-}: FloatingButtonProps) => {
+const FloatingButton = ({ children, href }: FloatingButtonProps) => {
+  const currentUser = useUserStore((state) => state.currentUser);
+
   const handlerClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!currentUser) {
       e.preventDefault();

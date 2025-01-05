@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { User } from "@prisma/client";
 import Heading from "@/components/common/Heading";
 import HeartButton from "@/components/common/HeartButton";
 
@@ -8,15 +7,9 @@ interface ProductHeadProps {
   title: string;
   imageSrc: string;
   id: string;
-  currentUser?: User | null;
 }
 
-const ProductHead = ({
-  title,
-  id,
-  imageSrc,
-  currentUser,
-}: ProductHeadProps) => {
+const ProductHead = ({ title, id, imageSrc }: ProductHeadProps) => {
   return (
     <>
       <Heading title={title} />
@@ -29,7 +22,7 @@ const ProductHead = ({
           objectFit="contain"
         />
         <div className="absolute top-5 right-5">
-          <HeartButton productId={id} currentUser={currentUser} />
+          <HeartButton productId={id} />
         </div>
       </div>
     </>

@@ -1,15 +1,16 @@
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
-import { User } from "@prisma/client";
 import { toast } from "react-toastify";
 import useFavorite from "@/hooks/product/useFavorite";
+import { useUserStore } from "@/store/userStore";
 
 interface HeartButtonProps {
   productId: string;
-  currentUser?: User | null;
 }
 
-const HeartButton = ({ productId, currentUser }: HeartButtonProps) => {
+const HeartButton = ({ productId }: HeartButtonProps) => {
+  const currentUser = useUserStore((state) => state.currentUser);
+
   const { toggleFavorite, isFavorite } = useFavorite({
     productId,
     currentUser,

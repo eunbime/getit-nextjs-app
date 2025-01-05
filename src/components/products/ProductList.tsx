@@ -1,6 +1,6 @@
 import { InfiniteData } from "@tanstack/react-query";
 
-import { Product, User } from "@prisma/client";
+import { Product } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 
@@ -12,13 +12,9 @@ interface ProductPage {
 
 interface ProductListProps {
   products: InfiniteData<ProductPage> | undefined;
-  currentUser?: User | null;
 }
 
-export default function ProductList({
-  products,
-  currentUser,
-}: ProductListProps) {
+export default function ProductList({ products }: ProductListProps) {
   return (
     <div
       className="w-full grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3
@@ -29,7 +25,6 @@ export default function ProductList({
           <ProductCard
             key={product.id}
             data={product as TProductWithCategory}
-            currentUser={currentUser}
           />
         ))
       )}

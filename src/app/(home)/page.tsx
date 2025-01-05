@@ -1,6 +1,5 @@
 import { FaPlus } from "react-icons/fa";
 
-import getCurrentUser from "../actions/getCurrentUser";
 import { SearchParams } from "@/hooks/api/useProducts";
 import Container from "@/components/common/Container";
 import Categories from "@/components/categories/Categories";
@@ -15,16 +14,14 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const currentUser = await getCurrentUser();
-
   return (
     <Container>
       <Categories />
       <div className="flex flex-col md:flex-row w-full">
         {Object.keys(searchParams).length !== 0 && <Sidebar />}
-        <Products searchParams={searchParams} currentUser={currentUser} />
+        <Products searchParams={searchParams} />
       </div>
-      <FloatingButton currentUser={currentUser} href="/products/upload">
+      <FloatingButton href="/products/upload">
         <FaPlus />
       </FloatingButton>
     </Container>

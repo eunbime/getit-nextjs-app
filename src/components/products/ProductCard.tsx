@@ -3,17 +3,15 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { User } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
 import { fromNow } from "@/helpers/dayjs";
 import HeartButton from "@/components/common/HeartButton";
 
 interface ProductCardProps {
   data: TProductWithCategory;
-  currentUser?: User | null;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
   const router = useRouter();
   return (
     <article
@@ -32,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
             quality={80}
           />
           <div className="absolute top-3 right-3">
-            <HeartButton productId={data.id} currentUser={currentUser} />
+            <HeartButton productId={data.id} />
           </div>
         </div>
 

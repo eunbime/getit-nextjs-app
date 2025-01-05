@@ -8,6 +8,7 @@ import NavBar from "@/components/navigation/NavBar";
 import ToastProvider from "@/components/providers/ToastProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { SocketProvider } from "@/components/providers/SocketProvider";
+import ClientUserInitializer from "@/components/providers/ClientUserInitializer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -57,6 +58,7 @@ export default async function RootLayout({
         <SocketProvider>
           <QueryProvider>
             <NavBar currentUser={currentUser} />
+            <ClientUserInitializer currentUser={currentUser} />
             <ToastProvider />
             {children}
             <Script

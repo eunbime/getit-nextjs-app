@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 
-import { User } from "@prisma/client";
 import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import ProductHead from "@/components/products/ProductHead";
@@ -10,13 +9,15 @@ import ProductInfo from "@/components/products/ProductInfo";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProductAction } from "@/hooks/product/useProductAction";
 import { useProduct } from "@/hooks/product/useProduct";
+import { useUserStore } from "@/store/userStore";
 
 interface ProductClientProps {
   productId?: string;
-  currentUser?: User | null;
 }
 
-const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
+const ProductClient = ({ productId }: ProductClientProps) => {
+  const currentUser = useUserStore((state) => state.currentUser);
+
   const { product, isLoading, error, category, subCategory } = useProduct({
     productId,
   });
@@ -60,7 +61,6 @@ const ProductClient = ({ productId, currentUser }: ProductClientProps) => {
             title={product?.title}
             imageSrc={product?.imageSrc}
             id={product?.id}
-            currentUser={currentUser}
           />
           <div className="grid grid-cols-1 mt-6 md:grid-cols-2 gap-10 w-full mb-10">
             <ProductInfo

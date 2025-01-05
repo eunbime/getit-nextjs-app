@@ -1,16 +1,11 @@
 "use client";
 
-import { User } from "@prisma/client";
 import EmptyState from "@/components/EmptyState";
 import ProductCard from "@/components/products/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFavorites } from "@/hooks/api/useFavorites";
 
-interface FavoritesListProps {
-  currentUser?: User | null;
-}
-
-const FavoritesList: React.FC<FavoritesListProps> = ({ currentUser }) => {
+const FavoritesList = () => {
   const { data: products, isLoading, error } = useFavorites();
 
   if (isLoading) {
@@ -54,11 +49,7 @@ const FavoritesList: React.FC<FavoritesListProps> = ({ currentUser }) => {
   return (
     <div className="grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
       {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          data={product}
-          currentUser={currentUser ?? null}
-        />
+        <ProductCard key={product.id} data={product} />
       ))}
     </div>
   );
