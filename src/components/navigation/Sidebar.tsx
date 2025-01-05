@@ -1,38 +1,42 @@
 "use client";
 
-import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 
-import { CATEGORY_TITLE } from "../categories/Categories";
+import { useSubCategories } from "@/hooks/api/useSubCategories";
+import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 import SideBarSubCategories from "@/components/navigation/SideBarSubCategories";
 
 const Sidebar = () => {
   const params = useSearchParams();
   const category = params?.get("category");
 
-  const { data: subCategories, isLoading } = useQuery({
-    queryKey: ["sub-categories", category],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `/api/categories/sub-categories?category=${category}`
-      );
-      return data;
-    },
-    enabled: !!category,
-  });
+  const {
+    data: subCategories,
+    isLoading,
+    error,
+  } = useSubCategories(category as CategoryType);
+
+  if (error) {
+    return (
+      <div className="w-full md:w-1/4 py-5" role="alert">
+        <div className="text-red-500">
+          서브 카테고리를 불러오는데 실패했습니다.
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full md:w-1/4 py-5">
+    <aside className="w-full md:w-1/4 py-5" aria-label="서브 카테고리">
       <h3 className="text-xl font-bold hidden md:block">
-        {CATEGORY_TITLE[category as string]}
+        {CATEGORY_TITLE[category as CategoryType]}
       </h3>
       <SideBarSubCategories
-        subCategories={subCategories}
+        subCategories={subCategories || []}
         category={category as string}
         isLoading={isLoading}
       />
-    </div>
+    </aside>
   );
 };
 

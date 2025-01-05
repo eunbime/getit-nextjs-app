@@ -1,15 +1,12 @@
 import { TUserWithChat } from "@/types/index";
-import User from "./User";
+import { Receiver } from "@/app/chat/ChatClient";
+import User from "@/components/chat/User";
 
 interface ContactsProps {
   users: TUserWithChat[];
   currentUser: TUserWithChat;
   setLayout: (layout: boolean) => void;
-  setReceiver: (receiver: {
-    receiverId: string;
-    receiverName: string;
-    receiverImage: string;
-  }) => void;
+  setReceiver: (receiver: Receiver) => void;
 }
 
 const Contacts = ({
@@ -18,48 +15,37 @@ const Contacts = ({
   setLayout,
   setReceiver,
 }: ContactsProps) => {
-  const filterMessages = (
-    userId: string,
-    userName: string | null,
-    userImage: string | null,
-    setReceiver: (receiver: {
-      receiverId: string;
-      receiverName: string;
-      receiverImage: string;
-    }) => void
-  ) => {
+  const filterMessages = (user: TUserWithChat) => {
     setReceiver({
-      receiverId: userId,
-      receiverName: userName || "",
-      receiverImage: userImage || "",
+      receiverId: user.id,
+      receiverName: user.name || "",
+      receiverImage: user.image || "",
     });
+    setLayout(true);
   };
 
   return (
-    <div className="w-full overflow-auto h-[calc(100vh_-_56px)] border-[1px]">
+    <nav
+      className="w-full overflow-auto h-[calc(100vh_-_56px)] border-[1px]"
+      aria-label="Chat Contacts"
+    >
       <h1 className="m-4 text-2xl font-semibold">Chat</h1>
 
       <hr />
 
-      <div className="flex flex-col">
+      <ul className="flex flex-col">
         {users?.length > 0 &&
           users
             .filter((user) => user.id !== currentUser?.id)
             .map((user) => {
               return (
-                <div
-                  key={user.id}
-                  onClick={() => {
-                    filterMessages(user.id, user.name, user.image, setReceiver);
-                    setLayout(true);
-                  }}
-                >
+                <li key={user.id} onClick={() => filterMessages(user)}>
                   <User user={user} currentUserId={currentUser?.id} />
-                </div>
+                </li>
               );
             })}
-      </div>
-    </div>
+      </ul>
+    </nav>
   );
 };
 

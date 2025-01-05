@@ -1,11 +1,10 @@
 "use client";
 
-import axios from "axios";
-import { debounce } from "lodash";
-import { useCallback, useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 
-import { Product, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import { useRecentSearches } from "@/hooks/search/useRecentSearches";
+import { useSearch } from "@/hooks/search/useSearch";
 import ProductCard from "@/components/products/ProductCard";
 import EmptyState from "@/components/EmptyState";
 
@@ -14,45 +13,15 @@ interface SearchFormProps {
 }
 
 const SearchForm = ({ currentUser }: SearchFormProps) => {
-  const [keyword, setKeyword] = useState("");
-  const [searchProducts, setSearchProducts] = useState<Product[]>([]);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const {
+    keyword,
+    setKeyword,
+    searchProducts,
+    debouncedSearch,
+    searchProductsByKeyword,
+  } = useSearch();
 
-  useEffect(() => {
-    const saveSearches = localStorage.getItem("recentSearches");
-    if (saveSearches) {
-      setRecentSearches(JSON.parse(saveSearches));
-    }
-  }, []);
-
-  const saveRecentSearch = (search: string) => {
-    if (!search.trim()) return;
-
-    const updatedSearches = [
-      search,
-      ...recentSearches.filter((s) => s !== search),
-    ].slice(0, 5);
-
-    setRecentSearches(updatedSearches);
-    localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
-  };
-
-  const debouncedSearch = useCallback(
-    debounce(async (value: string) => {
-      if (!value) {
-        setSearchProducts([]);
-        return;
-      }
-      try {
-        const { data } = await axios.get(`/api/search?keyword=${value}`);
-        setSearchProducts(data);
-      } catch (error) {
-        console.error("Search error:", error);
-        setSearchProducts([]);
-      }
-    }, 500),
-    [recentSearches]
-  );
+  const { recentSearches, saveRecentSearch } = useRecentSearches();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -69,14 +38,8 @@ const SearchForm = ({ currentUser }: SearchFormProps) => {
     e.preventDefault();
     if (!keyword.trim()) return;
 
-    try {
-      const { data } = await axios.get(`/api/search?keyword=${keyword}`);
-      setSearchProducts(data);
-      saveRecentSearch(keyword); // submit 시에만 검색어 저장
-    } catch (error) {
-      console.error("Search error:", error);
-      setSearchProducts([]);
-    }
+    await searchProductsByKeyword(keyword);
+    saveRecentSearch(keyword);
   };
 
   return (

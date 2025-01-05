@@ -38,7 +38,7 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
           : "찜 목록에 추가되었습니다."
       );
 
-      queryClient.invalidateQueries({ queryKey: ["favorite"] });
+      queryClient.invalidateQueries({ queryKey: ["favorites"] });
       router.refresh();
     },
     onError: (error) => {

@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 
 interface SideBarSubCategoriesProps {
-  subCategories: Subcategory[];
+  subCategories: Subcategory[] | undefined;
   category: string;
   isLoading: boolean;
 }
 
 const SideBarSubCategories = ({
-  subCategories,
+  subCategories = [],
   category,
   isLoading,
 }: SideBarSubCategoriesProps) => {

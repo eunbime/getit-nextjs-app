@@ -1,6 +1,6 @@
 import { fromNow } from "@/helpers/dayjs";
-import { TConversation, TUserWithChat } from "@/types/index";
-
+import { TUserWithChat } from "@/types/index";
+import { useLatestMessage } from "@/hooks/chat/useLatestMessage";
 import Avatar from "@/components/common/Avatar";
 
 interface UserProps {
@@ -9,12 +9,10 @@ interface UserProps {
 }
 
 const User = ({ user, currentUserId }: UserProps) => {
-  const messagesWithCurrentUser = user.conversations.find(
-    (conversation: TConversation) =>
-      conversation.users.find((user) => user.id === currentUserId)
-  );
-
-  const latestMessage = messagesWithCurrentUser?.messages.slice(-1)[0];
+  const latestMessage = useLatestMessage({
+    conversations: user.conversations,
+    currentUserId,
+  });
 
   return (
     <div

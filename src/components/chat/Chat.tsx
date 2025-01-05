@@ -1,40 +1,40 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { Message as MessageType } from "@prisma/client";
-import { TConversation, TUserWithChat } from "@/types/index";
+import { TUserWithChat } from "@/types/index";
 import ChatHeader from "./ChatHeader";
 import Message from "./Message";
 import Input from "./Input";
-import { useChatQuery } from "@/hooks/useChatQuery";
-import { useChatSocket } from "@/hooks/useChatSocket";
+import { useChatQuery } from "@/hooks/chat/useChatQuery";
+import { useChatSocket } from "@/hooks/chat/useChatSocket";
+import { Receiver } from "@/app/chat/ChatClient";
+import { useChatScroll } from "@/hooks/chat/useChatScroll";
+import { useConversation } from "@/hooks/chat/useConversation";
 
 interface ChatProps {
-  receiver: {
-    receiverId: string;
-    receiverName: string;
-    receiverImage: string;
-  };
+  receiver: Receiver;
   currentUser: TUserWithChat;
   setLayout: (layout: boolean) => void;
 }
 
 const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
   const { ref, inView } = useInView();
+  const messageEndRef = useRef<null | HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const conversation: TConversation | undefined =
-    currentUser?.conversations.find((conversation: TConversation) => {
-      return conversation.users.find((user) => user.id === receiver.receiverId);
-    });
+  const conversation = useConversation({
+    currentUser,
+    receiverId: receiver.receiverId,
+  });
 
+  // 실시간 메시지 업데이트를 위한 소켓 설정
   const queryKey = `chat:${conversation?.id}`;
   const addKey = `chat:${conversation?.id}:messages`;
   const updateKey = `chat:${conversation?.id}:messages:update`;
 
-  // 실시간 메시지 업데이트를 위한 소켓 설정
   useChatSocket({
     addKey,
     updateKey,
@@ -50,50 +50,18 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
     }
   );
 
-  const messageEndRef = useRef<null | HTMLDivElement>(null);
-  const [lastMessageId, setLastMessageId] = useState<string | null>(null);
-
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const scrollToBottom = () => {
-    messageEndRef?.current?.scrollIntoView({
-      behavior: "instant",
-    });
-  };
-
-  // 이전 메시지 로드 시 스크롤 위치 유지
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container && isFetchingNextPage) {
-      const scrollHeight = container.scrollHeight;
-
-      const handleScroll = () => {
-        const newScrollHeight = container.scrollHeight;
-        const heightDifference = newScrollHeight - scrollHeight;
-        container.scrollTop = heightDifference;
-      };
-
-      setTimeout(handleScroll, 0);
-    }
-  }, [isFetchingNextPage, data]);
-
-  // 새 메시지가 추가될 때만 스크롤
-  useEffect(() => {
-    const lastPage = data?.pages[0];
-    const firstMessage = lastPage?.items[0];
-
-    if (firstMessage && (!lastMessageId || firstMessage.id !== lastMessageId)) {
-      setLastMessageId(firstMessage.id);
-      // 이전 메시지 로드가 아닌 새 메시지 추가일 때만 스크롤
-      if (!isFetchingNextPage) {
-        scrollToBottom();
-      }
-    }
-  }, [data?.pages[0]?.items[0], isFetchingNextPage]);
+  useChatScroll({
+    containerRef,
+    isFetchingNextPage,
+    data,
+    messageEndRef,
+  });
 
   if (!receiver.receiverName || !currentUser) {
     return <div className="w-full h-full" />;

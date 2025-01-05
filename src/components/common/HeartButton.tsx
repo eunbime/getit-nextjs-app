@@ -1,8 +1,8 @@
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 import { User } from "@prisma/client";
-import useFavorite from "@/hooks/useFavorite";
 import { toast } from "react-toastify";
+import useFavorite from "@/hooks/product/useFavorite";
 
 interface HeartButtonProps {
   productId: string;

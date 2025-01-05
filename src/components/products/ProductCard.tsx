@@ -1,21 +1,22 @@
 "use client";
 
-import { User } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import HeartButton from "../common/HeartButton";
-import { fromNow } from "@/helpers/dayjs";
+
+import { User } from "@prisma/client";
 import { TProductWithCategory } from "@/types";
+import { fromNow } from "@/helpers/dayjs";
+import HeartButton from "@/components/common/HeartButton";
 
 interface ProductCardProps {
   data: TProductWithCategory;
-  currentUser: User | null;
+  currentUser?: User | null;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
   const router = useRouter();
   return (
-    <div
+    <article
       onClick={() => router.push(`/products/${data.id}`)}
       className="col-span-1 cursor-pointer group"
     >
@@ -46,7 +47,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, currentUser }) => {
           <div>{fromNow(data.createdAt)}</div>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

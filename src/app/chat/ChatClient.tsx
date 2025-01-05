@@ -1,62 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { RotatingLines } from "react-loader-spinner";
+import dynamic from "next/dynamic";
 
 import { User } from "@prisma/client";
 import { TUserWithChat } from "@/types/index";
-import Chat from "@/components/chat/Chat";
+import { useLayout } from "@/hooks/chat/useLayout";
+import { useChat } from "@/hooks/api/useChat";
 import Contacts from "@/components/chat/Contacts";
 import EmptyState from "@/components/EmptyState";
-import dynamic from "next/dynamic";
+import LoadingSpinner from "@/components/chat/LoadingSpinner";
 
 interface ChatClientProps {
   currentUser?: User | null;
 }
 
+export interface Receiver {
+  receiverId: string;
+  receiverName: string;
+  receiverImage: string;
+}
+
 const ChatClient = ({ currentUser }: ChatClientProps) => {
   const searchParams = useSearchParams();
-  const [receiver, setReceiver] = useState({
+  const [receiver, setReceiver] = useState<Receiver>({
     receiverId: "",
     receiverName: "",
     receiverImage: "",
   });
-  const [layout, setLayout] = useState(false);
 
-  useEffect(() => {
-    const id = searchParams?.get("id");
-    const name = searchParams?.get("name");
-    const open = searchParams?.get("open");
-    const image = searchParams?.get("image");
-
-    // 파라미터가 있으면 채팅창 열기
-    if (id && name) {
-      setReceiver({
-        receiverId: id,
-        receiverName: name,
-        receiverImage: image || "",
-      });
-
-      if (open === "true") {
-        setLayout(true);
-      }
-    }
-  }, [searchParams]);
-
-  const {
-    data: users,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["chat"],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/chat`);
-      return data;
-    },
+  const { layout, setLayout } = useLayout({
+    setReceiver,
+    searchParams,
   });
+
+  const { data: users, isLoading, error } = useChat();
 
   const currentUserWithMessage = users?.find(
     (user: TUserWithChat) => user.email === currentUser?.email
@@ -65,25 +44,14 @@ const ChatClient = ({ currentUser }: ChatClientProps) => {
   // 채팅 컴포넌트 동적 임포트
   const ChatComponent = dynamic(() => import("@/components/chat/Chat"), {
     loading: () => <div>Loading...</div>,
-    ssr: false, // WebSocket은 클라이언트에서만 필요
+    ssr: false,
   });
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen -mt-12 w-full flex flex-col gap-2 items-center justify-center">
-        <RotatingLines
-          strokeColor="grey"
-          strokeWidth="5"
-          animationDuration="0.75"
-          width="30"
-          visible={true}
-        />
-        <p>채팅을 불러오는 중입니다</p>
-      </div>
-    );
-  }
-
   if (error) return <p>채팅 불러오기 중 오류가 발생했습니다.</p>;
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   // 사용자가 없을 때 표시할 컴포넌트
   if (!users?.length) {

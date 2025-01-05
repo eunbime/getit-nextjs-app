@@ -1,7 +1,7 @@
 import { FaPlus } from "react-icons/fa";
 
 import getCurrentUser from "../actions/getCurrentUser";
-import { ProductsParams } from "../actions/getProducts";
+import { SearchParams } from "@/hooks/api/useProducts";
 import Container from "@/components/common/Container";
 import Categories from "@/components/categories/Categories";
 import Products from "@/components/products/Product";
@@ -11,7 +11,7 @@ import FloatingButton from "@/components/common/FloatingButton";
 export const dynamic = "force-dynamic";
 
 interface HomeProps {
-  searchParams: ProductsParams;
+  searchParams: SearchParams;
 }
 
 export default async function Home({ searchParams }: HomeProps) {

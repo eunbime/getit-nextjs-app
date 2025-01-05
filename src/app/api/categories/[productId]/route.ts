@@ -1,8 +1,8 @@
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
-import { NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
@@ -13,7 +13,7 @@ export async function GET(
       throw new Error("Invalid Product ID");
     }
 
-    const subCategories = await prisma.subcategory.findMany({
+    const category = await prisma.category.findMany({
       where: {
         products: {
           some: {
@@ -23,7 +23,7 @@ export async function GET(
       },
     });
 
-    return NextResponse.json(subCategories);
+    return NextResponse.json(category);
   } catch (error) {
     console.log(error);
     return new NextResponse("Internal Error", { status: 500 });

@@ -1,11 +1,11 @@
-import { Category, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { formatTime } from "@/helpers/dayjs";
 import ProductCategory from "./ProductCategory";
 import Avatar from "@/components/common/Avatar";
 
 interface ProductInfoProps {
   user: User;
-  category: Category | undefined;
+  category: string;
   createdAt: Date;
   description: string;
   subCategory: string;
@@ -33,11 +33,7 @@ const ProductInfo = ({
       </div>
       <hr />
       {category && (
-        <ProductCategory
-          label={category?.name}
-          description={category?.description || ""}
-          subCategory={subCategory}
-        />
+        <ProductCategory label={category} subCategory={subCategory} />
       )}
       <hr />
       <div className="text-lg font-light text-neutral-800 ml-4">

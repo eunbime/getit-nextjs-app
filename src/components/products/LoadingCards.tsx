@@ -1,7 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { SearchParams } from "@/hooks/api/useProducts";
 
 interface LoadingCardsProps {
-  searchParams: string;
+  searchParams: SearchParams;
 }
 
 const LoadingCards: React.FC<LoadingCardsProps> = ({ searchParams }) => {
