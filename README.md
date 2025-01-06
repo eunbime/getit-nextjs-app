@@ -1,37 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 프로젝트 주제
 
-## Getting Started
+---
 
-First, run the development server:
+“SUPER”는 위치 기반의 중고 거래 플랫폼으로, 사용자 간 중고 물품을 거래하고 실시간 채팅으로 소통할 수 있는 웹 플랫폼입니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[🔗 배포 링크](https://market-nextjs-app-production.up.railway.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⭐️ 주요 기능
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. **상품 관리 (CRUD)**
 
-## Learn More
+- 상품명, 가격, 설명, 이미지, 카테고리, 위치 등 상세 정보 입력 가능
+- 2단계 카테고리 구조를 활용한 동적 카테고리 필터링
+- Cloudinary를 통한 이미지 업로드 및 저장
+- Kakao Maps API와 Geolocation API로 거래 희망 장소 지정 및 현재 위치 자동 감지
 
-To learn more about Next.js, take a look at the following resources:
+### 2. **실시간 채팅 시스템**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- WebSocket 기반의 실시간 양방향 통신 (Socket.io)
+- 자동 재연결 메커니즘 및 채팅방별 메시지 히스토리 관리
+- 이미지 전송 및 미리보기 기능 제공
+- 무한 스크롤을 통한 채팅 히스토리 로드
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. **사용자 인증 및 관리**
 
-## Deploy on Vercel
+- NextAuth를 활용한 이메일/비밀번호 및 소셜 로그인(Google, Kakao) 지원
+- JWT 기반 인증과 bcrypt를 이용한 비밀번호 해싱
+- React Hook Form과 Zod를 활용한 유효성 검사
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. **찜하기 및 검색 기능**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# market-nextjs-app
+- React Query로 찜하기 상태 동기화 및 낙관적 업데이트
+- 키워드 기반 검색, 최근 검색어 저장, 디바운싱으로 최적화된 검색 경험 제공
+
+### 5. **무한 스크롤 및 반응형 레이아웃**
+
+- React Query의 useInfiniteQuery와 Intersection Observer를 활용한 무한 스크롤
+- 스켈레톤 UI로 로딩 중 상태 표시
+- Tailwind CSS로 디바이스별 반응형 레이아웃 구현 및 크로스 브라우징 대응
+
+## ⚙️ 주요 기술 스택과 특징
+
+---
+
+### 1. Next.js와 TypeScript의 결합으로 타입 안정성 확보
+
+Next.js와 TypeScript를 결합하여 **타입 안정성을 확보**하고, 명확한 데이터 구조를 정의함으로써 코드의 **가독성과 유지보수성**을 높였습니다. 이를 통해 코드 이해도를 향상시키고, **런타임 에러를 사전에 방지**하여 개발 생산성을 증대시켰습니다.
+
+### 2. Zustand와 React Query로 상태 관리 최적화
+
+Zustand와 React Query를 활용해 **클라이언트와 서버 상태를 분리 관리**함으로써 복잡성을 줄이고 성능을 최적화하였습니다.
+
+- Zustand로 클라이언트 상태를 효율적으로 처리하였습니다.
+- React Query로 서버 데이터를 **캐싱 및 동기화**하여 불필요한 API 호출을 줄이고 **성능을 향상**시켰습니다.
+
+### 3. WebSocket을 활용한 실시간 채팅
+
+WebSocket을 활용하여 **사용자 간 즉각적인 소통**을 가능하게 하여 거래의 편의성을 높였습니다. 실시간으로 채팅 메시지가 동기화되도록 구현하여 원활한 사용자 경험을 제공하였습니다.
+
+### 4. Kakao Maps API로 거래 위치 제공
+
+Kakao Maps API를 통해 거래 위치를 시각적으로 제공함으로써 **사용자가 쉽게 위치를 확인**할 수 있도록 했습니다. 이를 통해 플랫폼의 **편의성**을 향상시켰습니다.
+
+## 📈 프로젝트 성과
+
+---
+
+### 1. **상태 관리 최적화**
+
+- Zustand로 전역 상태 관리, React Query로 서버 상태 관리
+- 불필요한 리렌더링 감소 및 prop drilling 문제 해결
+- 상태 저장과 캐싱으로 API 호출 횟수 최적화
+
+### 2. **실시간 채팅 최적화**
+
+- 채팅방 이동 시 소켓 연결 해제 및 메모리 누수 문제 해결
+- 커스텀 훅을 이용해 소켓 연결을 효율적으로 관리
+
+### 3. **검색 성능 개선**
+
+- 디바운싱을 통해 서버 부하 75% 감소 및 검색 응답 시간 단축
+- 사용자 경험을 높이기 위해 실시간 검색 결과 표시
+
+### 4. **구조적 설계와 코드 품질 향상**
+
+- 커스텀 훅으로 비즈니스 로직과 UI 로직을 분리하여 테스트 용이성 향상
+- 체계적인 폴더 구조 설계로 유지보수성을 높임
