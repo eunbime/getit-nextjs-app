@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   FieldErrors,
   FieldValues,
@@ -29,23 +28,11 @@ const Input = <T extends FieldValues>({
   errors,
   isTextArea,
 }: InputProps<T>) => {
-  const [showWarning, setShowWarning] = useState(false);
-  const MAX_VALUE = 1000000000;
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (formatPrice) {
       // 콤마 제거 후 숫자만 추출
       let value = e.target.value.replace(/,/g, "");
       value = value.replace(/[^\d]/g, "");
-
-      // 최대값 제한
-      const numValue = Number(value);
-      if (numValue > MAX_VALUE) {
-        setShowWarning(true);
-        value = String(MAX_VALUE);
-      } else {
-        setShowWarning(false);
-      }
 
       // register에 콤마가 포함된 값 전달
       const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -129,9 +116,9 @@ const Input = <T extends FieldValues>({
       >
         {label}
       </label>
-      {showWarning && (
+      {errors[id as string as keyof T] && (
         <p className="text-red-500 text-xs mt-1">
-          최대 10억원까지 입력 가능합니다.
+          {errors[id as string as keyof T]?.message?.toString()}
         </p>
       )}
     </div>

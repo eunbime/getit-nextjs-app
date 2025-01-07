@@ -1,12 +1,17 @@
 "use client";
 
+import { ProductSchema } from "@/schemas";
 import { useEffect, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { z } from "zod";
 
 interface KakaoMapProps {
   latitude: number;
   longitude: number;
-  setCustomValue?: (id: string, value: number) => void;
+  setCustomValue?: (
+    id: keyof z.infer<typeof ProductSchema>,
+    value: number
+  ) => void;
   detailPage?: boolean;
 }
 

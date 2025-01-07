@@ -4,10 +4,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "react-toastify";
 
 import { Category, Subcategory } from "@prisma/client";
+import { ProductSchema } from "@/schemas";
 import { useProductById } from "@/hooks/api/useProductById";
 import { useCategories } from "@/hooks/api/useCategories";
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
@@ -17,15 +21,18 @@ import Heading from "@/components/common/Heading";
 import Input from "@/components/common/Input";
 import ImageUpload from "@/components/ImageUpload";
 
+const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
+  ssr: false,
+  loading: () => <p>지도를 불러오는 중...</p>,
+});
+
 const ProductForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const productId = searchParams?.get("productId");
-
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: productData } = useProductById(productId);
-
   const { data: categories } = useCategories();
 
   const {
@@ -35,7 +42,8 @@ const ProductForm = () => {
     watch,
     formState: { errors },
     reset,
-  } = useForm<FieldValues>({
+  } = useForm<z.infer<typeof ProductSchema>>({
+    resolver: zodResolver(ProductSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -46,6 +54,7 @@ const ProductForm = () => {
       imageSrc: "",
       price: 1,
     },
+    mode: "onChange",
   });
 
   useEffect(() => {
@@ -63,11 +72,7 @@ const ProductForm = () => {
     }
   }, [productData, reset]);
 
-  const imageSrc = watch("imageSrc");
-  const category = watch("category");
-  const subCategory = watch("subCategory");
-  const latitude = watch("latitude");
-  const longitude = watch("longitude");
+  const { imageSrc, category, subCategory, latitude, longitude } = watch();
 
   const { data: subCategories } = useQuery({
     queryKey: ["sub-categories", category],
@@ -80,41 +85,36 @@ const ProductForm = () => {
     enabled: !!category,
   });
 
-  const setCustomValue = (id: string, value: any) => {
+  const setCustomValue = (
+    id: keyof z.infer<typeof ProductSchema>,
+    value: any
+  ) => {
     setValue(id, value);
   };
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true);
+  const onSubmit: SubmitHandler<z.infer<typeof ProductSchema>> = async (
+    data
+  ) => {
+    try {
+      setIsLoading(true);
 
-    const productData = {
-      ...data,
-      price: parseInt(data.price),
-      latitude: parseFloat(data.latitude),
-      longitude: parseFloat(data.longitude),
-    };
+      const response = await (productId
+        ? axios.patch(`/api/products/${productId}`, data)
+        : axios.post("/api/products", data));
 
-    const request = productId
-      ? axios.patch(`/api/products/${productId}`, productData)
-      : axios.post("/api/products", productData);
-
-    request
-      .then((response) => {
-        router.push(`/products/${response.data.id}`);
-        reset();
-      })
-      .catch((error) => {
-        console.error("Error details:", error.response?.data);
-        alert(error.response?.data?.error || "오류가 발생했습니다!");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      toast.success(
+        productId ? "상품이 수정되었습니다!" : "상품이 등록되었습니다!"
+      );
+      router.push(`/products/${response.data.id}`);
+      reset();
+    } catch (error) {
+      toast.error("오류가 발생했습니다!");
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
-    ssr: false,
-  });
   return (
     <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
       <Heading title="Product Upload" subtitle="upload your product" />
@@ -122,6 +122,11 @@ const ProductForm = () => {
         onChange={(value) => setCustomValue("imageSrc", value)}
         value={imageSrc}
       />
+      {errors.imageSrc && (
+        <p className="text-red-500 text-xs mt-1">
+          {errors.imageSrc.message?.toString()}
+        </p>
+      )}
       <hr />
       <Input
         id="title"
@@ -174,6 +179,11 @@ const ProductForm = () => {
           </div>
         ))}
       </div>
+      {errors.category && (
+        <p className="text-red-500 text-xs mt-1">
+          {errors.category.message?.toString()}
+        </p>
+      )}
 
       {/* 서브카테고리 선택 */}
       {category && (
@@ -196,19 +206,23 @@ const ProductForm = () => {
           ))}
         </div>
       )}
+      {!errors.category && errors.subCategory && (
+        <p className="text-red-500 text-xs mt-1">
+          {errors.subCategory.message?.toString()}
+        </p>
+      )}
 
       <hr />
 
       <KakaoMap
         setCustomValue={setCustomValue}
-        latitude={latitude}
-        longitude={longitude}
+        latitude={latitude || 0}
+        longitude={longitude || 0}
       />
-      {productId ? (
-        <Button label="상품 수정하기" />
-      ) : (
-        <Button label="상품 생성하기" />
-      )}
+      <Button
+        label={productId ? "상품 수정하기" : "상품 등록하기"}
+        disabled={isLoading}
+      />
     </form>
   );
 };
