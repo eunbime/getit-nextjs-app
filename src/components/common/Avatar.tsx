@@ -15,6 +15,7 @@ const Avatar = ({ src }: AvatarProps) => {
       alt="Avatar"
       className="w-10 h-10 rounded-full"
       loading="lazy"
+      quality={80}
     />
   );
 };

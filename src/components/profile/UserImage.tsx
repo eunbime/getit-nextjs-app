@@ -63,6 +63,7 @@ const UserImage = ({ currentUser }: UserImageProps) => {
           width={192}
           height={192}
           className="w-full h-full object-cover"
+          priority
         />
         <input
           type="file"

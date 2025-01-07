@@ -50,6 +50,7 @@ const Message = ({
               height={300}
               src={messageImage}
               alt="messageImage"
+              quality={80}
             />
           </div>
         )}

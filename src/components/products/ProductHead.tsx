@@ -20,6 +20,8 @@ const ProductHead = ({ title, id, imageSrc }: ProductHeadProps) => {
           className="object-cover w-full"
           alt="Image"
           objectFit="contain"
+          priority
+          loading="eager"
         />
         <div className="absolute top-5 right-5">
           <HeartButton productId={id} />
