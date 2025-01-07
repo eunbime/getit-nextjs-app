@@ -17,6 +17,7 @@ interface ProductListProps {
 export default function ProductList({ products }: ProductListProps) {
   return (
     <div
+      data-testid="product-grid"
       className="w-full grid grid-cols-1 gap-8 pt-12 sm:grid-cols-2 md:grid-cols-3
         lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
     >

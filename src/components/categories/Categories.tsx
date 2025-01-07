@@ -29,7 +29,11 @@ const Categories = () => {
         aria-label="카테고리 로딩 중"
       >
         {Array.from({ length: categoryLength }).map((_, index) => (
-          <Skeleton className="h-10 md:w-24 w-20 mb-2" key={index} />
+          <Skeleton
+            key={index}
+            data-testid="skeleton"
+            className="h-10 md:w-24 w-20 mb-2"
+          />
         ))}
       </div>
     );

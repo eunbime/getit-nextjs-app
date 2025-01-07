@@ -89,7 +89,7 @@ const RegisterForm = () => {
           required
         />
         <p className="text-red-500">{errors.password?.message}</p>
-        <Button label="회원가입" />
+        <Button disabled={isLoading} label="회원가입" />
         <p className="text-red-500 w-full text-center">
           {errors.root?.message}
         </p>

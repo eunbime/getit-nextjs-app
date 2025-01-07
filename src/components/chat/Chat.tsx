@@ -41,14 +41,13 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
     queryKey,
   });
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatQuery(
-    {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, error } =
+    useChatQuery({
       queryKey,
       apiUrl: "/api/socket/messages",
       paramKey: "conversationId",
       paramValue: conversation?.id || "",
-    }
-  );
+    });
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -65,6 +64,10 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
 
   if (!receiver.receiverName || !currentUser) {
     return <div className="w-full h-full" />;
+  }
+
+  if (error) {
+    return <div>채팅 불러오기 중 오류가 발생했습니다.</div>;
   }
 
   return (

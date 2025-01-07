@@ -10,6 +10,8 @@ const CategoryBox = ({ label, path, selected }: CategoryBoxProps) => {
   return (
     <Link
       href={`/?category=${path}`}
+      role="tab"
+      aria-selected={selected}
       className={`flex flex-col items-center justify-center gap-2 p-3 border-b-2
         hover:text-neutral-800 transition cursor-pointer
         ${

@@ -92,7 +92,7 @@ const LoginForm = () => {
         />
         <p className="text-red-500">{errors.password?.message}</p>
 
-        <Button label="로그인" />
+        <Button disabled={isLoading} label="로그인" />
         <p className="text-red-500 w-full text-center">
           {errors.root?.message || urlError}
         </p>
