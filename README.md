@@ -3,6 +3,9 @@
 “SUPER”는 위치 기반의 중고 거래 플랫폼으로, 사용자 간 중고 물품을 거래하고 실시간 채팅으로 소통할 수 있는 웹 플랫폼입니다.
 
 [🔗 배포 링크](https://market-nextjs-app-production.up.railway.app/)
+test 계정
+email: test1234@gmail.com 
+password: 123456
 
 ## ⭐️ 주요 기능
 
