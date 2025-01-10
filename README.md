@@ -7,8 +7,8 @@
 <br />
 
 test 계정
-email: test1234@gmail.com 
-password: 123456
+- email: test1234@gmail.com 
+- password: 123456
 
 ## ⭐️ 주요 기능
 
