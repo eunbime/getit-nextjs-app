@@ -23,18 +23,28 @@ export const useProductAction = ({
     }
 
     try {
-      // 새로운 대화 생성 또는 기존 대화 확인
-      await axios.post("/api/chat", {
-        senderId: currentUser?.id,
-        receiverId: product?.user?.id,
-        text: `안녕하세요. ${product.title} 상품에 대해 문의드립니다.`,
-      });
-
-      const userImage = product?.user?.image ? product?.user?.image : "";
-
-      router.push(
-        `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${userImage}&open=true`
+      const response = await axios.get(
+        `/api/chat/check?senderId=${currentUser?.id}&receiverId=${product?.user?.id}`
       );
+      const conversationExists = response.data.exists;
+
+      if (conversationExists) {
+        router.push(
+          `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${product?.user?.image}&open=true`
+        );
+        return;
+      } else {
+        await axios.post("/api/chat", {
+          senderId: currentUser?.id,
+          receiverId: product?.user?.id,
+        });
+
+        const userImage = product?.user?.image ? product?.user?.image : "";
+
+        router.push(
+          `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${userImage}&open=true`
+        );
+      }
     } catch (error) {
       console.error("채팅 시작 중 오류 발생:", error);
       toast.error("채팅 시작 중 오류 발생했습니다.");

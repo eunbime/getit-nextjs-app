@@ -111,22 +111,7 @@ export async function POST(request: Request) {
           },
         },
       });
-
-      try {
-        const message = await prisma.message.create({
-          data: {
-            text: body.text,
-            image: body.image,
-            senderId: body.senderId,
-            receiverId: body.receiverId,
-            conversationId: newConversation.id,
-          },
-        });
-
-        return NextResponse.json(message);
-      } catch (error) {
-        return NextResponse.json(error);
-      }
+      return NextResponse.json(newConversation);
     }
   } catch (error) {
     console.log("CHAT_POST", error);

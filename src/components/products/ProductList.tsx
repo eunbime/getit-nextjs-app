@@ -22,10 +22,11 @@ export default function ProductList({ products }: ProductListProps) {
         lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
     >
       {products?.pages.flatMap((page) =>
-        page.data.map((product: Product) => (
+        page.data.map((product: Product, index: number) => (
           <ProductCard
             key={product.id}
             data={product as TProductWithCategory}
+            index={index}
           />
         ))
       )}

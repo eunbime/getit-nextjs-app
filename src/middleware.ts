@@ -4,21 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 export { default } from "next-auth/middleware";
 import compression from "compression";
 
-// 압축 미들웨어
-const compressionMiddleware = compression({
-  filter: (req, res) => {
-    // text 기반 컨텐츠만 압축
-    if (
-      req.headers["content-type"]?.includes("text") ||
-      req.headers["content-type"]?.includes("json")
-    ) {
-      return true;
-    }
-    return false;
-  },
-  threshold: 0, // 모든 크기의 응답을 압축
-});
-
 export async function middleware(req: NextRequest) {
   const session = await getToken({ req, secret: process.env.JWT_SECRET });
   const pathname = req.nextUrl.pathname;

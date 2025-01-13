@@ -9,10 +9,14 @@ import HeartButton from "@/components/common/HeartButton";
 
 interface ProductCardProps {
   data: TProductWithCategory;
+  index?: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ data, index }) => {
   const router = useRouter();
+
+  const isAboveTheFold = index && index < 9;
+
   return (
     <article
       onClick={() => router.push(`/products/${data.id}`)}
@@ -27,8 +31,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
             src={data.imageSrc}
             alt="Product Image"
             quality={60}
-            loading="lazy"
-            placeholder="empty"
+            loading={isAboveTheFold ? "eager" : "lazy"}
+            priority={isAboveTheFold ? true : false}
           />
           <div className="absolute top-3 right-3">
             <HeartButton productId={data.id} />
