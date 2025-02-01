@@ -14,6 +14,22 @@ interface ProductResponse {
   currentPage: number;
 }
 
+export const getProducts = async (searchParams: SearchParams) => {
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : process.env.NEXT_PUBLIC_API_URL;
+
+  const { data } = await axios.get(`${baseUrl}/api/products`, {
+    params: {
+      ...searchParams,
+      page: searchParams.page,
+      limit: searchParams.limit,
+    },
+  });
+  return data;
+};
+
 export const useProducts = (searchParams: SearchParams) => {
   return useInfiniteQuery<ProductResponse>({
     queryKey: ["products", searchParams.category, searchParams.subcategory],
