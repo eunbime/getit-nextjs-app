@@ -54,20 +54,23 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
   hashedPassword String?
- 
   userType  UserType  @default(User)
 
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+ 
+  accounts      Account[]
+  sessions      Session[]
   favoriteIds String[]
   products Product[]
-
+  likes Like[]
   conversations Conversation[]
   sentMessages Message[] @relation("sender")
   receiverMessages Message[] @relation("receiver")
+
+  @@index([email])
+  @@index([userType])
 }
 
 model VerificationRequest {
@@ -121,9 +124,26 @@ model Product {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   category Category @relation(fields: [categoryId], references: [id])
   subcategory Subcategory? @relation(fields: [subcategoryId], references: [id])
+  likes Like[]
 
   @@index([categoryId])
   @@index([subcategoryId])
+}
+
+model Like {
+  id String @id @default(cuid())
+  productId String
+  userId String
+  likeCount Int @default(0)
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, userId])
+  @@index([productId])
+  @@index([userId])
+  @@index([likeCount])
 }
 
 model Conversation {
