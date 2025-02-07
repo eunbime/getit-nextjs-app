@@ -28,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, index }) => {
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover w-full h-full transition group-hover:scale-110"
-            src={data.imageSrc}
+            src={data?.imageSrc}
             alt="Product Image"
             quality={60}
             loading={isAboveTheFold ? "eager" : "lazy"}
@@ -44,10 +44,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, index }) => {
 
         <div className="flex flex-row items-center justify-between gap-1">
           <div className="font-semibold">
-            {data.price.toLocaleString("ko-KR")}{" "}
+            {data?.price?.toLocaleString("ko-KR")}{" "}
             <span className="font-light">원</span>
           </div>
-          <div>{fromNow(data.createdAt)}</div>
+          <div>{fromNow(data?.createdAt)}</div>
         </div>
       </div>
     </article>

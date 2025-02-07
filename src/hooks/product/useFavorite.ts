@@ -46,6 +46,9 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["likes", currentUser?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["favorites", currentUser?.id],
+      });
       toast.success(
         !isLiked ? "찜 목록에 추가되었습니다." : "찜 목록에서 제거되었습니다."
       );
