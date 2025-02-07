@@ -1,10 +1,8 @@
-import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { User } from "@prisma/client";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { Like, User } from "@prisma/client";
+import { useState } from "react";
 
 interface UseFavoriteProps {
   productId: string;
@@ -12,46 +10,52 @@ interface UseFavoriteProps {
 }
 
 const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
-  const router = useRouter();
   const queryClient = useQueryClient();
+  const [optimisticLiked, setOptimisticLiked] = useState<boolean | null>(null);
 
-  const [isFavorite, setIsFavorite] = useState(() => {
-    const list = currentUser?.favoriteIds || [];
-    return list.includes(productId);
-  });
-
-  const { mutate: toggleFavorite } = useMutation({
-    mutationFn: async () => {
-      if (isFavorite) {
-        return await axios.post(`/api/favorites/${productId}`);
-      } else {
-        return await axios.delete(`/api/favorites/${productId}`);
+  const { data: likes } = useQuery<Like[]>({
+    queryKey: ["likes", currentUser?.id],
+    queryFn: async () => {
+      try {
+        const response = await axios.get(
+          `/api/likes/by-user/${currentUser?.id}`
+        );
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        toast.error("찜 목록을 불러오는 중 오류가 발생했습니다.");
       }
     },
-    onMutate: () => {
-      setIsFavorite(!isFavorite);
+    enabled: !!currentUser,
+  });
+
+  const isLiked =
+    optimisticLiked ??
+    (likes?.some((like) => like.productId === productId) || false);
+
+  const { mutate: toggleFavorite } = useMutation<
+    void,
+    Error,
+    void,
+    { previousLikes: Like[] }
+  >({
+    mutationFn: async () => {
+      return isLiked
+        ? axios.delete(`/api/likes/${productId}`)
+        : axios.post(`/api/likes/${productId}`);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["likes", currentUser?.id] });
       toast.success(
-        !isFavorite
-          ? "찜 목록에서 제거되었습니다."
-          : "찜 목록에 추가되었습니다."
+        !isLiked ? "찜 목록에 추가되었습니다." : "찜 목록에서 제거되었습니다."
       );
-
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
-      router.refresh();
     },
-    onError: (error) => {
-      console.log("좋아요 오류", error);
+    onError: () => {
       toast.error("일시적인 오류가 발생했습니다.");
-      setIsFavorite(isFavorite);
     },
   });
 
-  return {
-    isFavorite,
-    toggleFavorite,
-  };
+  return { isLiked, toggleFavorite };
 };
 
 export default useFavorite;

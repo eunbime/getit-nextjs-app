@@ -14,22 +14,22 @@ const NavItem = ({ mobile, currentUser }: NavItemProps) => {
         mobile && "flex-col h-full"
       }`}
     >
-      <li className="py-2 text-center border-b-4 cursor-pointer">
+      <li className="py-2 text-center border-b-4 hover:border-[#0d0c8f] cursor-pointer transition-all duration-300">
         <Link href={"/user/favorites"}>관심</Link>
       </li>
-      <li className="py-2 text-center border-b-4 cursor-pointer">
+      <li className="py-2 text-center border-b-4 hover:border-[#0d0c8f] cursor-pointer transition-all duration-300">
         <Link href={"/chat"}>채팅</Link>
       </li>
-      <li className="py-2 text-center border-b-4 cursor-pointer">
+      <li className="py-2 text-center border-b-4 hover:border-[#0d0c8f] cursor-pointer transition-all duration-300">
         <Link href={"/user/profile"}>마이페이지</Link>
       </li>
 
       {currentUser ? (
-        <li className="py-2 text-center border-b-4 cursor-pointer">
+        <li className="py-2 text-center border-b-4 hover:border-[#0d0c8f] cursor-pointer transition-all duration-300">
           <button onClick={() => signOut()}>로그아웃</button>
         </li>
       ) : (
-        <li className="py-2 text-center border-b-4 cursor-pointer">
+        <li className="py-2 text-center border-b-4 hover:border-[#0d0c8f] cursor-pointer transition-all duration-300">
           <button onClick={() => signIn()}>로그인</button>
         </li>
       )}

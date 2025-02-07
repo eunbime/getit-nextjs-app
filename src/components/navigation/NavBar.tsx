@@ -27,19 +27,19 @@ const NavBar = ({ currentUser }: NavBarProps) => {
 
   return (
     <nav
-      className="relative z-10 w-full bg-[#0d0c8f] text-white shadow-sm
+      className="fixed bg-white top-0 z-10 w-full shadow-sm shadow-gray-200
     "
     >
       <div className="flex items-center justify-between mx-5 sm:mx-10 lg:mx-20">
         {/* logo */}
-        <div className="flex items-center font-bold text-2xl h-14">
-          <Link href={"/"}>SUPER</Link>
+        <div className="flex items-center font-extrabold text-2xl h-14 text-[#0d0c8f]">
+          <Link href={"/"}>GET!T</Link>
         </div>
 
         {/* menu */}
         <div className="sm:hidden flex items-center gap-4">
           <Link href={"/search"} aria-label="search">
-            <IoSearch className="text-2xl" aria-label="search" />
+            <IoSearch className="text-2xl text-[#0d0c8f]" aria-label="search" />
           </Link>
           {menu === false ? (
             <button onClick={handleMenu}>
