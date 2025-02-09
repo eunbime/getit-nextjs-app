@@ -1,4 +1,6 @@
 import { FaPlus } from "react-icons/fa";
+import axios from "axios";
+import { Suspense } from "react";
 
 import { getProducts, SearchParams } from "@/hooks/api/useProducts";
 import Container from "@/components/common/Container";
@@ -11,12 +13,14 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import CategoriesComponent from "./_components/CategoriesComponent";
-import LatestProductsCarousel from "@/components/carousel/LatestProductsCarousel";
 import BestProductsCarousel from "@/components/carousel/BestProductsCarousel";
+import LatestProducts from "./_components/LatestProducts";
 
 interface HomeProps {
   searchParams: SearchParams;
 }
+
+export const dynamic = "force-dynamic"; // SSR 강제 적용
 
 export default async function Home({ searchParams }: HomeProps) {
   const queryClient = new QueryClient();
@@ -34,6 +38,18 @@ export default async function Home({ searchParams }: HomeProps) {
     },
   });
 
+  await queryClient.prefetchQuery({
+    queryKey: ["popular-products"],
+    queryFn: async () => {
+      const baseUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : process.env.NEXT_PUBLIC_API_URL;
+      const response = await axios.get(`${baseUrl}/api/posts/popular`);
+      return response.data;
+    },
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Container>
@@ -45,7 +61,9 @@ export default async function Home({ searchParams }: HomeProps) {
                 주목받고 있는 물품
                 <div className="absolute top-[50%] left-0 bg-gray-200 w-full h-4 -z-10" />
               </h2>
-              <BestProductsCarousel />
+              <Suspense fallback={<div>Loading...</div>}>
+                <BestProductsCarousel />
+              </Suspense>
             </div>
             <div className="flex flex-col gap-10 my-16">
               <h2 className="relative text-2xl font-bold w-fit">
@@ -53,7 +71,26 @@ export default async function Home({ searchParams }: HomeProps) {
                 새로 올라온 물품
                 <div className="absolute top-[50%] left-0 bg-gray-200 w-full h-4 -z-10" />
               </h2>
-              <LatestProductsCarousel />
+
+              <Suspense
+                fallback={
+                  <div className="flex gap-[50px]">
+                    <div className="hidden md:block animate-pulse flex-[0_0_calc(25%-37.5px)]">
+                      <div className="w-full aspect-square bg-gray-200 rounded-lg mb-4" />
+                    </div>
+                    {[...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="animate-pulse flex-[0_0_calc(33.333%-33.333px)] md:flex-[0_0_calc(25%-37.5px)]"
+                      >
+                        <div className="w-full aspect-square bg-gray-200 rounded-lg mb-4" />
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <LatestProducts />
+              </Suspense>
             </div>
           </>
         )}
