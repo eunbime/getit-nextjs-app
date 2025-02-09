@@ -40,8 +40,8 @@ const ProductClient = ({ productId }: ProductClientProps) => {
 
   if (isLoading) {
     return (
-      <div className="w-full justify-center items-center">
-        <div className="flex flex-col py-10 space-y-2 w-[90%] mx-auto">
+      <div className="max-w-screen-lg mx-auto pt-14">
+        <div className="flex flex-col py-8 space-y-2 ">
           <Skeleton className="h-[30px] w-1/5 rounded-xl" />
           <Skeleton className="h-[400px] w-full rounded-xl" />
           <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
@@ -55,7 +55,7 @@ const ProductClient = ({ productId }: ProductClientProps) => {
 
   return (
     <Container>
-      <div className="max-w-screen-lg mx-auto">
+      <div className="max-w-screen-lg mx-auto pt-14">
         <div className="flex flex-col gap-6">
           <ProductHead
             title={product?.title}

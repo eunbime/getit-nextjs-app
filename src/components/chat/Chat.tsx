@@ -71,7 +71,7 @@ const Chat = ({ receiver, currentUser, setLayout }: ChatProps) => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-14">
       <div>
         <ChatHeader
           setLayout={setLayout}

@@ -66,7 +66,7 @@ const ChatClient = () => {
   return (
     <main>
       <div className="grid grid-cols-[1fr] md:grid-cols-[300px_1fr]">
-        <section className={`md:flex ${layout && "hidden"}`}>
+        <section className={`md:flex pt-14 ${layout && "hidden"}`}>
           <Contacts
             users={users}
             currentUser={currentUserWithMessage}
