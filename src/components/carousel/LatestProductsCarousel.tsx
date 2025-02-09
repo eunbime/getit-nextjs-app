@@ -2,8 +2,6 @@
 
 import { Navigation, A11y } from "swiper/modules";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,18 +11,20 @@ import axios from "axios";
 import { TProductWithCategory } from "@/types";
 import CarouselProductCard from "./CarouselProductCard";
 import NavigationButton from "../common/NavigationButton";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const LatestProductsCarousel = () => {
   const { data } = useQuery({
     queryKey: ["latest-products"],
-    queryFn: () =>
-      axios.get("/api/posts/latest", {
+    queryFn: async () => {
+      const response = await axios.get("/api/posts/latest", {
         params: {
           limit: 10,
           page: 1,
         },
-      }),
-    select: (data) => data.data,
+      });
+      return response.data;
+    },
   });
 
   return (
@@ -35,9 +35,6 @@ const LatestProductsCarousel = () => {
         slidesPerView={3}
         breakpoints={{
           768: {
-            slidesPerView: 4,
-          },
-          1024: {
             slidesPerView: 4,
           },
         }}
