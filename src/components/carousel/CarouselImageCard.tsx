@@ -1,6 +1,7 @@
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 import { TProductWithCategory } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CarouselImageCardProps {
   product: TProductWithCategory;
@@ -33,9 +34,12 @@ const CarouselImageCard = ({ product }: CarouselImageCardProps) => {
         <p className="text-sm text-gray-500">
           {CATEGORY_TITLE[product.category.name as CategoryType]}
         </p>
-        <button className="bg-black text-white px-4 py-2 rounded-md hover:opacity-70 transition-opacity duration-300">
+        <Link
+          href={`/products/${product.id}`}
+          className="bg-black text-white px-4 py-2 rounded-md hover:opacity-70 transition-opacity duration-300"
+        >
           상품 보러가기
-        </button>
+        </Link>
       </div>
     </div>
   );

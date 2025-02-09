@@ -9,8 +9,8 @@ export default async function Profile() {
   const currentUser = await getCurrentUser();
 
   return (
-    <section className="flex-1 p-8">
-      <h1 className="text-2xl font-semibold mb-8">내 정보</h1>
+    <section className="flex-1 p-8 md:pt-16">
+      <h1 className="text-2xl font-semibold py-3">내 정보</h1>
 
       <div className="grid gap-8 max-w-2xl">
         <UserImage currentUser={currentUser} />
