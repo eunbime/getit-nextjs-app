@@ -32,8 +32,28 @@ const NavBar = ({ currentUser }: NavBarProps) => {
     >
       <div className="flex items-center justify-between mx-5 sm:mx-10 lg:mx-20">
         {/* logo */}
-        <div className="flex items-center font-extrabold text-2xl h-14 text-[#0d0c8f]">
-          <Link href={"/"}>GET!T</Link>
+        <div className="flex items-center font-extrabold text-2xl h-14 text-[#0d0c8f] gap-4">
+          {pathname === "/talk" ? (
+            <>
+              <Link href={"/talk"}>TALK!T</Link>
+              <Link
+                href={"/"}
+                className="text-sm bg-[#0d0c8f] text-white px-3 py-1 rounded-md mt-[1px]"
+              >
+                GET!T
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href={"/"}>GET!T</Link>
+              <Link
+                href={"/talk"}
+                className="text-sm bg-[#0d0c8f] text-white px-3 py-1 rounded-md mt-[1px]"
+              >
+                TALK!T
+              </Link>
+            </>
+          )}
         </div>
 
         {/* menu */}

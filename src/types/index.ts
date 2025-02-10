@@ -1,4 +1,11 @@
-import { Category, Like, Message, Product, User } from "@prisma/client";
+import {
+  Category,
+  Like,
+  Message,
+  Product,
+  Subcategory,
+  User,
+} from "@prisma/client";
 
 export type TUserWithChat = User & {
   conversations: TConversation[];
@@ -18,4 +25,8 @@ export type TLikeWithProduct = Like & {
   product: TProductWithCategory & {
     category: Category;
   };
+};
+
+export type TCategoryWithSubcategories = Category & {
+  subcategories: Subcategory[];
 };
