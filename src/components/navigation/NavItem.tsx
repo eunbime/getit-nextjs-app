@@ -1,6 +1,7 @@
 import { User } from "@prisma/client";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface NavItemProps {
   mobile?: boolean;
@@ -8,6 +9,12 @@ interface NavItemProps {
 }
 
 const NavItem = ({ mobile, currentUser }: NavItemProps) => {
+  const pathname = usePathname();
+  const isWritePage = pathname?.includes("/write");
+  const isUploadPage = pathname?.includes("/upload");
+
+  if (isWritePage || isUploadPage) return null;
+
   return (
     <ul
       className={`text-md justify-center flex gap-4 w-full items-center ${

@@ -16,6 +16,8 @@ interface NavBarProps {
 const NavBar = ({ currentUser }: NavBarProps) => {
   const [menu, setMenu] = useState(false);
   const pathname = usePathname();
+  const isTalkPage = pathname?.includes("/talk");
+  const isUploadPage = pathname?.includes("/upload");
 
   useEffect(() => {
     setMenu(false);
@@ -33,7 +35,7 @@ const NavBar = ({ currentUser }: NavBarProps) => {
       <div className="flex items-center justify-between mx-5 sm:mx-10 lg:mx-20">
         {/* logo */}
         <div className="flex items-center font-extrabold text-2xl h-14 text-[#0d0c8f] gap-4">
-          {pathname === "/talk" ? (
+          {pathname?.includes("/talk") ? (
             <>
               <Link href={"/talk"}>TALK!T</Link>
               <Link
@@ -58,9 +60,14 @@ const NavBar = ({ currentUser }: NavBarProps) => {
 
         {/* menu */}
         <div className="sm:hidden flex items-center gap-4">
-          <Link href={"/search"} aria-label="search">
-            <IoSearch className="text-2xl text-[#0d0c8f]" aria-label="search" />
-          </Link>
+          {isTalkPage || isUploadPage ? null : (
+            <Link href={"/search"} aria-label="search">
+              <IoSearch
+                className="text-2xl text-[#0d0c8f]"
+                aria-label="search"
+              />
+            </Link>
+          )}
           {menu === false ? (
             <button onClick={handleMenu}>
               <TbPlus className="text-2xl" />
@@ -73,14 +80,17 @@ const NavBar = ({ currentUser }: NavBarProps) => {
         </div>
 
         {/* nav-item: screen*/}
-        <div className="hidden sm:block relative">
+        <div className="flex sm:block relative">
           <Link
             href={"/search"}
             className="absolute top-3 -left-12"
             aria-label="search"
           >
-            <IoSearch className="text-2xl" aria-label="search" />
+            {isTalkPage || isUploadPage ? null : (
+              <IoSearch className="text-2xl" aria-label="search" />
+            )}
           </Link>
+
           <NavItem currentUser={currentUser} />
         </div>
       </div>

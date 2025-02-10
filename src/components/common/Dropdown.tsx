@@ -42,7 +42,7 @@ const Dropdown = ({ options, selectedOption, onSelect }: DropdownProps) => {
   };
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div className="relative w-full z-50" ref={dropdownRef}>
       <div className="flex items-center gap-2">
         <div>{selectedItem}</div>
         <div onClick={() => setIsOpen(!isOpen)}>
