@@ -13,8 +13,6 @@ const TalkMenuNav = async () => {
     console.log(error);
   }
 
-  console.log({ categories });
-
   return (
     <div className="w-[20%] h-full">
       <nav className="flex flex-col gap-4 bg-gray-100 py-5 px-7 rounded-md">

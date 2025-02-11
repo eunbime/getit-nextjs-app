@@ -7,6 +7,7 @@ interface DropdownProps {
   options?: string[];
   selectedOption?: string;
   onSelect?: (option: string) => void;
+  href?: string;
 }
 
 const Dropdown = ({ options, selectedOption, onSelect }: DropdownProps) => {
@@ -50,7 +51,7 @@ const Dropdown = ({ options, selectedOption, onSelect }: DropdownProps) => {
         </div>
       </div>
       <div
-        className={`absolute top-10 left-0 w-full h-fit bg-white text-black  rounded-md shadow-md ${
+        className={`absolute top-10 left-0 w-full h-fit flex flex-col gap-2 bg-white text-black  rounded-md shadow-md ${
           isOpen ? "block" : "hidden"
         }`}
       >
@@ -58,7 +59,7 @@ const Dropdown = ({ options, selectedOption, onSelect }: DropdownProps) => {
           <p
             key={option}
             onClick={() => handleItemClick(option)}
-            className="p-2 hover:bg-gray-100 w-full"
+            className="p-2 hover:bg-gray-100 w-full cursor-pointer"
           >
             {option}
           </p>

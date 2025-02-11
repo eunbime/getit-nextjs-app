@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import BoardListItem from "./BoardListItem";
 import { TPostWithCategoryWithAuthor } from "@/types";
 

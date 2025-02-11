@@ -3,35 +3,26 @@
 import { TCategoryWithSubcategories } from "@/types";
 import Dropdown from "@/components/common/Dropdown";
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
-import { useEffect } from "react";
 
 interface CategorySelectProps {
   categories?: TCategoryWithSubcategories[];
   setSelectedCategory: (category: string) => void;
-  setCategory?: (category: string) => void;
+  selectedCategory: string;
 }
 
 const CategorySelect = ({
   categories,
   setSelectedCategory,
-  setCategory = () => {},
+  selectedCategory,
 }: CategorySelectProps) => {
-  useEffect(() => {
-    setSelectedCategory("digital");
-    setCategory?.("digital");
-  }, []);
-
   const handleSelect = (option: string) => {
-    setSelectedCategory(
-      Object.keys(CATEGORY_TITLE).find(
-        (key) => CATEGORY_TITLE[key as CategoryType] === option
-      ) as CategoryType
-    );
-    setCategory?.(
-      Object.keys(CATEGORY_TITLE).find(
-        (key) => CATEGORY_TITLE[key as CategoryType] === option
-      ) as CategoryType
-    );
+    const category = Object.keys(CATEGORY_TITLE).find(
+      (key) => CATEGORY_TITLE[key as CategoryType] === option
+    ) as CategoryType;
+
+    if (category) {
+      setSelectedCategory(category);
+    }
   };
 
   return (
@@ -40,7 +31,7 @@ const CategorySelect = ({
         (category) => CATEGORY_TITLE[category.name as CategoryType]
       )}
       selectedOption={
-        "디지털 기기" || CATEGORY_TITLE[categories?.[0].name as CategoryType]
+        CATEGORY_TITLE[selectedCategory as CategoryType] || "전체"
       }
       onSelect={handleSelect}
     />

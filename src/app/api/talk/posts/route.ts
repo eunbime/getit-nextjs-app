@@ -2,8 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const page = searchParams.get("page") || 1;
+  const limit = searchParams.get("limit") || 10;
+  const sort = searchParams.get("sort") || "createdAt";
+  const order = searchParams.get("order") || "desc";
+  const category = searchParams.get("category") || "all";
+  const subcategory = searchParams.get("subcategory") || "전체";
+
   const posts = await prisma.post.findMany({
+    where: {
+      ...(category !== "all" && {
+        category: {
+          name: category,
+        },
+      }),
+      ...(subcategory !== "전체" && {
+        subcategory: {
+          name: subcategory,
+        },
+      }),
+    },
     include: {
       category: {
         select: {
@@ -23,8 +43,10 @@ export async function GET() {
       },
     },
     orderBy: {
-      createdAt: "desc",
+      [sort]: order === "desc" ? "desc" : "asc",
     },
+    skip: (Number(page) - 1) * Number(limit),
+    take: Number(limit),
   });
   return NextResponse.json(posts);
 }
