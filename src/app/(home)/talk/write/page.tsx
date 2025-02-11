@@ -63,26 +63,24 @@ export default function TalkWritePage() {
       const { title, content, category, subcategory } = data;
       // 수정
       if (postId) {
-        console.log("수정");
-        const response = await axios.put(`/api/talk/posts/${postId}`, {
+        await axios.put(`/api/talk/posts/${postId}`, {
           title,
           content,
           category,
           subcategory,
         });
-        console.log({ response });
       } else {
         // 작성
-        console.log("작성");
-        const response = await axios.post("/api/talk/posts", {
+        await axios.post("/api/talk/posts", {
           title,
           content,
           category,
           subcategory,
         });
-        console.log({ response });
       }
+
       queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
       toast.success("게시글이 작성되었습니다.");
       router.push("/talk");
     } catch (error) {

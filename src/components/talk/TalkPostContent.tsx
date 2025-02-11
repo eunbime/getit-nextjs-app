@@ -1,12 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Avatar from "../common/Avatar";
 import parse from "html-react-parser";
 import { useRouter } from "next/navigation";
 
 const TalkPostContent = ({ postId }: { postId: string }) => {
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   const { data: post } = useQuery({
@@ -15,10 +16,22 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
       const { data } = await axios.get(`/api/talk/posts/${postId}`);
       return data;
     },
-    gcTime: 1000 * 60 * 5, // 5분간 캐시 유지
+    gcTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnReconnect: false,
     enabled: !!postId,
+  });
+
+  const { mutate: deletePost } = useMutation({
+    mutationFn: async () => {
+      const { data } = await axios.delete(`/api/talk/posts/${postId}`);
+      return data;
+    },
+    onSuccess: () => {
+      router.push("/talk");
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
+      queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
+    },
   });
 
   return (
@@ -35,7 +48,7 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
             >
               수정
             </button>
-            <button>삭제</button>
+            <button onClick={() => deletePost()}>삭제</button>
           </div>
         </div>
       </div>

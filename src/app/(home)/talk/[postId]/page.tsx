@@ -1,4 +1,3 @@
-import Avatar from "@/components/common/Avatar";
 import Container from "@/components/common/Container";
 import TalkMenuNav from "@/components/navigation/TalkMenuNav";
 import TalkPostContent from "@/components/talk/\bTalkPostContent";

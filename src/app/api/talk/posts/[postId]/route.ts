@@ -64,3 +64,12 @@ export async function PUT(
   });
   return NextResponse.json(post);
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ postId: string }> }
+) {
+  const { postId } = await params;
+  await prisma.post.delete({ where: { id: postId } });
+  return NextResponse.json({ message: "Post deleted" });
+}
