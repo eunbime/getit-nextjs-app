@@ -1,8 +1,21 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import BoardFilter from "./BoardFilter";
 import BoardList from "./BoardList";
 import PaginationWrapper from "./PaginationWrapper";
+import axios from "axios";
+import { TPostWithCategoryWithAuthor } from "@/types";
 
 const TalkBoard = () => {
+  const { data: posts } = useQuery<TPostWithCategoryWithAuthor[]>({
+    queryKey: ["talk-posts"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/talk/posts");
+      return data;
+    },
+  });
+
   return (
     <div className="w-[80%] h-full rounded-md">
       <BoardFilter />
@@ -18,7 +31,9 @@ const TalkBoard = () => {
           <p>좋아요</p>
         </div>
       </div>
-      <BoardList />
+      {posts?.map((post) => (
+        <BoardList key={post.id} post={post} />
+      ))}
       <PaginationWrapper />
     </div>
   );

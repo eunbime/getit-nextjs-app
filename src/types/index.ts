@@ -2,6 +2,7 @@ import {
   Category,
   Like,
   Message,
+  Post,
   Product,
   Subcategory,
   User,
@@ -29,4 +30,17 @@ export type TLikeWithProduct = Like & {
 
 export type TCategoryWithSubcategories = Category & {
   subcategories: Subcategory[];
+};
+
+export type TPostWithCategoryWithAuthor = Post & {
+  category: {
+    name: string;
+  };
+  subcategory: {
+    name: string;
+  };
+  author: {
+    name: string;
+    image: string;
+  };
 };
