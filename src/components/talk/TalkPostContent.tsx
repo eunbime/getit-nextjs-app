@@ -4,8 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Avatar from "../common/Avatar";
 import parse from "html-react-parser";
+import { useRouter } from "next/navigation";
 
 const TalkPostContent = ({ postId }: { postId: string }) => {
+  const router = useRouter();
+
   const { data: post } = useQuery({
     queryKey: ["post", postId],
     queryFn: async () => {
@@ -20,11 +23,21 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
 
   return (
     <section className="w-full h-full">
-      <div className="flex flex-col gap-2 border-b border-gray-200 pb-2">
+      <div className="flex flex-col w-full gap-2 border-b border-gray-200 pb-2">
         <h3 className="text-3xl font-bold ">{post?.title}</h3>
-        <span className="text-gray-500">
-          {post?.category.name} / {post?.subcategory.name}
-        </span>
+        <div className="flex justify-between items-center">
+          <span className="text-gray-500">
+            {post?.category.name} / {post?.subcategory.name}
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => router.push(`/talk/write/?postId=${post?.id}`)}
+            >
+              수정
+            </button>
+            <button>삭제</button>
+          </div>
+        </div>
       </div>
       <div className="py-4 border-b border-gray-200 min-h-[300px]">
         {parse(post?.content || "")}

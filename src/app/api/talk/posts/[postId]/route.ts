@@ -30,3 +30,37 @@ export async function GET(
   });
   return NextResponse.json(post);
 }
+
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ postId: string }> }
+) {
+  const { postId } = await params;
+  const { title, content, category, subcategory } = await req.json();
+
+  const categoryId = await prisma.category.findFirst({
+    where: { name: category },
+  });
+
+  const subcategoryId = await prisma.subcategory.findFirst({
+    where: { name: subcategory },
+  });
+
+  if (!categoryId || !subcategoryId) {
+    return NextResponse.json(
+      { error: "Category or subcategory not found" },
+      { status: 404 }
+    );
+  }
+
+  const post = await prisma.post.update({
+    where: { id: postId },
+    data: {
+      title,
+      content,
+      categoryId: categoryId.id,
+      subcategoryId: subcategoryId.id,
+    },
+  });
+  return NextResponse.json(post);
+}

@@ -7,13 +7,15 @@ import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 interface CategorySelectProps {
   categories?: TCategoryWithSubcategories[];
   setSelectedCategory: (category: string) => void;
-  selectedCategory: string;
+  selectedCategory?: string;
+  setCategory: (category: string) => void;
 }
 
 const CategorySelect = ({
   categories,
   setSelectedCategory,
   selectedCategory,
+  setCategory,
 }: CategorySelectProps) => {
   const handleSelect = (option: string) => {
     const category = Object.keys(CATEGORY_TITLE).find(
@@ -22,6 +24,7 @@ const CategorySelect = ({
 
     if (category) {
       setSelectedCategory(category);
+      setCategory(category);
     }
   };
 

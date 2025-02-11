@@ -8,7 +8,7 @@ import { Category } from "@prisma/client";
 import TextEditor from "@/components/common/TextEditor";
 import CategorySelect from "@/components/talk/CategorySelect";
 import SubCategorySelect from "@/components/talk/SubCategorySelect";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { PostSchema } from "@/schemas";
@@ -19,6 +19,8 @@ export default function TalkWritePage() {
   const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const postId = searchParams?.get("postId");
 
   const {
     handleSubmit,
@@ -36,18 +38,51 @@ export default function TalkWritePage() {
     },
   });
 
+  const { data: post, isLoading } = useQuery({
+    queryKey: ["post", postId],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/talk/posts/${postId}`);
+      return data;
+    },
+    enabled: !!postId,
+  });
+
+  useEffect(() => {
+    if (postId && post && !isLoading) {
+      console.log({ post });
+      setValue("title", post?.title);
+      setValue("content", post?.content || "");
+      setValue("category", post?.category.name);
+      setValue("subcategory", post?.subcategory.name);
+      setSelectedCategory(post?.category.name);
+    }
+  }, [postId, post, setValue, isLoading]);
+
   const onSubmit = async (data: z.infer<typeof PostSchema>) => {
-    console.log(data);
     try {
       const { title, content, category, subcategory } = data;
-      const response = await axios.post("/api/talk/posts", {
-        title,
-        content,
-        category,
-        subcategory,
-      });
+      // 수정
+      if (postId) {
+        console.log("수정");
+        const response = await axios.put(`/api/talk/posts/${postId}`, {
+          title,
+          content,
+          category,
+          subcategory,
+        });
+        console.log({ response });
+      } else {
+        // 작성
+        console.log("작성");
+        const response = await axios.post("/api/talk/posts", {
+          title,
+          content,
+          category,
+          subcategory,
+        });
+        console.log({ response });
+      }
       queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
-      console.log({ response });
       toast.success("게시글이 작성되었습니다.");
       router.push("/talk");
     } catch (error) {

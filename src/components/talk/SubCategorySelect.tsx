@@ -23,7 +23,7 @@ const SubCategorySelect = ({
       options={subCategories?.map(
         (subcategory: Subcategory) => subcategory.name
       )}
-      selectedOption={subCategory}
+      selectedOption={subCategory || "전체"}
       onSelect={handleSelect}
     />
   );
