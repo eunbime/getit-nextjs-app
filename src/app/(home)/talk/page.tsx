@@ -7,11 +7,17 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
+import { Metadata } from "next";
 import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
+
+export const metadata: Metadata = {
+  title: "TALK!T 토크",
+  description: "TALK!T 커뮤니티입니다.",
+};
 
 export default async function TalkPage({
   searchParams,
