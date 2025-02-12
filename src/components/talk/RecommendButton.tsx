@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { ThumbsUp, ThumbsUpIcon } from "lucide-react";
@@ -5,9 +6,10 @@ import { toast } from "react-toastify";
 
 interface RecommendButtonProps {
   postId: string;
+  currentUser: User | null;
 }
 
-const RecommendButton = ({ postId }: RecommendButtonProps) => {
+const RecommendButton = ({ postId, currentUser }: RecommendButtonProps) => {
   const queryClient = useQueryClient();
 
   const { data: isRecommend } = useQuery({
@@ -47,6 +49,10 @@ const RecommendButton = ({ postId }: RecommendButtonProps) => {
   });
 
   const handleRecommend = () => {
+    if (!currentUser) {
+      toast.error("로그인 후 이용해주세요.");
+      return;
+    }
     if (isRecommend) {
       toast.error("이미 추천하셨습니다.");
       return;
@@ -58,7 +64,7 @@ const RecommendButton = ({ postId }: RecommendButtonProps) => {
   return (
     <button
       className={`flex items-center justify-center gap-2 rounded-full bg-gray-200 p-3 ${
-        isRecommend ? "text-blue-500" : ""
+        !!currentUser?.id === isRecommend ? "text-blue-500" : ""
       }`}
       onClick={handleRecommend}
     >

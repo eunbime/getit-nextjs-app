@@ -65,7 +65,7 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
           {parse(post?.content || "")}
         </div>
         <div className="flex items-center justify-end pt-4">
-          <RecommendButton postId={post?.id} />
+          <RecommendButton currentUser={currentUser} postId={post?.id} />
         </div>
       </div>
       <div className="flex justify-between items-center py-2 border-b border-gray-200">
