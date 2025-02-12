@@ -13,9 +13,18 @@ import { useEffect, useState } from "react";
 interface BoardFilterProps {
   categoryParam: string;
   subCategoryParam: string;
+  setSelectOrder: (order: string) => void;
+  setSelectedSort: (sort: string) => void;
+  setKeyword: (keyword: string) => void;
 }
 
-const BoardFilter = ({ categoryParam, subCategoryParam }: BoardFilterProps) => {
+const BoardFilter = ({
+  categoryParam,
+  subCategoryParam,
+  setSelectOrder,
+  setSelectedSort,
+  setKeyword,
+}: BoardFilterProps) => {
   const { updateQueryString } = useQueryString();
 
   const [subCategory, setSubCategory] = useState<string>(subCategoryParam);
@@ -67,8 +76,11 @@ const BoardFilter = ({ categoryParam, subCategoryParam }: BoardFilterProps) => {
         setSubCategory={handleSubCategoryChange}
         subCategory={subCategory}
       />
-      <SortSelect />
-      <BoardSearchInput />
+      <SortSelect
+        setSelectOrder={setSelectOrder}
+        setSelectedSort={setSelectedSort}
+      />
+      <BoardSearchInput setKeyword={setKeyword} />
     </section>
   );
 };

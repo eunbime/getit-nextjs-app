@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
   const order = searchParams.get("order") || "desc";
   const category = searchParams.get("category") || "all";
   const subcategory = searchParams.get("subcategory") || "전체";
+  const keyword = searchParams.get("keyword") || "";
 
   // 전체 게시물 수 조회
   const totalPosts = await prisma.post.count({
@@ -22,6 +23,11 @@ export async function GET(req: NextRequest) {
       ...(subcategory !== "전체" && {
         subcategory: {
           name: subcategory,
+        },
+      }),
+      ...(keyword !== "" && {
+        title: {
+          contains: keyword,
         },
       }),
     },
@@ -37,6 +43,11 @@ export async function GET(req: NextRequest) {
       ...(subcategory !== "전체" && {
         subcategory: {
           name: subcategory,
+        },
+      }),
+      ...(keyword !== "" && {
+        title: {
+          contains: keyword,
         },
       }),
     },

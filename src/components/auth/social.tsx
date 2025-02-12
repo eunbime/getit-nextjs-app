@@ -25,9 +25,9 @@ const Social = () => {
         variant="outline"
         onClick={() => onClick("google")}
         type="button"
-        label="google로 로그인"
       >
         <FcGoogle className="h-5 w-5" />
+        <span>Google로 로그인</span>
       </Button>
       <Button
         size="lg"
@@ -35,9 +35,9 @@ const Social = () => {
         variant="outline"
         onClick={() => onClick("github")}
         type="button"
-        label="github로 로그인"
       >
         <FaGithub className="h-5 w-5" />
+        <span>Github로 로그인</span>
       </Button>
     </div>
   );

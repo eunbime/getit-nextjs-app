@@ -14,19 +14,30 @@ const TalkBoard = () => {
   const categoryParam = searchParams?.get("category") || "all";
   const subCategoryParam = searchParams?.get("subcategory") || "전체";
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectOrder, setSelectOrder] = useState<string>("desc");
+  const [selectedSort, setSelectedSort] = useState<string>("createdAt");
+  const [keyword, setKeyword] = useState<string>("");
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
-      queryKey: ["talk-posts", categoryParam, subCategoryParam],
+      queryKey: [
+        "talk-posts",
+        categoryParam,
+        subCategoryParam,
+        selectedSort,
+        selectOrder,
+        keyword,
+      ],
       queryFn: async ({ pageParam = 1 }) => {
         const { data } = await axios.get("/api/talk/posts", {
           params: {
             page: pageParam,
             limit: 20,
-            sort: "createdAt",
-            order: "desc",
+            sort: selectedSort,
+            order: selectOrder,
             category: categoryParam,
             subcategory: subCategoryParam,
+            keyword: keyword,
           },
         });
         return data;
@@ -62,6 +73,9 @@ const TalkBoard = () => {
       <BoardFilter
         categoryParam={categoryParam}
         subCategoryParam={subCategoryParam}
+        setSelectOrder={setSelectOrder}
+        setSelectedSort={setSelectedSort}
+        setKeyword={setKeyword}
       />
       <div className="flex w-full items-center justify-between p-4 text-gray-600 border-b-2 border-gray-200">
         <div className="flex gap-10">

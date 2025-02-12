@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 
+export const dynamic = "force-dynamic";
+
 type SearchParams = { [key: string]: string | string[] | undefined };
 
 export default async function TalkPage({
