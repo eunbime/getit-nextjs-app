@@ -2,8 +2,14 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { Label } from "@/components/ui/label";
 import UserImage from "@/components/profile/UserImage";
 import UserName from "@/components/profile/UserName";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "마이페이지",
+  description: "GET!T 중고거래 마켓 마이페이지입니다.",
+};
 
 export default async function Profile() {
   const currentUser = await getCurrentUser();

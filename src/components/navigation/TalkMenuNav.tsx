@@ -14,7 +14,7 @@ const TalkMenuNav = async () => {
   }
 
   return (
-    <div className="w-[20%] h-full lg:block hidden">
+    <div className="w-full min-w-[200px] lg:w-[20%] h-full lg:block hidden">
       <nav className="flex flex-col gap-4 bg-gray-100 py-5 px-7 rounded-md">
         {categories.map((category) => (
           <div key={category.id} className="flex flex-col gap-2">

@@ -15,10 +15,16 @@ import {
 import CategoriesComponent from "./_components/CategoriesComponent";
 import BestProductsCarousel from "@/components/carousel/BestProductsCarousel";
 import LatestProducts from "./_components/LatestProducts";
+import { Metadata } from "next";
 
 interface HomeProps {
   searchParams: SearchParams;
 }
+
+export const metadata: Metadata = {
+  title: "GET!T 마켓",
+  description: "GET!T 중고거래 마켓입니다.",
+};
 
 export const dynamic = "force-dynamic"; // SSR 강제 적용
 

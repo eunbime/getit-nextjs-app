@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { Metadata } from "next/types";
 import localFont from "next/font/local";
 import Script from "next/script";
 
@@ -22,8 +22,11 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Super",
-  description: "Super 홈페이지입니다.",
+  title: {
+    template: "GET!T | %s",
+    default: "GET!T",
+  },
+  description: "GET!T 홈페이지입니다.",
   other: {
     "Cache-Control": "public, max-age=3600, must-revalidate",
   },
