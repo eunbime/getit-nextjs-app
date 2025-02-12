@@ -49,5 +49,17 @@ export type TPostWithCategoryWithAuthor = Post & {
 
 export type TCommentWithUserWithReplies = Comment & {
   user: User;
-  replies: Reply[];
+  replies: (Reply & {
+    user: {
+      name: string;
+      image: string;
+    };
+  })[];
+};
+
+export type TReplyWithUser = Reply & {
+  user: {
+    name: string;
+    image: string;
+  };
 };

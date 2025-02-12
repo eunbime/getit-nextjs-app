@@ -11,7 +11,16 @@ export async function GET(
     where: { postId },
     include: {
       user: true,
-      replies: true,
+      replies: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

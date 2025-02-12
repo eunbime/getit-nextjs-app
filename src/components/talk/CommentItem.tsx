@@ -1,10 +1,10 @@
-import { TCommentWithUserWithReplies } from "@/types";
-import Avatar from "../common/Avatar";
-import dayjs from "dayjs";
-import axios from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
+
+import { TCommentWithUserWithReplies } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import CommentBox from "./CommentBox";
 
 interface CommentItemProps {
   comment: TCommentWithUserWithReplies;
@@ -68,43 +68,18 @@ const CommentItem = ({ comment, postId }: CommentItemProps) => {
   };
 
   return (
-    <div className="flex gap-10 py-4 items-center justify-between border-b border-gray-200">
-      <div className="flex gap-10 items-center">
-        <div className="flex flex-col gap-2 items-center">
-          <Avatar src={comment?.user?.image || ""} />
-          <p>{comment?.user?.name || ""}</p>
-        </div>
-        {isEditing ? (
-          <input
-            type="text"
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-          />
-        ) : (
-          <p>{comment?.content || ""}</p>
-        )}
-      </div>
-      <div className="flex flex-col gap-2 items-end">
-        <div className="flex gap-2 items-center">
-          <p>{dayjs(comment?.createdAt).format("YYYY-MM-DD")}</p>
-          <p>{dayjs(comment?.createdAt).format("HH:mm")}</p>
-          <p>추천</p>
-        </div>
-        <div className="flex gap-2 items-center">
-          {isEditing ? (
-            <>
-              <button onClick={handleUpdateComment}>완료</button>
-              <button onClick={() => setIsEditing(false)}>취소</button>
-            </>
-          ) : (
-            <>
-              <button onClick={() => setIsEditing(true)}>수정</button>
-              <button onClick={handleDeleteComment}>삭제</button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+    <CommentBox
+      image={comment?.user?.image || ""}
+      name={comment?.user?.name || ""}
+      value={commentContent}
+      onChange={(e) => setCommentContent(e.target.value)}
+      content={comment?.content || ""}
+      createdAt={comment?.createdAt || ""}
+      isEditing={isEditing}
+      setIsEditing={setIsEditing}
+      handleUpdateComment={handleUpdateComment}
+      handleDeleteComment={handleDeleteComment}
+    />
   );
 };
 
