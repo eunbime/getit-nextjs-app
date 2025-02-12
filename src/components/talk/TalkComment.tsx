@@ -26,7 +26,7 @@ const TalkComment = ({ postId }: TalkCommentProps) => {
         <div key={comment.id}>
           <CommentItem key={comment.id} comment={comment} postId={postId} />
           <section className="w-full pl-20">
-            <div className="bg-white">
+            <div>
               {comment.replies.map((reply) => (
                 <ReplyItem
                   key={reply.id}

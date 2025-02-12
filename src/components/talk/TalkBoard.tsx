@@ -8,6 +8,7 @@ import BoardFilter from "./BoardFilter";
 import BoardList from "./BoardList";
 import PaginationWrapper from "./PaginationWrapper";
 import { TPostWithCategoryWithAuthor } from "@/types";
+import { Skeleton } from "../ui/skeleton";
 
 const TalkBoard = () => {
   const searchParams = useSearchParams();
@@ -18,7 +19,7 @@ const TalkBoard = () => {
   const [selectedSort, setSelectedSort] = useState<string>("createdAt");
   const [keyword, setKeyword] = useState<string>("");
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: [
         "talk-posts",
@@ -87,10 +88,17 @@ const TalkBoard = () => {
           <p>추천수</p>
         </div>
       </div>
-
-      {currentPosts.map((post: TPostWithCategoryWithAuthor) => (
-        <BoardList key={post.id} post={post} />
-      ))}
+      {isLoading ? (
+        <div className="w-full h-full flex flex-col gap-[2px]">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Skeleton key={index} className="w-full h-[58px]" />
+          ))}
+        </div>
+      ) : (
+        currentPosts.map((post: TPostWithCategoryWithAuthor) => (
+          <BoardList key={post.id} post={post} />
+        ))
+      )}
       {totalPages > 0 && (
         <PaginationWrapper
           page={currentPage}

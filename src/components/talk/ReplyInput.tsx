@@ -1,5 +1,6 @@
 "use client";
 
+import { useUserStore } from "@/store/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -11,6 +12,7 @@ interface ReplyInputProps {
 }
 
 const ReplyInput = ({ postId, commentId }: ReplyInputProps) => {
+  const { currentUser } = useUserStore();
   const queryClient = useQueryClient();
 
   const {
@@ -45,6 +47,10 @@ const ReplyInput = ({ postId, commentId }: ReplyInputProps) => {
   });
 
   const onSubmit = (data: { content: string }) => {
+    if (!currentUser) {
+      toast.error("로그인 후 이용해주세요.");
+      return;
+    }
     createReply(data);
     reset();
   };
