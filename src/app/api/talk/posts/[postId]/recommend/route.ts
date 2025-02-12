@@ -35,7 +35,7 @@ export async function PATCH(
     data: { postId: postId, userId: currentUser?.id },
   });
 
-  const { post } = await prisma.post.update({
+  const post = await prisma.post.update({
     where: { id: postId },
     data: {
       recommendCount: { increment: 1 },

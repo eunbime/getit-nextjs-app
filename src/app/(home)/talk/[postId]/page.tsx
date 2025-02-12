@@ -9,6 +9,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
+import TalkCommentComponent from "./_components/TalkCommentComponent";
 
 export default async function TalkPostPage({
   params,
@@ -22,7 +23,7 @@ export default async function TalkPostPage({
     queryKey: ["post", postId],
     queryFn: async () => {
       const { data } = await axios.get(
-        `http://localhost:3000/api/talk/posts/${postId}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/talk/posts/${postId}`
       );
       return data;
     },
@@ -35,8 +36,7 @@ export default async function TalkPostPage({
           <TalkMenuNav />
           <div className="flex flex-col gap-10 w-full h-full">
             <TalkPostContent postId={postId} />
-            <TalkComment postId={postId} />
-            <TalkCommentInput postId={postId} />
+            <TalkCommentComponent postId={postId} />
           </div>
         </div>
       </Container>
