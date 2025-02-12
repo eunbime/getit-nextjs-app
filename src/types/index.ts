@@ -1,9 +1,11 @@
 import {
   Category,
+  Comment,
   Like,
   Message,
   Post,
   Product,
+  Reply,
   Subcategory,
   User,
 } from "@prisma/client";
@@ -43,4 +45,9 @@ export type TPostWithCategoryWithAuthor = Post & {
     name: string;
     image: string;
   };
+};
+
+export type TCommentWithUserWithReplies = Comment & {
+  user: User;
+  replies: Reply[];
 };

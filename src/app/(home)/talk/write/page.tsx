@@ -23,7 +23,6 @@ export default function TalkWritePage() {
   const postId = searchParams?.get("postId");
 
   const {
-    handleSubmit,
     register,
     formState: { errors },
     setValue,
@@ -36,6 +35,7 @@ export default function TalkWritePage() {
       category: "",
       subcategory: "",
     },
+    mode: "onChange",
   });
 
   const { data: post, isLoading } = useQuery({
@@ -61,6 +61,13 @@ export default function TalkWritePage() {
   const onSubmit = async (data: z.infer<typeof PostSchema>) => {
     try {
       const { title, content, category, subcategory } = data;
+
+      // 카테고리와 서브카테고리 확인
+      if (!category || !subcategory) {
+        toast.error("카테고리와 서브카테고리를 선택해주세요.");
+        return;
+      }
+
       // 수정
       if (postId) {
         await axios.put(`/api/talk/posts/${postId}`, {
@@ -69,6 +76,7 @@ export default function TalkWritePage() {
           category,
           subcategory,
         });
+        toast.success("게시글이 수정되었습니다.");
       } else {
         // 작성
         await axios.post("/api/talk/posts", {
@@ -77,11 +85,14 @@ export default function TalkWritePage() {
           category,
           subcategory,
         });
+        console.log("게시글 작성 완료");
+        toast.success("게시글이 작성되었습니다.");
       }
 
       queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
-      queryClient.invalidateQueries({ queryKey: ["post", postId] });
-      toast.success("게시글이 작성되었습니다.");
+      if (postId) {
+        queryClient.invalidateQueries({ queryKey: ["post", postId] });
+      }
       router.push("/talk");
     } catch (error) {
       console.error(error);
@@ -122,7 +133,13 @@ export default function TalkWritePage() {
 
   return (
     <div className="w-full h-full flex flex-col gap-5 p-10">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = getValues();
+          onSubmit(formData);
+        }}
+      >
         <input
           title="title"
           className="w-full outline-none focus:outline-none focus:ring-0 focus:border-gray-300 border-b-2 border-t-0 border-x-0 border-gray-300 rounded-none text-3xl font-bold p-2"
@@ -154,8 +171,11 @@ export default function TalkWritePage() {
           onChange={(value) => setValue("content", value)}
         />
         {errors.content && <p>{errors.content.message}</p>}
-        <button className="fixed bottom-10 right-10 bg-[#0d0c8f] text-xl font-bold text-white px-4 py-2 rounded-md">
-          작성하기
+        <button
+          type="submit" // type을 명시적으로 지정
+          className="fixed bottom-10 right-10 bg-[#0d0c8f] text-xl font-bold text-white px-4 py-2 rounded-md"
+        >
+          {postId ? "수정하기" : "작성하기"}
         </button>
       </form>
     </div>

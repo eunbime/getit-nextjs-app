@@ -73,3 +73,17 @@ export async function DELETE(
   await prisma.post.delete({ where: { id: postId } });
   return NextResponse.json({ message: "Post deleted" });
 }
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ postId: string }> }
+) {
+  const { postId } = await params;
+  const { viewCount } = await req.json();
+
+  const post = await prisma.post.update({
+    where: { id: postId },
+    data: { viewCount },
+  });
+  return NextResponse.json(post);
+}

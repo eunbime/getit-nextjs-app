@@ -70,6 +70,8 @@ model User {
   conversations Conversation[]
   sentMessages Message[] @relation("sender")
   receiverMessages Message[] @relation("receiver")
+  comments Comment[]
+  replies Reply[]
 
   @@index([email])
   @@index([userType])
@@ -182,7 +184,10 @@ model Post {
   categoryId String
   subcategoryId String
   recommends Recommend[]
+  comments Comment[]
+  replies Reply[]
   recommendCount Int @default(0)
+  viewCount Int @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -206,4 +211,31 @@ model Recommend {
   @@unique([postId, userId])
   @@index([postId])
   @@index([userId])
+}
+
+model Comment {
+  id String @id @default(cuid())
+  postId String
+  userId String
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  replies Reply[]
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Reply {
+  id String @id @default(cuid())
+  commentId String
+  postId String
+  userId String
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  comment Comment @relation(fields: [commentId], references: [id])
 }

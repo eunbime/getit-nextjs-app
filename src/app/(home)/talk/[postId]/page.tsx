@@ -17,8 +17,8 @@ export default function TalkPostPage({
         <TalkMenuNav />
         <div className="flex flex-col gap-10 w-full h-full">
           <TalkPostContent postId={postId} />
-          <TalkComment />
-          <TalkCommentInput />
+          <TalkComment postId={postId} />
+          <TalkCommentInput postId={postId} />
         </div>
       </div>
     </Container>

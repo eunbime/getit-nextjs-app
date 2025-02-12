@@ -5,6 +5,8 @@ import axios from "axios";
 import Avatar from "../common/Avatar";
 import parse from "html-react-parser";
 import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import RecommendButton from "./RecommendButton";
 
 const TalkPostContent = ({ postId }: { postId: string }) => {
   const queryClient = useQueryClient();
@@ -52,8 +54,11 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
           </div>
         </div>
       </div>
-      <div className="py-4 border-b border-gray-200 min-h-[300px]">
-        {parse(post?.content || "")}
+      <div className="flex flex-col justify-between py-4 border-b border-gray-200 min-h-[300px]">
+        <p className="h-full">{parse(post?.content || "")}</p>
+        <div className="flex items-center justify-end">
+          <RecommendButton postId={post?.id} />
+        </div>
       </div>
       <div className="flex justify-between items-center py-2 border-b border-gray-200">
         <div className="flex gap-2 items-center">
@@ -61,9 +66,9 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
           <p>{post?.author.name}</p>
         </div>
         <div className="flex gap-2">
-          <p>{post?.createdAt}</p>
-          <p>{post?.views}</p>
-          <p>{post?.likes}</p>
+          <p>작성일: {dayjs(post?.createdAt).format("YYYY-MM-DD")}</p>
+          <p>조회수: {post?.viewCount}</p>
+          <p>추천: {post?.recommendCount}</p>
         </div>
       </div>
     </section>

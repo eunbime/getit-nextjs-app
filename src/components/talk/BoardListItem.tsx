@@ -1,5 +1,7 @@
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 import { TPostWithCategoryWithAuthor } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 
 interface BoardListItemProps {
@@ -8,8 +10,21 @@ interface BoardListItemProps {
 
 const BoardListItem = ({ post }: BoardListItemProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const { mutate: updateViewCount } = useMutation({
+    mutationFn: async (postId: string) => {
+      await axios.patch(`/api/talk/posts/${postId}`, {
+        viewCount: post.viewCount + 1,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
+    },
+  });
 
   const handleClick = () => {
+    updateViewCount(post.id);
     router.push(`/talk/${post.id}`);
   };
 
@@ -31,7 +46,7 @@ const BoardListItem = ({ post }: BoardListItemProps) => {
       <div className="flex gap-5">
         <p>{post.author.name}</p>
         <p>{formattedDate}</p>
-        <p>{post.recommendCount}</p>
+        <p>{post.viewCount}</p>
         <p>{post.recommendCount}</p>
       </div>
     </li>
