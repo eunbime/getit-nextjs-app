@@ -4,12 +4,28 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const page = searchParams.get("page") || 1;
-  const limit = searchParams.get("limit") || 10;
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 20;
   const sort = searchParams.get("sort") || "createdAt";
   const order = searchParams.get("order") || "desc";
   const category = searchParams.get("category") || "all";
   const subcategory = searchParams.get("subcategory") || "전체";
+
+  // 전체 게시물 수 조회
+  const totalPosts = await prisma.post.count({
+    where: {
+      ...(category !== "all" && {
+        category: {
+          name: category,
+        },
+      }),
+      ...(subcategory !== "전체" && {
+        subcategory: {
+          name: subcategory,
+        },
+      }),
+    },
+  });
 
   const posts = await prisma.post.findMany({
     where: {
@@ -43,12 +59,18 @@ export async function GET(req: NextRequest) {
       },
     },
     orderBy: {
-      [sort]: order === "desc" ? "desc" : "asc",
+      [sort]: order,
     },
-    skip: (Number(page) - 1) * Number(limit),
-    take: Number(limit),
+    skip: (page - 1) * limit,
+    take: limit,
   });
-  return NextResponse.json(posts);
+
+  return NextResponse.json({
+    posts,
+    totalPages: Math.ceil(totalPosts / limit),
+    currentPage: page,
+    hasNextPage: posts.length === limit,
+  });
 }
 
 export async function POST(req: NextRequest) {

@@ -1,8 +1,8 @@
 "use client";
 
 import { TCategoryWithSubcategories } from "@/types";
-import Dropdown from "@/components/common/Dropdown";
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
+import Dropdown from "@/components/common/Dropdown";
 
 interface CategorySelectProps {
   categories?: TCategoryWithSubcategories[];
@@ -15,7 +15,6 @@ const CategorySelect = ({
   categories,
   setSelectedCategory,
   selectedCategory,
-  setCategory,
 }: CategorySelectProps) => {
   const handleSelect = (option: string) => {
     const category = Object.keys(CATEGORY_TITLE).find(
@@ -24,7 +23,6 @@ const CategorySelect = ({
 
     if (category) {
       setSelectedCategory(category);
-      setCategory(category);
     }
   };
 
