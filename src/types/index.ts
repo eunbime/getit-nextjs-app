@@ -51,6 +51,7 @@ export type TCommentWithUserWithReplies = Comment & {
   user: User;
   replies: (Reply & {
     user: {
+      id: string;
       name: string;
       image: string;
     };
@@ -59,6 +60,7 @@ export type TCommentWithUserWithReplies = Comment & {
 
 export type TReplyWithUser = Reply & {
   user: {
+    id: string;
     name: string;
     image: string;
   };

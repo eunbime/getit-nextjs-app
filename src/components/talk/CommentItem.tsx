@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { TCommentWithUserWithReplies } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CommentBox from "./CommentBox";
+import { useUserStore } from "@/store/userStore";
 
 interface CommentItemProps {
   comment: TCommentWithUserWithReplies;
@@ -12,6 +13,7 @@ interface CommentItemProps {
 }
 
 const CommentItem = ({ comment, postId }: CommentItemProps) => {
+  const { currentUser } = useUserStore();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment?.content || "");
@@ -79,6 +81,7 @@ const CommentItem = ({ comment, postId }: CommentItemProps) => {
       setIsEditing={setIsEditing}
       handleUpdateComment={handleUpdateComment}
       handleDeleteComment={handleDeleteComment}
+      isAuthor={currentUser?.id === comment?.user?.id}
     />
   );
 };

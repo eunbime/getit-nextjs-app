@@ -7,7 +7,9 @@ import Link from "next/link";
 const TalkMenuNav = async () => {
   let categories: TCategoryWithSubcategories[] = [];
   try {
-    const { data } = await axios.get("http://localhost:3000/api/categories");
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`
+    );
     categories = data;
   } catch (error) {
     console.log(error);

@@ -24,7 +24,7 @@ const TalkWriteForm = () => {
 
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     setValue,
     getValues,
   } = useForm<z.infer<typeof PostSchema>>({
@@ -49,7 +49,6 @@ const TalkWriteForm = () => {
 
   useEffect(() => {
     if (postId && post && !isLoading) {
-      console.log({ post });
       setValue("title", post?.title);
       setValue("content", post?.content || "");
       setValue("category", post?.category.name);
@@ -145,12 +144,15 @@ const TalkWriteForm = () => {
         placeholder="제목을 입력해주세요."
         {...register("title")}
       />
-      {errors.title && <p>{errors.title.message}</p>}
+      {errors.title && (
+        <p className="text-red-500 text-sm">{errors.title.message}</p>
+      )}
       <div className="flex w-full md:w-1/2 p-3">
         <CategorySelect
           categories={categories}
           setSelectedCategory={setSelectedCategory}
           setCategory={(category: string) => setValue("category", category)}
+          savedCategory={getValues("category")}
         />
         <SubCategorySelect
           subCategories={
@@ -163,16 +165,30 @@ const TalkWriteForm = () => {
               setValue("subcategory", subcategory);
             }
           }}
+          savedSubCategory={getValues("subcategory")}
         />
       </div>
       <TextEditor
         value={getValues("content")}
-        onChange={(value) => setValue("content", value)}
+        onChange={(value) =>
+          setValue("content", value, {
+            shouldValidate: true,
+          })
+        }
       />
-      {errors.content && <p>{errors.content.message}</p>}
+      {errors.content && (
+        <p className="text-red-500 text-sm">{errors.content.message}</p>
+      )}
       <button
-        type="submit" // type을 명시적으로 지정
-        className="fixed bottom-10 right-10 bg-[#0d0c8f] text-xl font-bold text-white px-4 py-2 rounded-md"
+        type="submit"
+        disabled={!isValid}
+        className={`fixed bottom-10 right-10 bg-[#0d0c8f] text-xl font-bold text-white px-4 py-2 rounded-md
+          ${
+            !isValid
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#0d0c8f] text-white hover:bg-[#0d0c8f]/90"
+          }
+        `}
       >
         {postId ? "수정하기" : "작성하기"}
       </button>

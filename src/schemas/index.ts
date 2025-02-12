@@ -63,12 +63,34 @@ export const ProductSchema = z.object({
 });
 
 export const PostSchema = z.object({
-  title: z.string().min(1, {
-    message: "제목은 필수 입력 항목입니다.",
-  }),
-  content: z.string().min(1, {
-    message: "내용은 필수 입력 항목입니다.",
-  }),
+  title: z
+    .string()
+    .min(1, {
+      message: "제목은 필수 입력 항목입니다.",
+    })
+    .max(50, {
+      message: "제목은 최대 50자까지 입력할 수 있습니다.",
+    }),
+  content: z
+    .string()
+    .refine(
+      (value) => {
+        const textContent = value.replace(/<[^>]*>/g, "").trim();
+        return textContent.length > 0;
+      },
+      {
+        message: "내용은 필수 입력 항목입니다.",
+      }
+    )
+    .refine(
+      (value) => {
+        const textContent = value.replace(/<[^>]*>/g, "").trim();
+        return textContent.length <= 1000;
+      },
+      {
+        message: "내용은 최대 1000자까지 입력할 수 있습니다.",
+      }
+    ),
   category: z.string().min(1, {
     message: "카테고리는 필수 선택 항목입니다.",
   }),

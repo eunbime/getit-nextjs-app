@@ -4,6 +4,7 @@ import { TReplyWithUser } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useUserStore } from "@/store/userStore";
 
 interface ReplyItemProps {
   reply: TReplyWithUser;
@@ -12,6 +13,7 @@ interface ReplyItemProps {
 }
 
 const ReplyItem = ({ reply, postId, commentId }: ReplyItemProps) => {
+  const { currentUser } = useUserStore();
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -75,6 +77,7 @@ const ReplyItem = ({ reply, postId, commentId }: ReplyItemProps) => {
         setIsEditing={setIsEditing}
         handleUpdateComment={handleUpdateComment}
         handleDeleteComment={handleDeleteComment}
+        isAuthor={currentUser?.id === reply.user.id}
       />
     </div>
   );

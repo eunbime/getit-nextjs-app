@@ -7,12 +7,14 @@ interface SubCategorySelectProps {
   subCategories?: Subcategory[];
   subCategory?: string;
   setSubCategory?: (subcategory: string) => void;
+  savedSubCategory?: string;
 }
 
 const SubCategorySelect = ({
   subCategories,
   setSubCategory = () => {},
   subCategory,
+  savedSubCategory,
 }: SubCategorySelectProps) => {
   const handleSelect = (option: string) => {
     setSubCategory(option);
@@ -23,7 +25,7 @@ const SubCategorySelect = ({
       options={subCategories?.map(
         (subcategory: Subcategory) => subcategory.name
       )}
-      selectedOption={subCategory || "전체"}
+      selectedOption={subCategory || savedSubCategory || "전체"}
       onSelect={handleSelect}
     />
   );
