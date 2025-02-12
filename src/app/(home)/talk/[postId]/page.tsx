@@ -1,8 +1,5 @@
 import Container from "@/components/common/Container";
 import TalkMenuNav from "@/components/navigation/TalkMenuNav";
-import TalkPostContent from "@/components/talk/\bTalkPostContent";
-import TalkComment from "@/components/talk/TalkComment";
-import TalkCommentInput from "@/components/talk/TalkCommentInput";
 import {
   dehydrate,
   HydrationBoundary,
@@ -10,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import TalkCommentComponent from "./_components/TalkCommentComponent";
+import TalkPostContent from "@/components/talk/TalkPostContent";
 
 export default async function TalkPostPage({
   params,

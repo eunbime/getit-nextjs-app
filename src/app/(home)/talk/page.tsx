@@ -53,14 +53,9 @@ export default async function TalkPage({
           <TalkMenuNav />
           <Suspense
             fallback={
-              <section className="w-full h-full">
-                <ul className="w-full h-full flex flex-col">
-                  <li className="w-full bg-gray-100">Loading...</li>
-                  <li className="w-full bg-gray-100">Loading...</li>
-                  <li className="w-full bg-gray-100">Loading...</li>
-                  <li className="w-full bg-gray-100">Loading...</li>
-                </ul>
-              </section>
+              <div className="w-full h-full">
+                <div className="w-full h-full bg-gray-100">Loading...</div>
+              </div>
             }
           >
             <TalkBoard />
