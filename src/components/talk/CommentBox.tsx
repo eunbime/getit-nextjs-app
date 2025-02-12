@@ -12,6 +12,7 @@ interface CommentBoxProps {
   setIsEditing: (isEditing: boolean) => void;
   handleUpdateComment: () => void;
   handleDeleteComment: () => void;
+  isAuthor: boolean;
 }
 
 const CommentBox = ({
@@ -25,6 +26,7 @@ const CommentBox = ({
   setIsEditing,
   handleUpdateComment,
   handleDeleteComment,
+  isAuthor,
 }: CommentBoxProps) => {
   return (
     <div className="flex gap-10 p-4 items-center justify-between border-b border-gray-200">
@@ -45,19 +47,21 @@ const CommentBox = ({
           <p>{dayjs(createdAt).format("HH:mm")}</p>
           {/* <p>추천</p> */}
         </div>
-        <div className="flex gap-2 items-center">
-          {isEditing ? (
-            <>
-              <button onClick={handleUpdateComment}>완료</button>
-              <button onClick={() => setIsEditing(false)}>취소</button>
-            </>
-          ) : (
-            <>
-              <button onClick={() => setIsEditing(true)}>수정</button>
-              <button onClick={handleDeleteComment}>삭제</button>
-            </>
-          )}
-        </div>
+        {isAuthor && (
+          <div className="flex gap-2 items-center">
+            {isEditing ? (
+              <>
+                <button onClick={handleUpdateComment}>완료</button>
+                <button onClick={() => setIsEditing(false)}>취소</button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setIsEditing(true)}>수정</button>
+                <button onClick={handleDeleteComment}>삭제</button>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

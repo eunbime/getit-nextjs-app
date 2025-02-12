@@ -9,6 +9,7 @@ interface CategorySelectProps {
   setSelectedCategory: (category: string) => void;
   selectedCategory?: string;
   setCategory?: (category: string) => void;
+  savedCategory?: string;
 }
 
 const CategorySelect = ({
@@ -16,6 +17,7 @@ const CategorySelect = ({
   setSelectedCategory,
   selectedCategory,
   setCategory = () => {},
+  savedCategory,
 }: CategorySelectProps) => {
   const handleSelect = (option: string) => {
     const category = Object.keys(CATEGORY_TITLE).find(
@@ -34,7 +36,9 @@ const CategorySelect = ({
         (category) => CATEGORY_TITLE[category.name as CategoryType]
       )}
       selectedOption={
-        CATEGORY_TITLE[selectedCategory as CategoryType] || "전체"
+        CATEGORY_TITLE[selectedCategory as CategoryType] ||
+        CATEGORY_TITLE[savedCategory as CategoryType] ||
+        "전체"
       }
       onSelect={handleSelect}
     />
