@@ -65,9 +65,13 @@ model User {
   favoriteIds String[]
   products Product[]
   likes Like[]
+  posts Post[]
+  recommends Recommend[]
   conversations Conversation[]
   sentMessages Message[] @relation("sender")
   receiverMessages Message[] @relation("receiver")
+  comments Comment[]
+  replies Reply[]
 
   @@index([email])
   @@index([userType])
@@ -90,6 +94,7 @@ model Category {
   description String?
   subcategories Subcategory[]
   products Product[]
+  posts Post[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -100,6 +105,7 @@ model Subcategory {
   description String?
   categoryId String
   products Product[]
+  posts Post[]
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -168,4 +174,68 @@ model Message {
   receiverId String
   conversation Conversation @relation(fields: [conversationId], references: [id])
   conversationId String
+}
+
+model Post {
+  id String @id @default(cuid())
+  title String
+  content String
+  authorId String
+  categoryId String
+  subcategoryId String
+  recommends Recommend[]
+  comments Comment[]
+  replies Reply[]
+  recommendCount Int @default(0)
+  viewCount Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [authorId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+  subcategory Subcategory @relation(fields: [subcategoryId], references: [id])
+
+  @@index([recommendCount])
+}
+
+model Recommend {
+  id String @id @default(cuid())
+  postId String
+  userId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model Comment {
+  id String @id @default(cuid())
+  postId String
+  userId String
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  replies Reply[]
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Reply {
+  id String @id @default(cuid())
+  commentId String
+  postId String
+  userId String
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  comment Comment @relation(fields: [commentId], references: [id])
 }

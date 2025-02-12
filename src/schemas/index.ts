@@ -61,3 +61,18 @@ export const ProductSchema = z.object({
   latitude: z.number().nullable(),
   longitude: z.number().nullable(),
 });
+
+export const PostSchema = z.object({
+  title: z.string().min(1, {
+    message: "제목은 필수 입력 항목입니다.",
+  }),
+  content: z.string().min(1, {
+    message: "내용은 필수 입력 항목입니다.",
+  }),
+  category: z.string().min(1, {
+    message: "카테고리는 필수 선택 항목입니다.",
+  }),
+  subcategory: z.string().min(1, {
+    message: "서브카테고리는 필수 선택 항목입니다.",
+  }),
+});

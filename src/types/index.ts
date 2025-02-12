@@ -1,4 +1,14 @@
-import { Category, Like, Message, Product, User } from "@prisma/client";
+import {
+  Category,
+  Comment,
+  Like,
+  Message,
+  Post,
+  Product,
+  Reply,
+  Subcategory,
+  User,
+} from "@prisma/client";
 
 export type TUserWithChat = User & {
   conversations: TConversation[];
@@ -17,5 +27,39 @@ export type TProductWithCategory = Product & {
 export type TLikeWithProduct = Like & {
   product: TProductWithCategory & {
     category: Category;
+  };
+};
+
+export type TCategoryWithSubcategories = Category & {
+  subcategories: Subcategory[];
+};
+
+export type TPostWithCategoryWithAuthor = Post & {
+  category: {
+    name: string;
+  };
+  subcategory: {
+    name: string;
+  };
+  author: {
+    name: string;
+    image: string;
+  };
+};
+
+export type TCommentWithUserWithReplies = Comment & {
+  user: User;
+  replies: (Reply & {
+    user: {
+      name: string;
+      image: string;
+    };
+  })[];
+};
+
+export type TReplyWithUser = Reply & {
+  user: {
+    name: string;
+    image: string;
   };
 };
