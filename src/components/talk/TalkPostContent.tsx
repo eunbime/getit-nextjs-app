@@ -7,6 +7,7 @@ import parse from "html-react-parser";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import RecommendButton from "./RecommendButton";
+import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 
 const TalkPostContent = ({ postId }: { postId: string }) => {
   const queryClient = useQueryClient();
@@ -42,7 +43,8 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
         <h3 className="text-3xl font-bold ">{post?.title}</h3>
         <div className="flex justify-between items-center">
           <span className="text-gray-500">
-            {post?.category.name} / {post?.subcategory.name}
+            {CATEGORY_TITLE[post?.category.name as CategoryType]} /{" "}
+            {post?.subcategory.name}
           </span>
           <div className="flex gap-2">
             <button
@@ -55,8 +57,8 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
         </div>
       </div>
       <div className="flex flex-col justify-between py-4 border-b border-gray-200 min-h-[300px]">
-        <p className="h-full">{parse(post?.content || "")}</p>
-        <div className="flex items-center justify-end">
+        <div className="h-full">{parse(post?.content || "")}</div>
+        <div className="flex items-center justify-end pt-4">
           <RecommendButton postId={post?.id} />
         </div>
       </div>

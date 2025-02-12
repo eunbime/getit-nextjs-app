@@ -23,9 +23,9 @@ const TalkComment = ({ postId }: TalkCommentProps) => {
     <section className="w-full bg-gray-100 rounded-lg p-4">
       <h3 className="text-2xl font-bold border-b border-gray-200 pb-4">댓글</h3>
       {comments?.map((comment) => (
-        <>
+        <div key={comment.id}>
           <CommentItem key={comment.id} comment={comment} postId={postId} />
-          <section className="w-full  pl-20">
+          <section className="w-full pl-20">
             <div className="bg-white">
               {comment.replies.map((reply) => (
                 <ReplyItem
@@ -38,7 +38,7 @@ const TalkComment = ({ postId }: TalkCommentProps) => {
               <ReplyInput commentId={comment.id} postId={postId} />
             </div>
           </section>
-        </>
+        </div>
       ))}
     </section>
   );

@@ -27,7 +27,7 @@ const CommentBox = ({
   handleDeleteComment,
 }: CommentBoxProps) => {
   return (
-    <div className="flex gap-10 py-4 items-center justify-between border-b border-gray-200">
+    <div className="flex gap-10 p-4 items-center justify-between border-b border-gray-200">
       <div className="flex gap-10 items-center">
         <div className="flex flex-col gap-2 items-center">
           <Avatar src={image} />
@@ -43,7 +43,7 @@ const CommentBox = ({
         <div className="flex gap-2 items-center">
           <p>{dayjs(createdAt).format("YYYY-MM-DD")}</p>
           <p>{dayjs(createdAt).format("HH:mm")}</p>
-          <p>추천</p>
+          {/* <p>추천</p> */}
         </div>
         <div className="flex gap-2 items-center">
           {isEditing ? (
