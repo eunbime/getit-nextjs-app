@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -18,7 +18,7 @@ const TalkBoard = () => {
   const [selectedSort, setSelectedSort] = useState<string>("createdAt");
   const [keyword, setKeyword] = useState<string>("");
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: [
         "talk-posts",
@@ -66,8 +66,6 @@ const TalkBoard = () => {
   // 전체 페이지 수
   const totalPages = data?.pages[0]?.totalPages || 0;
 
-  if (isLoading) return <div>Loading...</div>;
-
   return (
     <div className="w-[80%] h-full rounded-md">
       <BoardFilter
@@ -89,6 +87,7 @@ const TalkBoard = () => {
           <p>좋아요</p>
         </div>
       </div>
+
       {currentPosts.map((post: TPostWithCategoryWithAuthor) => (
         <BoardList key={post.id} post={post} />
       ))}

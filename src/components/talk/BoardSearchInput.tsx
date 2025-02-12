@@ -10,7 +10,6 @@ const BoardSearchInput = ({ setKeyword }: BoardSearchInputProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.trim() === "") return;
     setKeyword(value);
     setValue("");
   };

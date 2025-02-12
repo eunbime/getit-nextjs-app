@@ -7,6 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -50,7 +51,20 @@ export default async function TalkPage({
       <Container>
         <div className="flex h-full w-full justify-between gap-10">
           <TalkMenuNav />
-          <TalkBoard />
+          <Suspense
+            fallback={
+              <section className="w-full h-full">
+                <ul className="w-full h-full flex flex-col">
+                  <li className="w-full bg-gray-100">Loading...</li>
+                  <li className="w-full bg-gray-100">Loading...</li>
+                  <li className="w-full bg-gray-100">Loading...</li>
+                  <li className="w-full bg-gray-100">Loading...</li>
+                </ul>
+              </section>
+            }
+          >
+            <TalkBoard />
+          </Suspense>
         </div>
       </Container>
     </HydrationBoundary>

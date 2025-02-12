@@ -61,26 +61,48 @@ const BoardFilter = ({
     });
   };
 
+  const handleReset = () => {
+    setSelectedCategory("all");
+    setSubCategory("전체");
+    updateQueryString({
+      category: "all",
+      subcategory: "전체",
+    });
+    setKeyword("");
+    setSelectOrder("desc");
+    setSelectedSort("createdAt");
+  };
+
   return (
-    <section className="flex items-center justify-around py-3 px-6 bg-[#0d0c8f] text-white font-semibold rounded-md">
-      <CategorySelect
-        categories={categories}
-        setSelectedCategory={handleCategoryChange}
-        selectedCategory={selectedCategory}
-      />
-      <SubCategorySelect
-        subCategories={
-          categories?.find((category) => category.name === selectedCategory)
-            ?.subcategories
-        }
-        setSubCategory={handleSubCategoryChange}
-        subCategory={subCategory}
-      />
-      <SortSelect
-        setSelectOrder={setSelectOrder}
-        setSelectedSort={setSelectedSort}
-      />
-      <BoardSearchInput setKeyword={setKeyword} />
+    <section className="flex items-center justify-between gap-10 py-3 px-6 bg-[#0d0c8f] text-white font-semibold rounded-md">
+      <div className="flex item-center justify-around w-full">
+        <div className="w-full flex items-center gap-10">
+          <CategorySelect
+            categories={categories}
+            setSelectedCategory={handleCategoryChange}
+            selectedCategory={selectedCategory}
+          />
+          <SubCategorySelect
+            subCategories={
+              categories?.find((category) => category.name === selectedCategory)
+                ?.subcategories
+            }
+            setSubCategory={handleSubCategoryChange}
+            subCategory={subCategory}
+          />
+          <SortSelect
+            setSelectOrder={setSelectOrder}
+            setSelectedSort={setSelectedSort}
+          />
+        </div>
+        <BoardSearchInput setKeyword={setKeyword} />
+      </div>
+      <button
+        className="w-20 bg-white text-black rounded-md"
+        onClick={handleReset}
+      >
+        초기화
+      </button>
     </section>
   );
 };
