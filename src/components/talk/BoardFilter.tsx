@@ -75,8 +75,8 @@ const BoardFilter = ({
 
   return (
     <section className="flex items-center justify-between gap-10 py-3 px-6 bg-[#0d0c8f] text-white font-semibold rounded-md">
-      <div className="flex item-center justify-around w-full">
-        <div className="w-full flex items-center gap-10">
+      <div className="flex item-center justify-around w-full flex-col md:flex-row gap-5 md:gap-0">
+        <div className="w-full flex items-center gap-10 ">
           <CategorySelect
             categories={categories}
             setSelectedCategory={handleCategoryChange}
@@ -98,7 +98,7 @@ const BoardFilter = ({
         <BoardSearchInput setKeyword={setKeyword} />
       </div>
       <button
-        className="w-20 bg-white text-black rounded-md"
+        className="w-20 h-7 bg-white text-black rounded-md hover:bg-gray-200 transition-all duration-300"
         onClick={handleReset}
       >
         초기화

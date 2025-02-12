@@ -1,4 +1,4 @@
-import WriteFloatingButton from "@/components/talk/writeFloatingButton";
+import WriteFloatingButton from "@/components/talk/WriteFloatingButton";
 
 export default function TalkLayout({
   children,

@@ -67,7 +67,7 @@ const TalkBoard = () => {
   const totalPages = data?.pages[0]?.totalPages || 0;
 
   return (
-    <div className="w-[80%] h-full rounded-md">
+    <div className="w-full h-full rounded-md">
       <BoardFilter
         categoryParam={categoryParam}
         subCategoryParam={subCategoryParam}
@@ -75,16 +75,16 @@ const TalkBoard = () => {
         setSelectedSort={setSelectedSort}
         setKeyword={setKeyword}
       />
-      <div className="flex w-full items-center justify-between p-4 text-gray-600 border-b-2 border-gray-200">
-        <div className="flex gap-10">
-          <p className="w-[200px]">카테고리 / 서브카테고리</p>
+      <div className="flex w-full items-center justify-between p-4 pt-10 text-gray-600 border-b-2 border-gray-200 text-xs md:text-base">
+        <div className="flex gap-8 md:gap-10">
+          <p className="w-[120px] md:w-[200px]">카테고리 / 서브카테고리</p>
           <p>제목</p>
         </div>
-        <div className="flex gap-5">
+        <div className="flex gap-2 md:gap-5">
           <p>작성자</p>
           <p>작성일</p>
           <p>조회수</p>
-          <p>좋아요</p>
+          <p>추천수</p>
         </div>
       </div>
 

@@ -34,16 +34,16 @@ const BoardListItem = ({ post }: BoardListItemProps) => {
   return (
     <li
       onClick={handleClick}
-      className="flex items-center justify-between p-4 border-b-2 border-gray-200 cursor-pointer hover:bg-gray-100"
+      className="flex items-center gap-2 md:gap-5 justify-between p-4 border-b-2 border-gray-200 cursor-pointer hover:bg-gray-100 text-xs md:text-base"
     >
-      <div className="flex gap-10">
-        <p className="w-[200px]">
+      <div className="flex gap-8 md:gap-10 flex-1 min-w-0">
+        <p className="w-[120px] md:w-[200px] shrink-0">
           {CATEGORY_TITLE[post.category.name as CategoryType]} /{" "}
           {post.subcategory.name}
         </p>
-        <p>{post.title}</p>
+        <p className="flex-1 truncate">{post.title}</p>
       </div>
-      <div className="flex gap-5">
+      <div className="flex gap-2 md:gap-5 shrink-0">
         <p>{post.author.name}</p>
         <p>{formattedDate}</p>
         <p>{post.viewCount}</p>

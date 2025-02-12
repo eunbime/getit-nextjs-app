@@ -80,7 +80,7 @@ const NavBar = ({ currentUser }: NavBarProps) => {
         </div>
 
         {/* nav-item: screen*/}
-        <div className="flex sm:block relative">
+        <div className="hidden sm:block relative">
           <Link
             href={"/search"}
             className="absolute top-3 -left-12"

@@ -15,16 +15,19 @@ const BoardSearchInput = ({ setKeyword }: BoardSearchInputProps) => {
   };
 
   return (
-    <form className="flex items-center gap-2 " onSubmit={handleSubmit}>
+    <form
+      className="flex items-center gap-3 w-full md:w-1/2"
+      onSubmit={handleSubmit}
+    >
       <input
         type="text"
         placeholder="검색"
-        className="outline-none border-none py-1 px-2 text-black"
+        className="w-full outline-none border-none py-1 px-2 text-black rounded-md"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
       <button type="submit">
-        <IoSearch />
+        <IoSearch size={25} />
       </button>
     </form>
   );
