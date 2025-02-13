@@ -22,8 +22,8 @@ interface HomeProps {
 }
 
 export const metadata: Metadata = {
-  title: "GET!T 마켓",
-  description: "GET!T 중고거래 마켓입니다.",
+  title: "GETIT 마켓",
+  description: "GETIT 중고거래 마켓입니다.",
 };
 
 export const dynamic = "force-dynamic"; // SSR 강제 적용

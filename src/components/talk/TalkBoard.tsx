@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -9,9 +9,15 @@ import BoardList from "./BoardList";
 import PaginationWrapper from "./PaginationWrapper";
 import { TPostWithCategoryWithAuthor } from "@/types";
 import { Skeleton } from "../ui/skeleton";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/userStore";
+import { toast } from "react-toastify";
 
 const TalkBoard = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const { currentUser } = useUserStore();
   const categoryParam = searchParams?.get("category") || "all";
   const subCategoryParam = searchParams?.get("subcategory") || "전체";
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,6 +68,14 @@ const TalkBoard = () => {
     }
   };
 
+  const handleWriteButtonClick = () => {
+    if (!currentUser) {
+      toast.warn("로그인 후 이용해주세요.");
+      return;
+    }
+    router.push("/talk/write");
+  };
+
   // 현재 페이지의 게시물 목록
   const currentPosts = data?.pages[currentPage - 1]?.posts || [];
   // 전체 페이지 수
@@ -88,17 +102,29 @@ const TalkBoard = () => {
           <p>추천수</p>
         </div>
       </div>
-      {isLoading ? (
+      {data?.pages[0]?.posts.length === 0 && (
+        <div className="w-full items-center justify-center p-28 gap-10 flex flex-col text-xl font-semibold text-center ">
+          <p>작성된 게시물이 없습니다.</p>
+          <Button
+            onClick={handleWriteButtonClick}
+            className="bg-primary text-white px-6 py-5 rounded-md text-lg"
+          >
+            게시물 작성하기
+          </Button>
+        </div>
+      )}
+      {isLoading && (
         <div className="w-full h-full flex flex-col gap-[2px]">
           {Array.from({ length: 10 }).map((_, index) => (
             <Skeleton key={index} className="w-full h-[58px]" />
           ))}
         </div>
-      ) : (
-        currentPosts.map((post: TPostWithCategoryWithAuthor) => (
-          <BoardList key={post.id} post={post} />
-        ))
       )}
+
+      {currentPosts.map((post: TPostWithCategoryWithAuthor) => (
+        <BoardList key={post.id} post={post} />
+      ))}
+
       {totalPages > 0 && (
         <PaginationWrapper
           page={currentPage}

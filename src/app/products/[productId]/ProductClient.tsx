@@ -6,7 +6,6 @@ import Button from "@/components/common/Button";
 import Container from "@/components/common/Container";
 import ProductHead from "@/components/products/ProductHead";
 import ProductInfo from "@/components/products/ProductInfo";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useProductAction } from "@/hooks/product/useProductAction";
 import { useProduct } from "@/hooks/product/useProduct";
 import { useUserStore } from "@/store/userStore";
@@ -18,7 +17,7 @@ interface ProductClientProps {
 const ProductClient = ({ productId }: ProductClientProps) => {
   const currentUser = useUserStore((state) => state.currentUser);
 
-  const { product, isLoading, error, category, subCategory } = useProduct({
+  const { product, error, category, subCategory } = useProduct({
     productId,
   });
 
@@ -31,26 +30,15 @@ const ProductClient = ({ productId }: ProductClientProps) => {
 
   const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
     ssr: false,
-    loading: () => <p>카카오맵 로딩중...</p>,
+    loading: () => (
+      <div className="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center">
+        지도 로딩중...
+      </div>
+    ),
   });
 
   if (error) {
     return <div>상품 로딩 중 오류가 발생했습니다.</div>;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="max-w-screen-lg mx-auto pt-14">
-        <div className="flex flex-col py-8 space-y-2 ">
-          <Skeleton className="h-[30px] w-1/5 rounded-xl" />
-          <Skeleton className="h-[400px] w-full rounded-xl" />
-          <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
-            <Skeleton className="h-[300px] w-full md:w-1/2" />
-            <Skeleton className="h-[300px] w-full md:w-1/2" />
-          </div>
-        </div>
-      </div>
-    );
   }
 
   return (
