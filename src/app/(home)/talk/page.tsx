@@ -12,30 +12,16 @@ import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
-type SearchParams = { [key: string]: string | string[] | undefined };
-
 export const metadata: Metadata = {
   title: "TALK!T 토크",
   description: "TALK!T 커뮤니티입니다.",
 };
 
-export default async function TalkPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function TalkPage() {
   const queryClient = new QueryClient();
-  console.log(searchParams);
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: [
-      "talk-posts",
-      searchParams.category,
-      searchParams.subcategory,
-      "createdAt",
-      "desc",
-      "",
-    ],
+    queryKey: ["talk-posts", "all", "전체", "createdAt", "desc", ""],
     queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/talk/posts`,
@@ -45,8 +31,8 @@ export default async function TalkPage({
             limit: 20,
             sort: "createdAt",
             order: "desc",
-            category: searchParams.category,
-            subcategory: searchParams.subcategory,
+            category: "all",
+            subcategory: "전체",
           },
           headers: {
             "Cache-Control": "no-store",

@@ -2,14 +2,13 @@ import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 import { TPostWithCategoryWithAuthor } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface BoardListItemProps {
   post: TPostWithCategoryWithAuthor;
 }
 
 const BoardListItem = ({ post }: BoardListItemProps) => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { mutate: updateViewCount } = useMutation({
@@ -25,14 +24,14 @@ const BoardListItem = ({ post }: BoardListItemProps) => {
 
   const handleClick = () => {
     updateViewCount(post.id);
-    router.push(`/talk/${post.id}`);
   };
 
   const date = new Date(post.createdAt);
   const formattedDate = date.toLocaleDateString();
 
   return (
-    <li
+    <Link
+      href={`/talk/${post.id}`}
       onClick={handleClick}
       className="flex items-center gap-2 md:gap-5 justify-between p-4 border-b-2 border-gray-200 cursor-pointer hover:bg-gray-100 text-xs md:text-base"
     >
@@ -49,7 +48,7 @@ const BoardListItem = ({ post }: BoardListItemProps) => {
         <p>{post.viewCount}</p>
         <p>{post.recommendCount}</p>
       </div>
-    </li>
+    </Link>
   );
 };
 
