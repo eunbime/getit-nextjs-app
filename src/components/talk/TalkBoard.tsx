@@ -92,7 +92,9 @@ const TalkBoard = () => {
       />
       <div className="flex w-full items-center justify-between p-4 pt-10 text-gray-600 border-b-2 border-gray-200 text-xs md:text-base">
         <div className="flex gap-8 md:gap-10">
-          <p className="w-[120px] md:w-[200px]">카테고리 / 서브카테고리</p>
+          <p className="w-[120px] md:w-[200px] sm:block hidden">
+            카테고리 / 서브카테고리
+          </p>
           <p>제목</p>
         </div>
         <div className="flex gap-2 md:gap-5">
@@ -113,13 +115,14 @@ const TalkBoard = () => {
           </Button>
         </div>
       )}
-      {isLoading && (
-        <div className="w-full h-full flex flex-col gap-[2px]">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Skeleton key={index} className="w-full h-[58px]" />
-          ))}
-        </div>
-      )}
+      {isLoading ||
+        (isFetchingNextPage && (
+          <div className="w-full h-full flex flex-col gap-[2px]">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <Skeleton key={index} className="w-full h-[58px]" />
+            ))}
+          </div>
+        ))}
 
       {currentPosts.map((post: TPostWithCategoryWithAuthor) => (
         <BoardList key={post.id} post={post} />
@@ -134,7 +137,6 @@ const TalkBoard = () => {
           isFetchingNextPage={isFetchingNextPage}
         />
       )}
-      {isFetchingNextPage && <div>Loading more...</div>}
     </div>
   );
 };

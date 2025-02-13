@@ -31,11 +31,12 @@ const LatestProductsCarousel = () => {
     <div className="relative h-fit">
       <Swiper
         modules={[Navigation, A11y]}
-        spaceBetween={50}
+        spaceBetween={20}
         slidesPerView={3}
         breakpoints={{
           768: {
             slidesPerView: 4,
+            spaceBetween: 50,
           },
         }}
         className="relative"

@@ -15,10 +15,13 @@ export async function GET(
         include: {
           user: true,
         },
+        orderBy: {
+          createdAt: "asc",
+        },
       },
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: "asc",
     },
   });
   return NextResponse.json(comments);

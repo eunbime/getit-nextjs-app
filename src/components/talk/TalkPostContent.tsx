@@ -45,20 +45,25 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
   return (
     <section className="w-full h-full">
       <div className="flex flex-col w-full gap-2 border-b border-gray-200 pb-2">
-        <h3 className="text-3xl font-bold break-all">{post?.title}</h3>
+        <h3 className="text-xl md:text-3xl font-bold break-all">
+          {post?.title}
+        </h3>
         <div className="flex justify-between items-center">
-          <span className="text-gray-500">
+          <span className="text-gray-500 text-sm md:text-base">
             {CATEGORY_TITLE[post?.category.name as CategoryType]} /{" "}
             {post?.subcategory.name}
           </span>
           {currentUser?.id === post?.authorId && (
             <div className="flex gap-2">
               <button
+                className="hover:opacity-70"
                 onClick={() => router.push(`/talk/write/?postId=${post?.id}`)}
               >
                 수정
               </button>
-              <button onClick={() => deletePost()}>삭제</button>
+              <button className="hover:opacity-70" onClick={() => deletePost()}>
+                삭제
+              </button>
             </div>
           )}
         </div>
@@ -76,7 +81,7 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
           <Avatar src={post?.author.image} user={post?.author} />
           <p>{post?.author.name}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 text-sm md:text-base">
           <p>작성일: {dayjs(post?.createdAt).format("YYYY-MM-DD")}</p>
           <p>조회수: {post?.viewCount}</p>
           <p>추천: {post?.recommendCount}</p>

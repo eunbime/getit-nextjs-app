@@ -68,8 +68,6 @@ const ReplyItem = ({ reply, postId, commentId }: ReplyItemProps) => {
       <CommentBox
         user={reply.user}
         key={reply.id}
-        image={reply.user.image || ""}
-        name={reply.user.name || ""}
         createdAt={reply.createdAt}
         isEditing={isEditing}
         value={replyContent}

@@ -72,8 +72,6 @@ const CommentItem = ({ comment, postId }: CommentItemProps) => {
   return (
     <CommentBox
       user={comment?.user}
-      image={comment?.user?.image || ""}
-      name={comment?.user?.name || ""}
       value={commentContent}
       onChange={(e) => setCommentContent(e.target.value)}
       content={comment?.content || ""}

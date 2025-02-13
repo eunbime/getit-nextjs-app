@@ -25,18 +25,16 @@ const TalkComment = ({ postId }: TalkCommentProps) => {
       {comments?.map((comment) => (
         <div key={comment.id}>
           <CommentItem key={comment.id} comment={comment} postId={postId} />
-          <section className="w-full pl-20">
-            <div>
-              {comment.replies.map((reply) => (
-                <ReplyItem
-                  key={reply.id}
-                  reply={reply}
-                  postId={postId}
-                  commentId={comment.id}
-                />
-              ))}
-              <ReplyInput commentId={comment.id} postId={postId} />
-            </div>
+          <section className="w-full pl-10">
+            {comment.replies.map((reply) => (
+              <ReplyItem
+                key={reply.id}
+                reply={reply}
+                postId={postId}
+                commentId={comment.id}
+              />
+            ))}
+            <ReplyInput commentId={comment.id} postId={postId} />
           </section>
         </div>
       ))}

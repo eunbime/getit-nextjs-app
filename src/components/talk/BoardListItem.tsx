@@ -36,7 +36,7 @@ const BoardListItem = ({ post }: BoardListItemProps) => {
       className="flex items-center gap-2 md:gap-5 justify-between p-4 border-b-2 border-gray-200 cursor-pointer hover:bg-gray-100 text-xs md:text-base"
     >
       <div className="flex gap-8 md:gap-10 flex-1 min-w-0">
-        <p className="w-[120px] md:w-[200px] shrink-0">
+        <p className="w-[120px] md:w-[200px] shrink-0 sm:block hidden">
           {CATEGORY_TITLE[post.category.name as CategoryType]} /{" "}
           {post.subcategory.name}
         </p>
