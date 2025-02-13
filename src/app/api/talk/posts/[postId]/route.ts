@@ -20,12 +20,7 @@ export async function GET(
           name: true,
         },
       },
-      author: {
-        select: {
-          name: true,
-          image: true,
-        },
-      },
+      author: true,
     },
   });
   return NextResponse.json(post);

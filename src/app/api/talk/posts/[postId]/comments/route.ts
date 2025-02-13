@@ -13,13 +13,7 @@ export async function GET(
       user: true,
       replies: {
         include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
+          user: true,
         },
       },
     },

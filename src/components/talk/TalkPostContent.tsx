@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import RecommendButton from "./RecommendButton";
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 import { useUserStore } from "@/store/userStore";
+import { TPostWithCategoryWithAuthor } from "@/types";
 
 const TalkPostContent = ({ postId }: { postId: string }) => {
   const queryClient = useQueryClient();
@@ -18,7 +19,9 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
   const { data: post } = useQuery({
     queryKey: ["post", postId],
     queryFn: async () => {
-      const { data } = await axios.get(`/api/talk/posts/${postId}`);
+      const { data } = await axios.get<TPostWithCategoryWithAuthor>(
+        `/api/talk/posts/${postId}`
+      );
       return data;
     },
     gcTime: 1000 * 60 * 5,
@@ -65,12 +68,12 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
           {parse(post?.content || "")}
         </div>
         <div className="flex items-center justify-end pt-4">
-          <RecommendButton currentUser={currentUser} postId={post?.id} />
+          <RecommendButton currentUser={currentUser} postId={post?.id || ""} />
         </div>
       </div>
       <div className="flex justify-between items-center py-2 border-b border-gray-200">
         <div className="flex gap-2 items-center">
-          <Avatar src={post?.author.image} />
+          <Avatar src={post?.author.image} user={post?.author} />
           <p>{post?.author.name}</p>
         </div>
         <div className="flex gap-2">

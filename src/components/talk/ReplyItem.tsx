@@ -66,6 +66,7 @@ const ReplyItem = ({ reply, postId, commentId }: ReplyItemProps) => {
   return (
     <div>
       <CommentBox
+        user={reply.user}
         key={reply.id}
         image={reply.user.image || ""}
         name={reply.user.name || ""}

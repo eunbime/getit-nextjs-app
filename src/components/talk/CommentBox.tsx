@@ -1,7 +1,9 @@
 import dayjs from "dayjs";
 import Avatar from "../common/Avatar";
+import { User } from "@prisma/client";
 
 interface CommentBoxProps {
+  user: User;
   image: string;
   name: string;
   value: string;
@@ -16,6 +18,7 @@ interface CommentBoxProps {
 }
 
 const CommentBox = ({
+  user,
   image,
   name,
   value,
@@ -32,7 +35,7 @@ const CommentBox = ({
     <div className="flex gap-10 p-4 items-center justify-between border-b border-gray-200">
       <div className="flex gap-10 items-center">
         <div className="flex flex-col gap-2 items-center">
-          <Avatar src={image} />
+          <Avatar src={image} user={user} />
           <p>{name}</p>
         </div>
         {isEditing ? (

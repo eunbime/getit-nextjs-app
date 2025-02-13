@@ -1,55 +1,13 @@
-import { User } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 interface UseProductActionProps {
-  product: any;
-  currentUser?: User | null;
   productId?: string;
 }
 
-export const useProductAction = ({
-  product,
-  currentUser,
-  productId,
-}: UseProductActionProps) => {
+export const useProductAction = ({ productId }: UseProductActionProps) => {
   const router = useRouter();
-
-  const handleChatClick = async () => {
-    if (!currentUser) {
-      toast.warning("로그인 후 이용해주세요");
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        `/api/chat/check?senderId=${currentUser?.id}&receiverId=${product?.user?.id}`
-      );
-      const conversationExists = response.data.exists;
-
-      if (conversationExists) {
-        router.push(
-          `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${product?.user?.image}&open=true`
-        );
-        return;
-      } else {
-        await axios.post("/api/chat", {
-          senderId: currentUser?.id,
-          receiverId: product?.user?.id,
-        });
-
-        const userImage = product?.user?.image ? product?.user?.image : "";
-
-        router.push(
-          `/chat?id=${product?.user?.id}&name=${product?.user?.name}&image=${userImage}&open=true`
-        );
-      }
-    } catch (error) {
-      console.error("채팅 시작 중 오류 발생:", error);
-      toast.error("채팅 시작 중 오류 발생했습니다.");
-    }
-  };
 
   const handleDeleteClick = async () => {
     try {
@@ -73,7 +31,6 @@ export const useProductAction = ({
   };
 
   return {
-    handleChatClick,
     handleDeleteClick,
     handleUpdateClick,
   };
