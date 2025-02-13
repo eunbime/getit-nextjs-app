@@ -25,8 +25,10 @@ const CarouselProductCard: React.FC<CarouselProductCardProps> = ({
           className="object-cover"
         />
         <div className="absolute flex flex-col gap-4 items-center justify-center inset-0 bg-black/30 z-0 opacity-0 hover:opacity-100 transition-all duration-300">
-          <h3 className="text-2xl font-bold text-white">{product.title}</h3>
-          <p className="text-sm text-white">
+          <h3 className="text-lg lg:text-2xl font-bold text-white">
+            {product.title}
+          </h3>
+          <p className="text-xs sm:text-sm lg:text-lg md:font-semibold text-white">
             {CATEGORY_TITLE[product.category.name as CategoryType]}
           </p>
         </div>

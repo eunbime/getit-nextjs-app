@@ -41,27 +41,16 @@ export type TPostWithCategoryWithAuthor = Post & {
   subcategory: {
     name: string;
   };
-  author: {
-    name: string;
-    image: string;
-  };
+  author: User;
 };
 
 export type TCommentWithUserWithReplies = Comment & {
   user: User;
   replies: (Reply & {
-    user: {
-      id: string;
-      name: string;
-      image: string;
-    };
+    user: User;
   })[];
 };
 
 export type TReplyWithUser = Reply & {
-  user: {
-    id: string;
-    name: string;
-    image: string;
-  };
+  user: User;
 };

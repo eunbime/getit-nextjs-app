@@ -117,9 +117,7 @@ const PaginationWrapper = ({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      {isFetchingNextPage && (
-        <div className="text-sm text-gray-500 ml-2">Loading...</div>
-      )}
+      {isFetchingNextPage && <div className="text-sm text-gray-500 ml-2"></div>}
     </div>
   );
 };

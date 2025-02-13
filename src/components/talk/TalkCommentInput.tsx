@@ -51,7 +51,7 @@ const TalkCommentInput = ({ postId }: TalkCommentInputProps) => {
   };
 
   return (
-    <form className="flex gap-2" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex gap-2 mb-10" onSubmit={handleSubmit(onSubmit)}>
       <div className="relative w-full">
         <textarea
           className="w-full h-[100px] border border-gray-200 rounded-lg p-2"

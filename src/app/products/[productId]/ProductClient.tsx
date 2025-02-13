@@ -9,6 +9,7 @@ import ProductInfo from "@/components/products/ProductInfo";
 import { useProductAction } from "@/hooks/product/useProductAction";
 import { useProduct } from "@/hooks/product/useProduct";
 import { useUserStore } from "@/store/userStore";
+import { useOpenChat } from "@/hooks/chat/useOpenChat";
 
 interface ProductClientProps {
   productId?: string;
@@ -21,12 +22,13 @@ const ProductClient = ({ productId }: ProductClientProps) => {
     productId,
   });
 
-  const { handleChatClick, handleDeleteClick, handleUpdateClick } =
-    useProductAction({
-      product,
-      currentUser,
-      productId,
-    });
+  const { handleDeleteClick, handleUpdateClick } = useProductAction({
+    productId,
+  });
+
+  const { handleOpenChat } = useOpenChat({
+    user: product?.user,
+  });
 
   const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
     ssr: false,
@@ -71,7 +73,7 @@ const ProductClient = ({ productId }: ProductClientProps) => {
 
           {currentUser?.id !== product?.user?.id && (
             <div>
-              <Button onClick={handleChatClick} label="이 유저와 채팅하기" />
+              <Button onClick={handleOpenChat} label="이 유저와 채팅하기" />
             </div>
           )}
           {currentUser?.id === product?.user?.id && (
