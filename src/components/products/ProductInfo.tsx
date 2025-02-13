@@ -37,7 +37,7 @@ const ProductInfo = ({
       )}
       <hr />
       <div className="text-lg font-light text-neutral-800 ml-4">
-        {price.toLocaleString("ko-KR")}원
+        {Number(price).toLocaleString("ko-KR")}원
       </div>
       <hr />
       <div className="text-lg font-light text-neutral-500 mx-4 break-words whitespace-pre-wrap">
