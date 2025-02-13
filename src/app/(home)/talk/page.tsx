@@ -28,7 +28,14 @@ export default async function TalkPage({
   console.log(searchParams);
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["talk-posts", searchParams.category, searchParams.subcategory],
+    queryKey: [
+      "talk-posts",
+      searchParams.category,
+      searchParams.subcategory,
+      "createdAt",
+      "desc",
+      "",
+    ],
     queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/talk/posts`,
@@ -41,13 +48,12 @@ export default async function TalkPage({
             category: searchParams.category,
             subcategory: searchParams.subcategory,
           },
+          headers: {
+            "Cache-Control": "no-store",
+          },
         }
       );
       return data;
-    },
-    getNextPageParam: (lastPage: any) => {
-      if (!lastPage.hasNextPage) return undefined;
-      return lastPage.currentPage + 1;
     },
     initialPageParam: 1,
   });
