@@ -23,10 +23,10 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: "GET!T | %s",
-    default: "GET!T",
+    template: "GETIT | %s",
+    default: "GETIT",
   },
-  description: "GET!T 홈페이지입니다.",
+  description: "GETIT 홈페이지입니다.",
   other: {
     "Cache-Control": "public, max-age=3600, must-revalidate",
   },

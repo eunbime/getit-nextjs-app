@@ -13,8 +13,8 @@ import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "TALK!T 토크",
-  description: "TALK!T 커뮤니티입니다.",
+  title: "TALKIT 토크",
+  description: "TALKIT 커뮤니티입니다.",
 };
 
 export default async function TalkPage() {
