@@ -18,6 +18,7 @@ interface ProductClientProps {
 const ProductClient = ({ productId }: ProductClientProps) => {
   const currentUser = useUserStore((state) => state.currentUser);
 
+  // product 타입 지정 필요 (현재 any)
   const { product, error, category, subCategory } = useProduct({
     productId,
   });
@@ -30,6 +31,8 @@ const ProductClient = ({ productId }: ProductClientProps) => {
     user: product?.user,
   });
 
+  // 1. 해당 코드 컴포넌트 밖으로 빼기
+  // 이유: ProductClient 컴포넌트 내부에 선언되어 있으면 컴포넌트가 리렌더링될 때마다 dynamic import 설정이 다시 실행된다.
   const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
     ssr: false,
     loading: () => (
@@ -53,6 +56,7 @@ const ProductClient = ({ productId }: ProductClientProps) => {
             id={product?.id}
           />
           <div className="grid grid-cols-1 mt-6 md:grid-cols-2 gap-10 w-full mb-10">
+            {/* 타입 단언이 다소 위험 */}
             <ProductInfo
               user={product?.user}
               category={category?.name as string}

@@ -9,6 +9,9 @@ export default function ClientUserInitializer({
 }: {
   currentUser: User | null;
 }) {
+  // const setCurrentUser = useUserStore((state) => state.setCurrentUser);
+  // zustand 최적화 
+  // currentUser 변경 시에도 ClientUserInitializer 컴포넌트가 재렌더링
   const { setCurrentUser } = useUserStore();
 
   useEffect(() => {

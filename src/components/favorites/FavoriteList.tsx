@@ -8,6 +8,7 @@ import { useFavorites } from "@/hooks/api/useFavorites";
 const FavoritesList = () => {
   const { data: products, isLoading, error } = useFavorites();
 
+  // 콘솔로그는 개발 후 삭제하기
   console.log(products);
 
   if (isLoading) {

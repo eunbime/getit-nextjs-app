@@ -11,6 +11,8 @@ interface UseFavoriteProps {
 
 const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
   const queryClient = useQueryClient();
+  // setOptimisticLiked 사용하지 않음 -> optimisticLiked 역시 변경되는 상태가 아닌 것으로 보입니다
+  // 굳이 필요없는 정보가 아닐까 생각합니다.
   const [optimisticLiked, setOptimisticLiked] = useState<boolean | null>(null);
 
   const { data: likes } = useQuery<Like[]>({
@@ -22,6 +24,7 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
         );
         return response.data;
       } catch (error) {
+        // 개발자에게 오류 메세지를 전달할 수 있는 로깅 시스템을 추후에 도입해봅시다.
         console.error(error);
         toast.error("찜 목록을 불러오는 중 오류가 발생했습니다.");
       }

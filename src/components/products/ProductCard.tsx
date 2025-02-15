@@ -24,6 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, index }) => {
     >
       <div className="flex flex-col w-full gap-2">
         <div className="relative w-full overflow-hidden aspect-square rounded-xl">
+          {/* blur 처리 추가하면 좋을 듯 */}
           <Image
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

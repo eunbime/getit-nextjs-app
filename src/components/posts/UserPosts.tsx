@@ -13,7 +13,16 @@ import { useUserStore } from "@/store/userStore";
 const UserPosts = () => {
   const currentUser = useUserStore((state) => state.currentUser);
 
+  // 통일성 유지 - hook으로 분리
   const { data: products, isLoading } = useQuery({
+    // 쿼리키 규칙이 다소 아쉬움 
+    // products 뒤의 아이디는 상품의 상세로 생각할 수 있음 
+    // ["products", "user", currentUser?.id] 이렇게 하면 좋을 듯
+    // 좋은 이유
+    // 1. 계층 구조 명확: products(최상위 리소스 타입) -> user(필터링 기준) -> userId (구체적 식별자)
+    // 2. 쿼리 무효화 적용 쉬움
+    //    - 모든 제품 쿼리 무효화: queryClient.invalidateQueries(["products"])
+    //    - 특정 사용자 제품 쿼리 무효화: queryClient.invalidateQueries(["products", "user", currentUser?.id])
     queryKey: ["products", currentUser?.id],
     queryFn: async () => {
       if (!currentUser?.id) {

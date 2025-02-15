@@ -25,7 +25,13 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json(subCategories);
+    // 구체적인 오류 메세지 추가 필요
   } catch (error) {
+    if (error instanceof Error) {
+      return new NextResponse(`Internal Error: ${error.message}`, {
+        status: 500,
+      });
+    }
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+// 사용하지 않는 타입 삭제
 import type { transports } from "engine.io-client";
 
 import { io, Socket } from "socket.io-client";
@@ -53,16 +54,20 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     // 서버와 연결이 끊어졌을 때
-    socketInstance.on("disconnect", (reason: any) => {
+    // any 타입을 아예 안써도 됨
+    socketInstance.on("disconnect", (reason) => {
       console.log("Socket.io 연결 끊김", reason);
       setIsConnected(false);
     });
 
-    socketInstance.on("connect_error", (err: any) => {
+    // any 타입을 아예 안써도 됨
+    socketInstance.on("connect_error", (err) => {
       console.error("Socket 연결 에러:", err);
       setIsConnected(false);
 
       // 새로운 소켓 인스턴스 생성
+      // 해당 소켓은 연결된 후에 setIsConnected를 true로 바꿔주거나 뭔가 하지 않아도 괜찮은지??
+      // 테스트: 상단에 NEXT_PUBLIC_SITE_URL을 없애고 아래 코드엔 실제 키를 하드코딩하여 테스트해보기
       const newSocket = io(process.env.NEXT_PUBLIC_SITE_URL!, {
         ...socketInstance.io.opts,
         transports: ["polling"],

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+// force-dynamic 설정을 한 이유??
+// 강제로 매번 새로 만들 필요가 있는지?
 export const dynamic = "force-dynamic";
 
 export default function NotFound() {

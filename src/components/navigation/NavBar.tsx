@@ -29,8 +29,7 @@ const NavBar = ({ currentUser }: NavBarProps) => {
 
   return (
     <nav
-      className="fixed bg-white top-0 z-10 w-full shadow-sm shadow-gray-200
-    "
+      className="fixed bg-white top-0 z-10 w-full shadow-sm shadow-gray-200"
     >
       <div className="flex items-center justify-between mx-5 sm:mx-10 lg:mx-20">
         {/* logo */}

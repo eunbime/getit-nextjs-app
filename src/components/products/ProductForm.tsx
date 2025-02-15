@@ -74,6 +74,7 @@ const ProductForm = () => {
 
   const { imageSrc, category, subCategory, latitude, longitude } = watch();
 
+  // hooks/api/useSubCategories.ts 와 중복 
   const { data: subCategories } = useQuery({
     queryKey: ["sub-categories", category],
     queryFn: async () => {

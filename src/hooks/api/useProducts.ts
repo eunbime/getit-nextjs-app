@@ -14,6 +14,7 @@ interface ProductResponse {
   currentPage: number;
 }
 
+// hooks의 api 폴더와 hooks의 product 폴더의 차이는?
 export const getProducts = async (searchParams: SearchParams) => {
   const baseUrl =
     process.env.NODE_ENV === "development"
