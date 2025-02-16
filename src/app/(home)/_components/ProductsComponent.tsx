@@ -17,13 +17,13 @@ export default async function ProductsComponent({
 }: ProductsComponentProps) {
   const queryClient = new QueryClient();
 
-  await prefetchProducts(queryClient, searchParams);
+  await prefetchProducts(queryClient);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex flex-col md:flex-row w-full">
         {Object.keys(searchParams).length !== 0 && <Sidebar />}
-        <Products searchParams={searchParams} />
+        <Products />
       </div>
     </HydrationBoundary>
   );
