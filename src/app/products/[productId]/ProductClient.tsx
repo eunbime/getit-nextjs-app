@@ -7,9 +7,9 @@ import Container from "@/components/common/Container";
 import ProductHead from "@/components/products/ProductHead";
 import ProductInfo from "@/components/products/ProductInfo";
 import { useProductAction } from "@/hooks/product/useProductAction";
-import { useProduct } from "@/hooks/product/useProduct";
 import { useUserStore } from "@/store/userStore";
 import { useOpenChat } from "@/hooks/chat/useOpenChat";
+import { useProductWithCategory } from "@/hooks/product/useProductWithCategory";
 
 interface ProductClientProps {
   productId?: string;
@@ -18,11 +18,11 @@ interface ProductClientProps {
 const ProductClient = ({ productId }: ProductClientProps) => {
   const currentUser = useUserStore((state) => state.currentUser);
 
-  const { product, error, category, subCategory } = useProduct({
+  const { product, error, category, subCategory } = useProductWithCategory({
     productId,
   });
 
-  const { handleDeleteClick, handleUpdateClick } = useProductAction({
+  const { deleteProduct, handleUpdateClick } = useProductAction({
     productId,
   });
 
@@ -78,7 +78,7 @@ const ProductClient = ({ productId }: ProductClientProps) => {
           )}
           {currentUser?.id === product?.user?.id && (
             <div className="flex gap-2">
-              <Button onClick={handleDeleteClick} label="삭제" />
+              <Button onClick={() => deleteProduct()} label="삭제" />
               <Button onClick={handleUpdateClick} label="수정" />
             </div>
           )}

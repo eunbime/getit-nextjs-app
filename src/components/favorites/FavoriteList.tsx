@@ -3,10 +3,10 @@
 import EmptyState from "@/components/EmptyState";
 import ProductCard from "@/components/products/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useFavorites } from "@/hooks/api/useFavorites";
+import { useFavoriteProducts } from "@/hooks/product/useFavoriteProduct";
 
 const FavoritesList = () => {
-  const { data: products, isLoading, error } = useFavorites();
+  const { data: products, isLoading, error } = useFavoriteProducts();
 
   console.log(products);
 

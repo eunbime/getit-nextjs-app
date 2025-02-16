@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -8,17 +9,23 @@ interface UseProductActionProps {
 
 export const useProductAction = ({ productId }: UseProductActionProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const handleDeleteClick = async () => {
-    try {
-      await axios.delete(`/api/products/${productId}`);
+  const { mutate: deleteProduct } = useMutation({
+    mutationFn: async () => {
+      const { data } = await axios.delete(`/api/products/${productId}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("상품이 삭제되었습니다.");
       router.push("/");
-    } catch (error) {
-      console.error("상품 삭제 중 오류 발생:", error);
-      toast.error("상품 삭제 중 오류가 발생했습니다.");
-    }
-  };
+    },
+    onError: (error) => {
+      toast.error("상품 삭제에 실패했습니다.");
+      throw new Error("상품 삭제에 실패했습니다.", error);
+    },
+  });
 
   const handleUpdateClick = async () => {
     try {
@@ -31,7 +38,7 @@ export const useProductAction = ({ productId }: UseProductActionProps) => {
   };
 
   return {
-    handleDeleteClick,
+    deleteProduct,
     handleUpdateClick,
   };
 };

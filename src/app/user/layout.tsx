@@ -6,9 +6,9 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-1 md:flex-row flex-col">
+    <div className="flex md:flex-row flex-col">
       <ProfileSidebar />
-      {children}
+      <div className="flex-1 p-8 md:pt-16">{children}</div>
     </div>
   );
 }

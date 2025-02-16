@@ -10,6 +10,8 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { SocketProvider } from "@/components/providers/SocketProvider";
 import ClientUserInitializer from "@/components/providers/ClientUserInitializer";
 
+export const dynamic = "force-dynamic";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",

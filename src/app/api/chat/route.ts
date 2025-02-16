@@ -7,7 +7,7 @@ export async function GET() {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return NextResponse.error();
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const users = await prisma.user.findMany({
@@ -42,7 +42,13 @@ export async function GET() {
 
     return NextResponse.json(users);
   } catch (error) {
-    console.log("[CHAT_GET]", error);
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
 
@@ -51,7 +57,7 @@ export async function POST(request: Request) {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return NextResponse.error();
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const body = await request.json();
@@ -114,6 +120,12 @@ export async function POST(request: Request) {
       return NextResponse.json(newConversation);
     }
   } catch (error) {
-    console.log("CHAT_POST", error);
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -27,6 +27,7 @@ const CarouselImageCard = ({ product }: CarouselImageCardProps) => {
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          blurDataURL={product.imageSrc}
         />
       </div>
       <div className="flex flex-col gap-4 z-10 items-center p-5">

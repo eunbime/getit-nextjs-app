@@ -6,7 +6,7 @@ interface UseProductProps {
   productId?: string;
 }
 
-export const useProduct = ({ productId }: UseProductProps) => {
+export const useProductWithCategory = ({ productId }: UseProductProps) => {
   const {
     data: product,
     isLoading,

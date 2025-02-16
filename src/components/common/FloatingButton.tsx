@@ -28,7 +28,7 @@ const FloatingButton = ({ children, href }: FloatingButtonProps) => {
       className="fixed flex items-center justify-center text-lg text-center text-white
     transition-colors bg-[#0d0c8f] border-0 border-transparent
     rounded-full shadow-xl cursor-pointer hover:bg-opacity-80
-    aspect-square bottom-5 right-5 w-14"
+    aspect-square bottom-5 right-5 w-14 z-50"
     >
       {children}
     </Link>

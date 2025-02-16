@@ -5,16 +5,16 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "react-toastify";
 
 import { Category, Subcategory } from "@prisma/client";
 import { ProductSchema } from "@/schemas";
-import { useProductById } from "@/hooks/api/useProductById";
-import { useCategories } from "@/hooks/api/useCategories";
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
+import { useCategories } from "@/hooks/category/useCategories";
+import { useProductById } from "@/hooks/product/useProductById";
+import { useSubCategories } from "@/hooks/category/useSubCategories";
 import CategoryInput from "@/components/categories/CategoryInput";
 import Button from "@/components/common/Button";
 import Heading from "@/components/common/Heading";
@@ -74,16 +74,7 @@ const ProductForm = () => {
 
   const { imageSrc, category, subCategory, latitude, longitude } = watch();
 
-  const { data: subCategories } = useQuery({
-    queryKey: ["sub-categories", category],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `/api/categories/sub-categories?category=${category}`
-      );
-      return data;
-    },
-    enabled: !!category,
-  });
+  const { data: subCategories } = useSubCategories(category as CategoryType);
 
   const setCustomValue = (
     id: keyof z.infer<typeof ProductSchema>,

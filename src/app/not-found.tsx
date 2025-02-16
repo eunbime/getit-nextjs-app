@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 export default function NotFound() {
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-gray-100">

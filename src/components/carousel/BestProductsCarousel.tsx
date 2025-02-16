@@ -6,19 +6,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 import { TProductWithCategory } from "@/types";
-import CarouselImageCard from "./CarouselImageCard";
+import { usePopularProducts } from "@/hooks/product/usePopularProducts";
+import CarouselImageCard from "@/components/carousel/CarouselImageCard";
 
 const BestProductsCarousel = () => {
-  const { data } = useQuery<TProductWithCategory[]>({
-    queryKey: ["popular-products"],
-    queryFn: async () => {
-      const response = await axios.get("/api/posts/popular");
-      return response.data;
-    },
-  });
+  const { data } = usePopularProducts();
 
   return (
     <div className="w-full h-fit">
@@ -27,8 +21,8 @@ const BestProductsCarousel = () => {
         spaceBetween={50}
         slidesPerView={1}
         pagination={{ clickable: true }}
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log("slide change")}
+        onSwiper={() => {}}
+        onSlideChange={() => {}}
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,

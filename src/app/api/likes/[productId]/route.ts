@@ -3,17 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
 
 export async function POST(
-  request: NextRequest,
+  _: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
     const currentUser = await getCurrentUser();
     const { productId } = params;
 
-    console.log({ productId });
-
     if (!currentUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     await prisma.like.create({
@@ -26,16 +24,18 @@ export async function POST(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
@@ -43,7 +43,7 @@ export async function DELETE(
     const { productId } = params;
 
     if (!currentUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     await prisma.like.deleteMany({
@@ -55,10 +55,12 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

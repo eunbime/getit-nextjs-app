@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
 
 export async function POST(req: NextRequest) {
-  console.log("API 호출됨");
   try {
     const data = await req.json();
     const { image, userId } = data;
@@ -31,7 +30,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(updatedImage);
   } catch (error) {
-    console.error("[PROFILE_IMAGE_UPLOAD_ERROR]", error);
-    return new NextResponse("서버 오류가 발생했습니다", { status: 500 });
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

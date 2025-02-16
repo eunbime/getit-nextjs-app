@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
 
 export async function GET(
-  request: NextRequest,
+  _: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
     const { productId } = params;
 
     if (!productId || typeof productId !== "string") {
-      console.log("Invalid Product ID");
       throw new Error("Invalid Product ID");
     }
 
@@ -25,7 +24,12 @@ export async function GET(
 
     return NextResponse.json(category);
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

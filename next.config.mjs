@@ -3,6 +3,12 @@ const nextConfig = {
   reactStrictMode: true,
   crossOrigin: "anonymous",
   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
     domains: [
       "res.cloudinary.com",
       "res-console.cloudinary.com",
@@ -12,9 +18,6 @@ const nextConfig = {
     ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  },
-  future: {
-    webpack5: true,
   },
   webpack: (config, { isServer }) => {
     // socket.io-client를 externals에서 제거하고 fallback 설정 추가
@@ -37,9 +40,6 @@ const nextConfig = {
     });
 
     return config;
-  },
-  experimental: {
-    serverActions: true,
   },
   eslint: {
     ignoreDuringBuilds: true,

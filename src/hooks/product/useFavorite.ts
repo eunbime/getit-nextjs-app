@@ -14,7 +14,7 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
   const [optimisticLiked, setOptimisticLiked] = useState<boolean | null>(null);
 
   const { data: likes } = useQuery<Like[]>({
-    queryKey: ["likes", currentUser?.id],
+    queryKey: ["likes", { userId: currentUser?.id }],
     queryFn: async () => {
       try {
         const response = await axios.get(
@@ -45,9 +45,11 @@ const useFavorite = ({ productId, currentUser }: UseFavoriteProps) => {
         : axios.post(`/api/likes/${productId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["likes", currentUser?.id] });
       queryClient.invalidateQueries({
-        queryKey: ["favorites", currentUser?.id],
+        queryKey: ["likes", { userId: currentUser?.id }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["products", "favorites", { userId: currentUser?.id }],
       });
       toast.success(
         !isLiked ? "찜 목록에 추가되었습니다." : "찜 목록에서 제거되었습니다."

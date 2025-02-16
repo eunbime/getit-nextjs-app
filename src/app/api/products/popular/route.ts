@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const categories = await prisma.category.findMany();
@@ -33,10 +35,12 @@ export async function GET() {
 
     return NextResponse.json(products);
   } catch (error) {
-    console.error("Error fetching most liked products:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch most liked products" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

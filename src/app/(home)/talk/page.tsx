@@ -10,8 +10,6 @@ import axios from "axios";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "TALKIT 토크",
   description: "TALKIT 커뮤니티입니다.",

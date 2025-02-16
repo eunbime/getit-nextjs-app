@@ -2,9 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 
-import { useSubCategories } from "@/hooks/api/useSubCategories";
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
 import SideBarSubCategories from "@/components/navigation/SideBarSubCategories";
+import { useSubCategories } from "@/hooks/category/useSubCategories";
 
 const Sidebar = () => {
   const params = useSearchParams();
