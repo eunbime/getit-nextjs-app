@@ -1,44 +1,39 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import Avatar from "../common/Avatar";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import parse from "html-react-parser";
 import { useRouter } from "next/navigation";
-import dayjs from "dayjs";
-import RecommendButton from "./RecommendButton";
-import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
+
+import { useTalkPost } from "@/hooks/talk/usePost";
 import { useUserStore } from "@/store/userStore";
-import { TPostWithCategoryWithAuthor } from "@/types";
+import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
+import Avatar from "@/components/common/Avatar";
+import RecommendButton from "@/components/talk/RecommendButton";
+import { toast } from "react-toastify";
 
 const TalkPostContent = ({ postId }: { postId: string }) => {
-  const queryClient = useQueryClient();
-  const { currentUser } = useUserStore();
   const router = useRouter();
-
-  const { data: post } = useQuery({
-    queryKey: ["post", postId],
-    queryFn: async () => {
-      const { data } = await axios.get<TPostWithCategoryWithAuthor>(
-        `/api/talk/posts/${postId}`
-      );
-      return data;
-    },
-    gcTime: 1000 * 60 * 5,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    enabled: !!postId,
-  });
+  const queryClient = useQueryClient();
+  const currentUser = useUserStore((state) => state.currentUser);
+  const { data: post } = useTalkPost(postId);
 
   const { mutate: deletePost } = useMutation({
     mutationFn: async () => {
-      const { data } = await axios.delete(`/api/talk/posts/${postId}`);
-      return data;
+      await axios.delete(`/api/talk/posts/${postId}`);
     },
     onSuccess: () => {
       router.push("/talk");
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
-      queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      toast.error("게시글 삭제 중 오류가 발생했습니다.");
+      throw new Error("게시글 삭제 중 오류가 발생했습니다.");
     },
   });
 
@@ -61,7 +56,14 @@ const TalkPostContent = ({ postId }: { postId: string }) => {
               >
                 수정
               </button>
-              <button className="hover:opacity-70" onClick={() => deletePost()}>
+              <button
+                className="hover:opacity-70"
+                onClick={() => {
+                  if (window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+                    deletePost();
+                  }
+                }}
+              >
                 삭제
               </button>
             </div>

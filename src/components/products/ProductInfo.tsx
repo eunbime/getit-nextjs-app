@@ -4,12 +4,12 @@ import ProductCategory from "./ProductCategory";
 import Avatar from "@/components/common/Avatar";
 
 interface ProductInfoProps {
-  user: User;
-  category: string;
-  createdAt: Date;
-  description: string;
-  subCategory: string;
-  price: number;
+  user?: User;
+  category?: string;
+  createdAt?: Date;
+  description?: string;
+  subCategory?: string;
+  price?: number;
 }
 
 const ProductInfo = ({
@@ -28,7 +28,7 @@ const ProductInfo = ({
           <div>{user?.name}</div>
         </div>
         <div className="flex flex-row items-center gap-4 font-light text-neutral-500">
-          <div>{formatTime(createdAt)}</div>
+          <div>{formatTime(createdAt as Date)}</div>
         </div>
       </div>
       <hr />

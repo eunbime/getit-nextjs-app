@@ -1,10 +1,11 @@
 import { useState } from "react";
-import CommentBox from "./CommentBox";
-import { TReplyWithUser } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
+
+import { TReplyWithUser } from "@/types";
 import { useUserStore } from "@/store/userStore";
+import CommentBox from "@/components/talk/CommentBox";
 
 interface ReplyItemProps {
   reply: TReplyWithUser;
@@ -13,7 +14,7 @@ interface ReplyItemProps {
 }
 
 const ReplyItem = ({ reply, postId, commentId }: ReplyItemProps) => {
-  const { currentUser } = useUserStore();
+  const currentUser = useUserStore((state) => state.currentUser);
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -28,9 +29,7 @@ const ReplyItem = ({ reply, postId, commentId }: ReplyItemProps) => {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["replies", postId, commentId],
-      });
+      queryClient.invalidateQueries({ queryKey: ["post", postId, "comments"] });
       toast.success("대댓글 수정 완료");
     },
   });
@@ -44,12 +43,7 @@ const ReplyItem = ({ reply, postId, commentId }: ReplyItemProps) => {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["replies", postId, commentId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["comments", postId],
-      });
+      queryClient.invalidateQueries({ queryKey: ["post", postId, "comments"] });
       toast.success("대댓글 삭제 완료");
     },
   });

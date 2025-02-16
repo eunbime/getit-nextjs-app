@@ -13,7 +13,7 @@ interface CommentItemProps {
 }
 
 const CommentItem = ({ comment, postId }: CommentItemProps) => {
-  const { currentUser } = useUserStore();
+  const currentUser = useUserStore((state) => state.currentUser);
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment?.content || "");
@@ -31,7 +31,7 @@ const CommentItem = ({ comment, postId }: CommentItemProps) => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId, "comments"] });
       toast.success("댓글이 삭제되었습니다.");
     },
     onError: () => {
@@ -48,7 +48,7 @@ const CommentItem = ({ comment, postId }: CommentItemProps) => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId, "comments"] });
       toast.success("댓글이 수정되었습니다.");
     },
     onError: () => {

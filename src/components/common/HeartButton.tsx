@@ -5,14 +5,14 @@ import useFavorite from "@/hooks/product/useFavorite";
 import { useUserStore } from "@/store/userStore";
 
 interface HeartButtonProps {
-  productId: string;
+  productId?: string;
 }
 
 const HeartButton = ({ productId }: HeartButtonProps) => {
   const currentUser = useUserStore((state) => state.currentUser);
 
   const { toggleFavorite, isLiked } = useFavorite({
-    productId,
+    productId: productId || "",
     currentUser,
   });
 

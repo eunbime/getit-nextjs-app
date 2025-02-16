@@ -13,7 +13,6 @@ export const useOpenChat = ({ user }: UseOpenChatProps) => {
   const { currentUser } = useUserStore();
 
   const handleOpenChat = async () => {
-    console.log(currentUser?.id, user?.id);
     if (!currentUser) {
       toast.warn("로그인 후 이용해주세요");
       return;
@@ -48,8 +47,13 @@ export const useOpenChat = ({ user }: UseOpenChatProps) => {
         );
       }
     } catch (error) {
-      console.error("채팅 시작 중 오류 발생:", error);
-      toast.error("채팅 시작 중 오류 발생했습니다.");
+      if (error instanceof Error) {
+        toast.error(`채팅 시작 중 오류가 발생했습니다.: ${error.message}`);
+        throw new Error(`채팅 시작 중 오류가 발생했습니다.: ${error.message}`);
+      } else {
+        toast.error("채팅 시작 중 오류가 발생했습니다.");
+        throw new Error("채팅 시작 중 오류가 발생했습니다.");
+      }
     }
   };
 

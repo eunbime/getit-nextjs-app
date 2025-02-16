@@ -1,10 +1,11 @@
 "use client";
 
-import { useUserStore } from "@/store/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+
+import { useUserStore } from "@/store/userStore";
 
 interface ReplyInputProps {
   postId: string;
@@ -12,7 +13,7 @@ interface ReplyInputProps {
 }
 
 const ReplyInput = ({ postId, commentId }: ReplyInputProps) => {
-  const { currentUser } = useUserStore();
+  const currentUser = useUserStore((state) => state.currentUser);
   const queryClient = useQueryClient();
 
   const {
@@ -36,12 +37,7 @@ const ReplyInput = ({ postId, commentId }: ReplyInputProps) => {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["replies", postId, commentId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["comments", postId],
-      });
+      queryClient.invalidateQueries({ queryKey: ["post", postId, "comments"] });
       toast.success("대댓글 작성 완료");
     },
   });

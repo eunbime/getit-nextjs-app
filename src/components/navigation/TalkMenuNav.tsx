@@ -1,19 +1,11 @@
-import axios from "axios";
-
-import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
-import { TCategoryWithSubcategories } from "@/types";
 import Link from "next/link";
 
+import { TCategoryWithSubcategories } from "@/types";
+import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
+import { getCategories } from "@/hooks/talk/useCategories";
+
 const TalkMenuNav = async () => {
-  let categories: TCategoryWithSubcategories[] = [];
-  try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`
-    );
-    categories = data;
-  } catch (error) {
-    console.log(error);
-  }
+  const categories: TCategoryWithSubcategories[] = await getCategories();
 
   return (
     <div className="w-full min-w-[200px] lg:w-[20%] h-full lg:block hidden">

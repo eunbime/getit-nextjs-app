@@ -1,6 +1,6 @@
 interface ProductCategoryProps {
-  label: string;
-  subCategory: string;
+  label?: string;
+  subCategory?: string;
 }
 
 const ProductCategory = ({ label, subCategory }: ProductCategoryProps) => {

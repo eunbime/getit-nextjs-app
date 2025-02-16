@@ -9,7 +9,7 @@ export default function ClientUserInitializer({
 }: {
   currentUser: User | null;
 }) {
-  const { setCurrentUser } = useUserStore();
+  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
   useEffect(() => {
     setCurrentUser(currentUser);

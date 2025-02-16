@@ -18,6 +18,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
+  if (pathname.startsWith("/talk/write") && !session) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
+  }
+
   // 관리자 유저만 접근 가능
   if (pathname.startsWith("/admin") && session?.role !== "admin") {
     return NextResponse.redirect(new URL("/", req.url));

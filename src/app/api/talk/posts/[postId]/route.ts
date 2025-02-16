@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
 
 export async function GET(
-  req: NextRequest,
+  _: NextRequest,
   { params }: { params: Promise<{ postId: string }> }
 ) {
   const { postId } = await params;
@@ -61,11 +61,26 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  _: NextRequest,
   { params }: { params: Promise<{ postId: string }> }
 ) {
   const { postId } = await params;
-  await prisma.post.delete({ where: { id: postId } });
+
+  const existingPost = await prisma.post.findUnique({
+    where: { id: postId },
+  });
+
+  if (!existingPost) {
+    return NextResponse.json(
+      { error: "게시글을 찾을 수 없습니다." },
+      { status: 404 }
+    );
+  }
+
+  await prisma.post.delete({
+    where: { id: postId },
+  });
+
   return NextResponse.json({ message: "Post deleted" });
 }
 

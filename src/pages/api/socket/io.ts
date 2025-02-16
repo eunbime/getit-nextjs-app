@@ -14,7 +14,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   try {
     // 서버에 연결되어 있지 않다면 socket.io 서버 초기화
     if (!res.socket.server.io) {
-      const path = "/api/socket/io"; // 웹소켓 연결을 처리할 경로
+      const path = "/api/socket/io";
       const httpServer: NetServer = res.socket.server as any;
       const io = new ServerIO(httpServer, {
         path: path,
@@ -25,7 +25,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
         connectTimeout: 5000,
         transports: ["polling", "websocket"],
         cors: {
-          origin: process.env.NEXT_PUBLIC_SITE_URL,
+          origin: process.env.NEXT_PUBLIC_API_URL,
           methods: ["GET", "POST"],
           credentials: true,
         },
