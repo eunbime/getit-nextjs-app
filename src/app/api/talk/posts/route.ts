@@ -129,10 +129,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(post);
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("게시글 작성 중 오류가 발생했습니다.");
   }
 }

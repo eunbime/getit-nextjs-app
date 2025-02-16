@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
-import BoardFilter from "./BoardFilter";
-import BoardList from "./BoardList";
-import PaginationWrapper from "./PaginationWrapper";
-import { TPostWithCategoryWithAuthor } from "@/types";
-import { Skeleton } from "../ui/skeleton";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/userStore";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+
+import { TPostWithCategoryWithAuthor } from "@/types";
+import { useUserStore } from "@/store/userStore";
+import { useTalkPosts } from "@/hooks/talk/usePosts";
+import BoardFilter from "@/components/talk/BoardFilter";
+import BoardList from "@/components/talk/BoardList";
+import PaginationWrapper from "@/components/talk/PaginationWrapper";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 const TalkBoard = () => {
   const router = useRouter();
@@ -26,35 +25,13 @@ const TalkBoard = () => {
   const [keyword, setKeyword] = useState<string>("");
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery({
-      queryKey: [
-        "talk-posts",
-        categoryParam,
-        subCategoryParam,
-        selectedSort,
-        selectOrder,
-        keyword,
-      ],
-      queryFn: async ({ pageParam = 1 }) => {
-        const { data } = await axios.get("/api/talk/posts", {
-          params: {
-            page: pageParam,
-            limit: 20,
-            sort: selectedSort,
-            order: selectOrder,
-            category: categoryParam,
-            subcategory: subCategoryParam,
-            keyword: keyword,
-          },
-        });
-        return data;
-      },
-      getNextPageParam: (lastPage) => {
-        if (!lastPage.hasNextPage) return undefined;
-        return lastPage.currentPage + 1;
-      },
-      initialPageParam: 1,
-    });
+    useTalkPosts(
+      categoryParam,
+      subCategoryParam,
+      selectedSort,
+      selectOrder,
+      keyword
+    );
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -115,14 +92,13 @@ const TalkBoard = () => {
           </Button>
         </div>
       )}
-      {isLoading ||
-        (isFetchingNextPage && (
-          <div className="w-full h-full flex flex-col gap-[2px]">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <Skeleton key={index} className="w-full h-[58px]" />
-            ))}
-          </div>
-        ))}
+      {(isLoading || isFetchingNextPage) && (
+        <div className="w-full h-full flex flex-col gap-[2px]">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Skeleton key={index} className="w-full h-[58px]" />
+          ))}
+        </div>
+      )}
 
       {currentPosts.map((post: TPostWithCategoryWithAuthor) => (
         <BoardList key={post.id} post={post} />

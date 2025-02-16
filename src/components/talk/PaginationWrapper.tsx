@@ -8,6 +8,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useEffect } from "react";
 
 interface PaginationWrapperProps {
   page: number;
@@ -24,6 +25,10 @@ const PaginationWrapper = ({
   hasNextPage,
   isFetchingNextPage,
 }: PaginationWrapperProps) => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [page]);
+
   const handlePrevious = () => {
     if (page > 1) setPage(page - 1);
   };

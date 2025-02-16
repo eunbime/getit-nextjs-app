@@ -24,6 +24,12 @@ export type TProductWithCategory = Product & {
   category: Category;
 };
 
+export type TProductWithCategoryWithSubcategory = Product & {
+  category: Category;
+  subcategory: Subcategory;
+  user: User;
+};
+
 export type TLikeWithProduct = Like & {
   product: TProductWithCategory & {
     category: Category;

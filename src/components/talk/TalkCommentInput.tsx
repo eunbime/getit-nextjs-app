@@ -1,18 +1,18 @@
 "use client";
 
-import { useUserStore } from "@/store/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+
+import { useUserStore } from "@/store/userStore";
 
 interface TalkCommentInputProps {
   postId: string;
 }
 
 const TalkCommentInput = ({ postId }: TalkCommentInputProps) => {
-  const { currentUser } = useUserStore();
-  console.log({ currentUser });
+  const currentUser = useUserStore((state) => state.currentUser);
   const queryClient = useQueryClient();
 
   const {
@@ -36,7 +36,7 @@ const TalkCommentInput = ({ postId }: TalkCommentInputProps) => {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId, "comments"] });
     },
   });
 

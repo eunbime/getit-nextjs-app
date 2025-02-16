@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 
 const QuillWrapper = dynamic(() => import("react-quill"), {
   ssr: false,
-  loading: () => <p>Loading ...</p>,
+  loading: () => (
+    <div className="w-full h-[400px] flex justify-center items-center bg-gray-100">
+      Loading ...
+    </div>
+  ),
 });
 
 interface TextEditorProps {

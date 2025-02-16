@@ -15,6 +15,15 @@ interface ProductClientProps {
   productId?: string;
 }
 
+const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center">
+      지도 로딩중...
+    </div>
+  ),
+});
+
 const ProductClient = ({ productId }: ProductClientProps) => {
   const currentUser = useUserStore((state) => state.currentUser);
 
@@ -28,15 +37,6 @@ const ProductClient = ({ productId }: ProductClientProps) => {
 
   const { handleOpenChat } = useOpenChat({
     user: product?.user,
-  });
-
-  const KakaoMap = dynamic(() => import("@/components/KakaoMap"), {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center">
-        지도 로딩중...
-      </div>
-    ),
   });
 
   if (error) {
@@ -56,17 +56,17 @@ const ProductClient = ({ productId }: ProductClientProps) => {
             <ProductInfo
               user={product?.user}
               category={category?.name as string}
-              createdAt={product?.createdAt}
-              price={product?.price}
-              description={product?.description}
+              createdAt={product?.createdAt as Date}
+              price={product?.price as number}
+              description={product?.description as string}
               subCategory={subCategory?.name as string}
             />
 
             <div>
               <KakaoMap
                 detailPage
-                latitude={product?.latitude}
-                longitude={product?.longitude}
+                latitude={Number(product?.latitude)}
+                longitude={Number(product?.longitude)}
               />
             </div>
           </div>

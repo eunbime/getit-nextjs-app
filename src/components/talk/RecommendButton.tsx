@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { ThumbsUp, ThumbsUpIcon } from "lucide-react";
 import { toast } from "react-toastify";
+import { usePostRecommend } from "@/hooks/talk/useRecommend";
 
 interface RecommendButtonProps {
   postId: string;
@@ -12,13 +13,7 @@ interface RecommendButtonProps {
 const RecommendButton = ({ postId, currentUser }: RecommendButtonProps) => {
   const queryClient = useQueryClient();
 
-  const { data: isRecommend } = useQuery({
-    queryKey: ["recommend", postId],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/talk/posts/${postId}/recommend`);
-      return data;
-    },
-  });
+  const { data: isRecommend } = usePostRecommend(postId);
 
   const { mutate: recommendPost } = useMutation({
     mutationFn: async () => {
@@ -26,25 +21,36 @@ const RecommendButton = ({ postId, currentUser }: RecommendButtonProps) => {
       return data;
     },
     onMutate: async () => {
-      // 낙관적 업데이트
-      await queryClient.cancelQueries({ queryKey: ["recommend", postId] });
-      const previousRecommend = queryClient.getQueryData(["recommend", postId]);
-      queryClient.setQueryData(["recommend", postId], !previousRecommend);
+      await queryClient.cancelQueries({
+        queryKey: ["post", postId, "recommend"],
+      });
+      const previousRecommend = queryClient.getQueryData([
+        "post",
+        postId,
+        "recommend",
+      ]);
+      queryClient.setQueryData(
+        ["post", postId, "recommend"],
+        !previousRecommend
+      );
       return { previousRecommend };
     },
     onError: (err, variables, context) => {
       // 에러 시 롤백
       if (context?.previousRecommend !== undefined) {
         queryClient.setQueryData(
-          ["recommend", postId],
+          ["post", postId, "recommend"],
           context.previousRecommend
         );
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["recommend", postId] });
+      toast.success("추천되었습니다.");
+      queryClient.invalidateQueries({
+        queryKey: ["post", postId, "recommend"],
+      });
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
-      queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
@@ -57,7 +63,6 @@ const RecommendButton = ({ postId, currentUser }: RecommendButtonProps) => {
       toast.error("이미 추천하셨습니다.");
       return;
     }
-    toast.success("추천되었습니다.");
     recommendPost();
   };
 

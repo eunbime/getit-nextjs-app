@@ -1,12 +1,13 @@
-import Container from "@/components/common/Container";
-import TalkMenuNav from "@/components/navigation/TalkMenuNav";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
+
+import { prefetchTalkPost } from "@/hooks/talk/usePost";
 import TalkCommentComponent from "./_components/TalkCommentComponent";
+import Container from "@/components/common/Container";
+import TalkMenuNav from "@/components/navigation/TalkMenuNav";
 import TalkPostContent from "@/components/talk/TalkPostContent";
 
 export default async function TalkPostPage({
@@ -17,15 +18,7 @@ export default async function TalkPostPage({
   const { postId } = params;
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["post", postId],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/talk/posts/${postId}`
-      );
-      return data;
-    },
-  });
+  await prefetchTalkPost(queryClient, postId);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

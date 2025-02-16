@@ -42,11 +42,15 @@ const KakaoMap = ({
           }
         },
         (error) => {
-          console.error("현재 위치를 가져오는데 실패했습니다:", error);
+          if (error instanceof Error) {
+            throw new Error(
+              `현재 위치를 가져오는데 실패했습니다.: ${error.message}`
+            );
+          }
         }
       );
     } else {
-      console.log("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+      throw new Error("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
     }
   }, [detailPage, latitude, longitude]);
 

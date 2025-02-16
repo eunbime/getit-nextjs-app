@@ -3,17 +3,18 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Category } from "@prisma/client";
+import { PostSchema } from "@/schemas";
+import { useCategories } from "@/hooks/talk/useCategories";
 import TextEditor from "@/components/common/TextEditor";
 import CategorySelect from "@/components/talk/CategorySelect";
 import SubCategorySelect from "@/components/talk/SubCategorySelect";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { PostSchema } from "@/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
 
 const TalkWriteForm = () => {
   const queryClient = useQueryClient();
@@ -21,6 +22,8 @@ const TalkWriteForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const postId = searchParams?.get("postId");
+
+  const { data: categories } = useCategories();
 
   const {
     register,
@@ -61,7 +64,6 @@ const TalkWriteForm = () => {
     try {
       const { title, content, category, subcategory } = data;
 
-      // 카테고리와 서브카테고리 확인
       if (!category || !subcategory) {
         toast.error("카테고리와 서브카테고리를 선택해주세요.");
         return;
@@ -76,6 +78,7 @@ const TalkWriteForm = () => {
           subcategory,
         });
         toast.success("게시글이 수정되었습니다.");
+        router.push(`/talk/${postId}`);
       } else {
         // 작성
         await axios.post("/api/talk/posts", {
@@ -84,17 +87,22 @@ const TalkWriteForm = () => {
           category,
           subcategory,
         });
-        console.log("게시글 작성 완료");
+
         toast.success("게시글이 작성되었습니다.");
+        router.push("/talk");
       }
 
-      queryClient.invalidateQueries({ queryKey: ["talk-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       if (postId) {
         queryClient.invalidateQueries({ queryKey: ["post", postId] });
       }
-      router.push("/talk");
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        toast.error("게시글 작성 중 오류가 발생했습니다.");
+        throw new Error(error.message);
+      }
+      toast.error("게시글 작성 중 오류가 발생했습니다.");
+      throw new Error("게시글 작성 중 오류가 발생했습니다.");
     }
   };
 
@@ -121,14 +129,6 @@ const TalkWriteForm = () => {
       document.removeEventListener("click", handleNavigation, true);
     };
   }, [handleNavigation]);
-
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const { data } = await axios.get("/api/categories");
-      return data;
-    },
-  });
 
   return (
     <form

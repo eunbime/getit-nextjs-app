@@ -1,3 +1,4 @@
+import { TProductWithCategoryWithSubcategory } from "@/types";
 import { Category, Subcategory } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -11,7 +12,7 @@ export const useProductWithCategory = ({ productId }: UseProductProps) => {
     data: product,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<TProductWithCategoryWithSubcategory>({
     queryKey: ["product", productId],
     queryFn: async () => {
       const { data } = await axios.get(`/api/products/${productId}`);
