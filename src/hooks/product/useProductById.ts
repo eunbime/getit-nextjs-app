@@ -34,7 +34,9 @@ export const useProductById = (productId?: string | null) => {
     queryKey: ["product", productId],
     queryFn: async () => {
       if (!productId) return null;
-      const { data } = await axios.get(`/api/products/${productId}`);
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`
+      );
       return data;
     },
     enabled: !!productId,
