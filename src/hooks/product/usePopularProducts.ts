@@ -17,12 +17,12 @@ export const prefetchPopularProducts = async (queryClient: QueryClient) => {
         );
         return data;
       },
-      staleTime: 1000 * 60 * 5, // 5분
-      gcTime: 1000 * 60 * 30, // 30분
     });
   } catch (error) {
-    console.error("인기 상품 프리페치 중 오류 발생:", error);
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("인기 상품 프리페치 중 오류 발생");
   }
 };
 
@@ -31,16 +31,9 @@ export const usePopularProducts = () => {
     queryKey: ["products", "popular"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/products/popular`,
-        {
-          headers: {
-            "Cache-Control": "no-store",
-          },
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/api/products/popular`
       );
       return data;
     },
-    staleTime: 1000 * 60 * 5, // 5분
-    gcTime: 1000 * 60 * 30, // 30분
   });
 };
