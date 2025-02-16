@@ -39,6 +39,12 @@ const ProductClient = ({ productId }: ProductClientProps) => {
     user: product?.user,
   });
 
+  const isValidLocation =
+    product?.latitude &&
+    product?.longitude &&
+    !isNaN(Number(product.latitude)) &&
+    !isNaN(Number(product.longitude));
+
   if (error) {
     return <div>상품 로딩 중 오류가 발생했습니다.</div>;
   }
@@ -55,19 +61,25 @@ const ProductClient = ({ productId }: ProductClientProps) => {
           <div className="grid grid-cols-1 mt-6 md:grid-cols-2 gap-10 w-full mb-10">
             <ProductInfo
               user={product?.user}
-              category={category?.name as string}
-              createdAt={product?.createdAt as Date}
-              price={product?.price as number}
-              description={product?.description as string}
-              subCategory={subCategory?.name as string}
+              category={category?.name}
+              createdAt={product?.createdAt}
+              price={product?.price}
+              description={product?.description}
+              subCategory={subCategory?.name}
             />
 
             <div>
-              <KakaoMap
-                detailPage
-                latitude={Number(product?.latitude)}
-                longitude={Number(product?.longitude)}
-              />
+              {isValidLocation ? (
+                <KakaoMap
+                  detailPage
+                  latitude={Number(product?.latitude)}
+                  longitude={Number(product?.longitude)}
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  위치 정보를 불러올 수 없습니다.
+                </div>
+              )}
             </div>
           </div>
 

@@ -22,7 +22,10 @@ const KakaoMap = ({
   detailPage = false,
 }: KakaoMapProps) => {
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
-  const [center, setCenter] = useState({ lat: 0, lng: 0 });
+  const [center, setCenter] = useState({
+    lat: latitude || 0,
+    lng: longitude || 0,
+  });
 
   // 처음 로드될 때 현재 위치를 초기화
   useEffect(() => {
@@ -36,23 +39,25 @@ const KakaoMap = ({
 
           if (!latitude && !longitude) {
             setCenter({ lat, lng });
-
             setCustomValue?.("latitude", lat);
             setCustomValue?.("longitude", lng);
           }
         },
         (error) => {
-          if (error instanceof Error) {
-            throw new Error(
-              `현재 위치를 가져오는데 실패했습니다.: ${error.message}`
-            );
+          console.error("위치 정보를 가져오는데 실패했습니다:", error);
+          // 기본 위치 설정 (예: 서울시청)
+          const defaultLat = 37.5665;
+          const defaultLng = 126.978;
+
+          setCenter({ lat: defaultLat, lng: defaultLng });
+          if (!detailPage) {
+            setCustomValue?.("latitude", defaultLat);
+            setCustomValue?.("longitude", defaultLng);
           }
         }
       );
-    } else {
-      throw new Error("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
     }
-  }, [detailPage, latitude, longitude]);
+  }, [detailPage, latitude, longitude, setCustomValue]);
 
   // latitude, longitude가 변경될 때 center 업데이트
   useEffect(() => {
