@@ -5,7 +5,6 @@ import axios from "axios";
 export interface SearchParams {
   category?: string;
   subcategory?: string;
-  [key: string]: string | undefined;
 }
 
 interface ProductResponse {
@@ -14,28 +13,18 @@ interface ProductResponse {
   currentPage: number;
 }
 
-export const prefetchProducts = async (
-  queryClient: QueryClient,
-  searchParams: SearchParams = {
-    category: "",
-    subcategory: "",
-  }
-) => {
+export const prefetchProducts = async (queryClient: QueryClient) => {
   try {
     return queryClient.prefetchInfiniteQuery({
-      queryKey: [
-        "products",
-        "category",
-        searchParams.category || "",
-        searchParams.subcategory || "",
-      ],
+      queryKey: ["products", "category", "", ""],
       initialPageParam: 1,
       queryFn: async ({ pageParam = 1 }) => {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/api/products`,
           {
             params: {
-              ...searchParams,
+              category: "",
+              subcategory: "",
               page: pageParam.toString(),
               limit: "10",
             },
