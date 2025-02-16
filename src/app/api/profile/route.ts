@@ -29,7 +29,12 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error("[PROFILE_UPDATE_ERROR]", error);
-    return new NextResponse("서버 오류가 발생했습니다", { status: 500 });
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

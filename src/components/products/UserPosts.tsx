@@ -10,17 +10,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/components/EmptyState";
 import { useUserStore } from "@/store/userStore";
 
-const UserPosts = () => {
+const UserProducts = () => {
   const currentUser = useUserStore((state) => state.currentUser);
 
   const { data: products, isLoading } = useQuery({
-    queryKey: ["products", currentUser?.id],
+    queryKey: ["products", { userId: currentUser?.id }],
     queryFn: async () => {
       if (!currentUser?.id) {
         return [];
       }
-      const response = await axios.get(`/api/posts`);
-      return response.data;
+      const { data } = await axios.get(`/api/products/by-user`);
+      return data;
     },
     enabled: !!currentUser?.id,
   });
@@ -65,4 +65,4 @@ const UserPosts = () => {
   );
 };
 
-export default UserPosts;
+export default UserProducts;

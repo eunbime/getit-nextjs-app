@@ -4,8 +4,6 @@ import UserImage from "@/components/profile/UserImage";
 import UserName from "@/components/profile/UserName";
 import { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "마이페이지",
   description: "GET!T 중고거래 마켓 마이페이지입니다.",
@@ -15,7 +13,7 @@ export default async function Profile() {
   const currentUser = await getCurrentUser();
 
   return (
-    <section className="flex-1 p-8 md:pt-16">
+    <section>
       <h1 className="text-2xl font-semibold py-3">내 정보</h1>
 
       <div className="grid gap-8 max-w-2xl">

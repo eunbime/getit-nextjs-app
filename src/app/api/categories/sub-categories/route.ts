@@ -6,7 +6,6 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const categoryName = searchParams.get("category");
 
-    // 먼저 카테고리를 찾음
     const category = await prisma.category.findFirst({
       where: {
         name: categoryName as string,
@@ -14,10 +13,9 @@ export async function GET(request: Request) {
     });
 
     if (!category) {
-      return NextResponse.json([]);
+      return new NextResponse("Category not found", { status: 404 });
     }
 
-    // 찾은 카테고리의 서브카테고리들을 조회
     const subCategories = await prisma.subcategory.findMany({
       where: {
         categoryId: category.id,
@@ -26,6 +24,12 @@ export async function GET(request: Request) {
 
     return NextResponse.json(subCategories);
   } catch (error) {
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

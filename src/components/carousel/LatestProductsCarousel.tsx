@@ -1,31 +1,28 @@
 "use client";
 
 import { Navigation, A11y } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 import { TProductWithCategory } from "@/types";
-import CarouselProductCard from "./CarouselProductCard";
-import NavigationButton from "../common/NavigationButton";
-import { Swiper, SwiperSlide } from "swiper/react";
+import CarouselProductCard from "@/components/carousel/CarouselProductCard";
+import NavigationButton from "@/components/common/NavigationButton";
+import { useLatestProducts } from "@/hooks/product/useLatestProducts";
+import { useEffect, useState } from "react";
 
 const LatestProductsCarousel = () => {
-  const { data } = useQuery({
-    queryKey: ["latest-products"],
-    queryFn: async () => {
-      const response = await axios.get("/api/posts/latest", {
-        params: {
-          limit: 10,
-          page: 1,
-        },
-      });
-      return response.data;
-    },
-  });
+  const [isClient, setIsClient] = useState(false);
+  const { data } = useLatestProducts();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
 
   return (
     <div className="relative h-fit">

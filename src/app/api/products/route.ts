@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return NextResponse.error();
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const body = await request.json();
@@ -25,10 +25,7 @@ export async function POST(request: Request) {
 
     Object.keys(body).forEach((value: any) => {
       if (!body[value]) {
-        return NextResponse.json(
-          { error: `${value} is required` },
-          { status: 400 }
-        );
+        return new NextResponse(`${value} is required`, { status: 400 });
       }
     });
 
@@ -45,7 +42,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // 서브카테고리 찾기
     const subCategoryRecord = await prisma.subcategory.findFirst({
       where: {
         name: subCategory,
@@ -73,19 +69,20 @@ export async function POST(request: Request) {
       price: parseInt(price),
       userId: currentUser.id,
     };
-    console.log("Creating product with data:", productData); // 생성할 상품 데이터 확인
 
     const product = await prisma.product.create({
       data: productData,
     });
 
     return NextResponse.json(product);
-  } catch (error: any) {
-    console.error("[PRODUCTS_POST] Detailed error:", error); // 자세한 에러 로깅
-    return NextResponse.json(
-      { error: error.message || "Internal Server Error" },
-      { status: 500 }
-    );
+  } catch (error) {
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
 
@@ -155,9 +152,12 @@ export async function GET(request: Request) {
       totalCount,
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

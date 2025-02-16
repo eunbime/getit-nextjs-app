@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/helpers/prismadb";
 
 export async function GET(
-  request: Request,
+  _: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
@@ -20,36 +20,45 @@ export async function GET(
     });
 
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return new NextResponse("Product not found", { status: 404 });
     }
 
     return NextResponse.json(product);
   } catch (error) {
-    console.error("[PRODUCT_GET]", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
 
 export async function DELETE(
-  request: Request,
+  _: NextRequest,
   { params }: { params: { productId: string } }
 ) {
   try {
     const { productId } = params;
+
+    if (!productId) {
+      return new NextResponse("Product ID is required", { status: 400 });
+    }
+
     await prisma.product.delete({
       where: { id: productId },
     });
 
     return NextResponse.json({ message: "Product deleted successfully" });
   } catch (error) {
-    console.error("[PRODUCT_DELETE]", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
 
@@ -57,24 +66,18 @@ export async function PATCH(
   request: Request,
   { params }: { params: { productId: string } }
 ) {
-  // 수정 로직 추가
   try {
     const { productId } = params;
     const data = await request.json();
 
-    // 상품 존재 여부 확인
     const existingProduct = await prisma.product.findUnique({
       where: { id: productId },
     });
 
     if (!existingProduct) {
-      return NextResponse.json(
-        { error: "상품을 찾을 수 없습니다" },
-        { status: 404 }
-      );
+      return new NextResponse("Product not found", { status: 404 });
     }
 
-    // 먼저 카테고리와 서브카테고리 찾기
     const category = await prisma.category.findFirst({
       where: { name: data.category },
     });
@@ -84,10 +87,9 @@ export async function PATCH(
     });
 
     if (!category || !subCategory) {
-      return NextResponse.json(
-        { error: "카테고리 또는 서브카테고리를 찾을 수 없습니다" },
-        { status: 400 }
-      );
+      return new NextResponse("Category or subCategory not found", {
+        status: 400,
+      });
     }
 
     const updatedData = {
@@ -115,17 +117,13 @@ export async function PATCH(
     });
 
     return NextResponse.json(updatedProduct);
-  } catch (error: any) {
-    // 더 자세한 에러 로깅
-    console.error("[PRODUCT_PATCH] Error details:", {
-      message: error.message,
-      stack: error.stack,
-      data: error,
-    });
-
-    return NextResponse.json(
-      { error: error.message || "Internal Server Error" },
-      { status: 500 }
-    );
+  } catch (error) {
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

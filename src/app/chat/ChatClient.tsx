@@ -6,11 +6,11 @@ import dynamic from "next/dynamic";
 
 import { TUserWithChat } from "@/types/index";
 import { useLayout } from "@/hooks/chat/useLayout";
-import { useChat } from "@/hooks/api/useChat";
 import Contacts from "@/components/chat/Contacts";
 import EmptyState from "@/components/EmptyState";
 import LoadingSpinner from "@/components/chat/LoadingSpinner";
 import { useUserStore } from "@/store/userStore";
+import { useChat } from "@/hooks/chat/useChat";
 
 export interface Receiver {
   receiverId: string;

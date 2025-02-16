@@ -2,15 +2,14 @@ import prisma from "@/helpers/prismadb";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
+  _: Request,
   { params }: { params: { productId: string } }
 ) {
   try {
     const { productId } = params;
 
     if (!productId || typeof productId !== "string") {
-      console.log("Invalid Product ID");
-      throw new Error("Invalid Product ID");
+      return new NextResponse("Invalid Product ID", { status: 400 });
     }
 
     const subCategories = await prisma.subcategory.findMany({
@@ -25,7 +24,12 @@ export async function GET(
 
     return NextResponse.json(subCategories);
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -11,7 +11,12 @@ export async function GET() {
 
     return NextResponse.json(categories);
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) {
+      return new NextResponse("Internal Error", {
+        status: 500,
+        statusText: error.message,
+      });
+    }
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

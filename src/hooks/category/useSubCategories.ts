@@ -8,7 +8,7 @@ export const useSubCategories = (category: CategoryType | null) => {
     queryKey: ["sub-categories", category],
     queryFn: async () => {
       const { data } = await axios.get(
-        `/api/categories/sub-categories?category=${category}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/sub-categories?category=${category}`
       );
       return data;
     },
