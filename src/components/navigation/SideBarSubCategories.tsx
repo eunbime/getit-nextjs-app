@@ -1,34 +1,21 @@
-import { Subcategory } from "@prisma/client";
+"use client";
+
 import Link from "next/link";
-import { Skeleton } from "../ui/skeleton";
 import { useSearchParams } from "next/navigation";
 
+import { Subcategory } from "@prisma/client";
+import { useSubCategories } from "@/hooks/category/useSubCategories";
+import { CategoryType } from "@/constants/categories";
+
 interface SideBarSubCategoriesProps {
-  subCategories: Subcategory[] | undefined;
-  category: string;
-  isLoading: boolean;
+  category: CategoryType;
 }
 
-const SideBarSubCategories = ({
-  subCategories = [],
-  category,
-  isLoading,
-}: SideBarSubCategoriesProps) => {
+const SideBarSubCategories = ({ category }: SideBarSubCategoriesProps) => {
   const searchParams = useSearchParams();
   const selectedSubCategory = searchParams?.get("subcategory");
 
-  if (isLoading) {
-    return (
-      <div className="flex gap-2 mt-1 md:mt-5 ml-2 md:flex-col w-full justify-start overflow-x-scroll md:overflow-x-auto">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <Skeleton
-            key={index}
-            className="h-[30px] md:h-[20px] w-[90px] rounded-xl"
-          />
-        ))}
-      </div>
-    );
-  }
+  const { data: subCategories } = useSubCategories(category);
 
   return (
     <ul className="flex gap-2 mt-1 md:mt-5 ml-2 md:flex-col w-full justify-start overflow-x-scroll md:overflow-x-auto">

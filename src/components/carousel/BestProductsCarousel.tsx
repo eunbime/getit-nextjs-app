@@ -21,8 +21,6 @@ const BestProductsCarousel = () => {
         spaceBetween={50}
         slidesPerView={1}
         pagination={{ clickable: true }}
-        onSwiper={() => {}}
-        onSlideChange={() => {}}
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
