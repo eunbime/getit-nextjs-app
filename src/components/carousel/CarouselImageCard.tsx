@@ -1,4 +1,5 @@
 import { CATEGORY_TITLE, CategoryType } from "@/constants/categories";
+import { getBase64BlurData } from "@/helpers/getBase64BlurData";
 import { TProductWithCategory } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,13 +8,20 @@ interface CarouselImageCardProps {
   product: TProductWithCategory;
 }
 
-const CarouselImageCard = ({ product }: CarouselImageCardProps) => {
+const CarouselImageCard = async ({ product }: CarouselImageCardProps) => {
+  const blurredUrl = await getBase64BlurData(product.imageSrc);
+
   return (
     <div className="relative flex md:flex-row flex-col justify-around items-center bg-gray-200 rounded-md h-full p-10 overflow-hidden">
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url(${product.imageSrc})`,
+          backgroundImage: `url(${
+            product.imageSrc
+          }), url(${product.imageSrc.replace(
+            "/upload/",
+            "/upload/w_300,e_blur:1000/"
+          )})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "blur(8px) brightness(1.0)",
@@ -27,7 +35,8 @@ const CarouselImageCard = ({ product }: CarouselImageCardProps) => {
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          blurDataURL={product.imageSrc}
+          placeholder="blur"
+          blurDataURL={blurredUrl}
         />
       </div>
       <div className="flex flex-col gap-4 z-10 items-center p-5">
@@ -37,7 +46,7 @@ const CarouselImageCard = ({ product }: CarouselImageCardProps) => {
         </p>
         <Link
           href={`/products/${product.id}`}
-          className="bg-black text-white px-4 py-2 rounded-md hover:opacity-70 transition-opacity duration-300"
+          className="bg-[#0d0c8f] text-white font-semibold px-4 py-2 rounded-md hover:brightness-150 transition-all duration-300"
         >
           상품 보러가기
         </Link>

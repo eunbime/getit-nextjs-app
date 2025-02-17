@@ -12,6 +12,7 @@ import ProductsComponent from "@/app/(home)/_components/ProductsComponent";
 import Container from "@/components/common/Container";
 import FloatingButton from "@/components/common/FloatingButton";
 import { ProductsSkeleton } from "@/components/products/Product";
+import { SidebarSkeleton } from "@/components/navigation/Sidebar";
 
 interface HomeProps {
   searchParams: SearchParams;
@@ -55,7 +56,14 @@ export default async function Home({ searchParams }: HomeProps) {
       )}
 
       <CategoriesComponent />
-      <Suspense fallback={<ProductsSkeleton />}>
+      <Suspense
+        fallback={
+          <div className="flex flex-col md:flex-row w-full">
+            {Object.keys(searchParams).length !== 0 && <SidebarSkeleton />}
+            <ProductsSkeleton />
+          </div>
+        }
+      >
         <ProductsComponent searchParams={searchParams} />
       </Suspense>
       <FloatingButton href="/products/upload">

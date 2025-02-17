@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { TProductWithCategory } from "@/types";
 import { fromNow } from "@/helpers/dayjs";
@@ -12,18 +12,26 @@ interface ProductCardProps {
   index?: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ data, index }) => {
-  const router = useRouter();
-
-  const isAboveTheFold = index && index < 9;
-
+const ProductCard = ({ data }: ProductCardProps) => {
   return (
-    <article
-      onClick={() => router.push(`/products/${data.id}`)}
+    <Link
+      href={`/products/${data.id}`}
       className="col-span-1 cursor-pointer group"
     >
       <div className="flex flex-col w-full gap-2">
         <div className="relative w-full overflow-hidden aspect-square rounded-xl">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${data?.imageSrc.replace(
+                "/upload/",
+                "/upload/w_200,h_200,c_fill,e_blur:300,f_jpg,q_1/"
+              )})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              filter: "blur(8px)",
+            }}
+          ></div>
           <Image
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -31,8 +39,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, index }) => {
             src={data?.imageSrc}
             alt="Product Image"
             quality={60}
-            loading={isAboveTheFold ? "eager" : "lazy"}
-            priority={isAboveTheFold ? true : false}
           />
           <div className="absolute top-3 right-3">
             <HeartButton productId={data.id} />
@@ -50,7 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, index }) => {
           <div>{fromNow(data?.createdAt)}</div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 };
 

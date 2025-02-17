@@ -12,10 +12,10 @@ const CategoryBox = ({ label, path, selected }: CategoryBoxProps) => {
       href={`/?category=${path}`}
       role="tab"
       aria-selected={selected}
-      className={`flex flex-col items-center justify-center gap-2 py-2 px-4 transition cursor-pointer rounded-md mb-2
+      className={`flex flex-col items-center justify-center gap-2 py-2 px-4 transition-all duration-300 cursor-pointer rounded-md mb-2
         ${
           selected
-            ? "bg-[#0b0b0b] text-white hover:opacity-80"
+            ? "bg-[#0d0c8f] text-white"
             : " text-neutral-500 bg-gray-100 hover:text-neutral-800"
         }
         `}

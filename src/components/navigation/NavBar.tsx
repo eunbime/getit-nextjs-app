@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-import NavItem from "./NavItem";
-import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { IoSearch } from "react-icons/io5";
 import { TbMinus, TbPlus } from "react-icons/tb";
+
+import { User } from "@prisma/client";
+import NavItem from "@/components/navigation/NavItem";
 
 interface NavBarProps {
   currentUser?: User | null;

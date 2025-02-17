@@ -170,3 +170,14 @@ a {
     opacity: 0.8;
   }
 }
+
+/* Swiper 페이지네이션 스타일 */
+.swiper-pagination-bullet {
+  background-color: gray !important;
+  opacity: 0.5 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #0d0c8f !important;
+  opacity: 1 !important;
+}

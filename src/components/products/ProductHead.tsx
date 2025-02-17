@@ -14,6 +14,19 @@ const ProductHead = ({ title, id, imageSrc }: ProductHeadProps) => {
     <>
       <Heading title={title} />
       <div className="w-full h-[60vh] overflow-hidden rounded-xl relative">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${imageSrc?.replace(
+              "/upload/",
+              "/upload/w_300,h_300,c_fill,e_blur:200,f_jpg,q_1/"
+            )})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            filter: "blur(10px)",
+          }}
+        />
         <Image
           src={imageSrc || ""}
           fill
@@ -21,7 +34,6 @@ const ProductHead = ({ title, id, imageSrc }: ProductHeadProps) => {
           alt="Image"
           objectFit="contain"
           priority
-          loading="eager"
         />
         <div className="absolute top-5 right-5">
           <HeartButton productId={id} />
