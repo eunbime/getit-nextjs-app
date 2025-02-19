@@ -43,11 +43,11 @@ const Dropdown = ({ options, selectedOption, onSelect }: DropdownProps) => {
   };
 
   return (
-    <div className="relative w-full z-50" ref={dropdownRef}>
-      <div className="flex items-center gap-2">
-        <div className="text-xs md:text-base">{selectedItem}</div>
+    <div className="relative w-fit min-w-fit z-50 " ref={dropdownRef}>
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-sm md:text-base">{selectedItem}</div>
         <div onClick={() => setIsOpen(!isOpen)}>
-          <IoChevronDownCircleOutline className="w-4 h-4" />
+          <IoChevronDownCircleOutline className="w-4 h-4 md:w-5 md:h-5" />
         </div>
       </div>
       <div

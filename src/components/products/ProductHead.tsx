@@ -11,9 +11,9 @@ interface ProductHeadProps {
 
 const ProductHead = ({ title, id, imageSrc }: ProductHeadProps) => {
   return (
-    <>
+    <div className="w-full">
       <Heading title={title} />
-      <div className="w-full h-[60vh] overflow-hidden rounded-xl relative">
+      <div className="relative w-full aspect-square mx-auto overflow-hidden rounded-xl mt-5">
         <div
           className="absolute inset-0"
           style={{
@@ -30,16 +30,15 @@ const ProductHead = ({ title, id, imageSrc }: ProductHeadProps) => {
         <Image
           src={imageSrc || ""}
           fill
-          className="object-cover w-full"
+          className="object-cover"
           alt="Image"
-          objectFit="contain"
           priority
         />
         <div className="absolute top-5 right-5">
           <HeartButton productId={id} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

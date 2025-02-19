@@ -34,9 +34,6 @@ export const useTalkPost = (postId: string) => {
         );
         return data;
       },
-      gcTime: 1000 * 60 * 5,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
       enabled: !!postId,
     });
   } catch (error) {

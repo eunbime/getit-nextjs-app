@@ -18,6 +18,9 @@ export const useProductAction = ({ productId }: UseProductActionProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product", "latest"] });
+      queryClient.invalidateQueries({ queryKey: ["product", "popular"] });
+
       toast.success("상품이 삭제되었습니다.");
       router.push("/");
     },

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Category } from "@prisma/client";
 import { PostSchema } from "@/schemas";
 import { useCategories } from "@/hooks/talk/useCategories";
+import { useTalkPost } from "@/hooks/talk/usePost";
 import TextEditor from "@/components/common/TextEditor";
 import CategorySelect from "@/components/talk/CategorySelect";
 import SubCategorySelect from "@/components/talk/SubCategorySelect";
@@ -41,14 +42,7 @@ const TalkWriteForm = () => {
     mode: "onChange",
   });
 
-  const { data: post, isLoading } = useQuery({
-    queryKey: ["post", postId],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/talk/posts/${postId}`);
-      return data;
-    },
-    enabled: !!postId,
-  });
+  const { data: post, isLoading } = useTalkPost(postId || "");
 
   useEffect(() => {
     if (postId && post && !isLoading) {
@@ -147,7 +141,7 @@ const TalkWriteForm = () => {
       {errors.title && (
         <p className="text-red-500 text-sm">{errors.title.message}</p>
       )}
-      <div className="flex w-full md:w-1/2 p-3">
+      <div className="flex w-full p-3 gap-5">
         <CategorySelect
           categories={categories}
           setSelectedCategory={setSelectedCategory}
@@ -177,7 +171,7 @@ const TalkWriteForm = () => {
         }
       />
       {errors.content && (
-        <p className="text-red-500 text-sm">{errors.content.message}</p>
+        <p className="text-red-500 text-sm p-3">{errors.content.message}</p>
       )}
       <button
         type="submit"

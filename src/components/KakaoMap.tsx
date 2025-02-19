@@ -79,7 +79,7 @@ const KakaoMap = ({
   return (
     <Map
       center={center}
-      style={{ width: "100%", height: "360px" }}
+      style={{ width: "100%", height: "400px" }}
       onClick={(_, mouseEvent) => handleClick(mouseEvent)}
     >
       <MapMarker position={center} />

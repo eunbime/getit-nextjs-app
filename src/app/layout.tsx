@@ -1,14 +1,14 @@
+import "./globals.css";
 import { Metadata } from "next/types";
 import localFont from "next/font/local";
 import Script from "next/script";
 
-import "./globals.css";
 import getCurrentUser from "./actions/getCurrentUser";
-import NavBar from "@/components/navigation/NavBar";
 import ToastProvider from "@/components/providers/ToastProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { SocketProvider } from "@/components/providers/SocketProvider";
 import ClientUserInitializer from "@/components/providers/ClientUserInitializer";
+import Header from "@/components/common/Header";
 
 export const dynamic = "force-dynamic";
 
@@ -62,7 +62,7 @@ export default async function RootLayout({
       >
         <SocketProvider>
           <QueryProvider>
-            <NavBar currentUser={currentUser} />
+            <Header currentUser={currentUser} />
             <ClientUserInitializer currentUser={currentUser} />
             <ToastProvider />
             {children}

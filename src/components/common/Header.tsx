@@ -9,11 +9,11 @@ import { TbMinus, TbPlus } from "react-icons/tb";
 import { User } from "@prisma/client";
 import NavItem from "@/components/navigation/NavItem";
 
-interface NavBarProps {
+interface HeaderProps {
   currentUser?: User | null;
 }
 
-const NavBar = ({ currentUser }: NavBarProps) => {
+const Header = ({ currentUser }: HeaderProps) => {
   const [menu, setMenu] = useState(false);
   const pathname = usePathname();
   const isTalkPage = pathname?.includes("/talk");
@@ -28,19 +28,19 @@ const NavBar = ({ currentUser }: NavBarProps) => {
   };
 
   return (
-    <nav
+    <header
       className="fixed bg-white top-0 z-10 w-full shadow-sm shadow-gray-200
     "
     >
-      <div className="flex items-center justify-between mx-5 sm:mx-10 lg:mx-20">
+      <nav className="flex items-center justify-between mx-auto max-w-[2520px] xl:px-20 md:px-10 sm:px-2 px-4">
         {/* logo */}
-        <div className="flex items-center font-extrabold text-2xl h-14 text-[#0d0c8f] gap-4">
+        <div className="flex items-center font-extrabold text-2xl h-14 text-main-blue gap-4">
           {pathname?.includes("/talk") ? (
             <>
               <Link href={"/talk"}>TALK!T</Link>
               <Link
                 href={"/"}
-                className="text-sm bg-[#0d0c8f] text-white px-3 py-1 rounded-md mt-[1px]"
+                className="text-sm bg-main-blue text-white px-3 py-1 rounded-md mt-[1px]"
               >
                 GET!T
               </Link>
@@ -50,7 +50,7 @@ const NavBar = ({ currentUser }: NavBarProps) => {
               <Link href={"/"}>GET!T</Link>
               <Link
                 href={"/talk"}
-                className="text-sm bg-[#0d0c8f] text-white px-3 py-1 rounded-md mt-[1px]"
+                className="text-sm bg-main-blue text-white px-3 py-1 rounded-md mt-[1px]"
               >
                 TALK!T
               </Link>
@@ -63,7 +63,7 @@ const NavBar = ({ currentUser }: NavBarProps) => {
           {isTalkPage || isUploadPage ? null : (
             <Link href={"/search"} aria-label="search">
               <IoSearch
-                className="text-2xl text-[#0d0c8f]"
+                className="text-2xl text-main-blue"
                 aria-label="search"
               />
             </Link>
@@ -93,14 +93,14 @@ const NavBar = ({ currentUser }: NavBarProps) => {
 
           <NavItem currentUser={currentUser} />
         </div>
-      </div>
+      </nav>
 
       {/* nav-item: mobile*/}
-      <div className="block sm:hidden">
+      <nav className="block sm:hidden">
         {menu === false ? null : <NavItem mobile currentUser={currentUser} />}
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 };
 
-export default NavBar;
+export default Header;
