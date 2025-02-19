@@ -59,7 +59,7 @@ const TalkBoard = () => {
   const totalPages = data?.pages[0]?.totalPages || 0;
 
   return (
-    <div className="w-full h-full rounded-md">
+    <div className="w-full min-w-[350px] h-full rounded-md">
       <BoardFilter
         categoryParam={categoryParam}
         subCategoryParam={subCategoryParam}
@@ -86,7 +86,8 @@ const TalkBoard = () => {
           <p>작성된 게시물이 없습니다.</p>
           <Button
             onClick={handleWriteButtonClick}
-            className="bg-primary text-white px-6 py-5 rounded-md text-lg"
+            variant="primary"
+            className="px-6 py-5 rounded-md text-lg"
           >
             게시물 작성하기
           </Button>

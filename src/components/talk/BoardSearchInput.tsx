@@ -15,10 +15,7 @@ const BoardSearchInput = ({ setKeyword }: BoardSearchInputProps) => {
   };
 
   return (
-    <form
-      className="flex items-center gap-3 w-full md:w-1/2"
-      onSubmit={handleSubmit}
-    >
+    <form className="flex items-center gap-3 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="검색"

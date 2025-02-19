@@ -13,6 +13,10 @@ export const useOpenChat = ({ user }: UseOpenChatProps) => {
   const { currentUser } = useUserStore();
 
   const handleOpenChat = async () => {
+    if (!user) {
+      return;
+    }
+
     if (!currentUser) {
       toast.warn("로그인 후 이용해주세요");
       return;

@@ -23,7 +23,7 @@ export default async function TalkPostPage({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Container>
-        <div className="flex h-full w-full justify-between gap-10">
+        <div className="flex h-full w-full min-w-[350px] justify-between gap-10">
           <TalkMenuNav />
           <div className="flex flex-col gap-10 w-full h-full">
             <TalkPostContent postId={postId} />

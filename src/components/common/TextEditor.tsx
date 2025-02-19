@@ -6,9 +6,7 @@ import "react-quill/dist/quill.snow.css";
 const QuillWrapper = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[400px] flex justify-center items-center bg-gray-100">
-      Loading ...
-    </div>
+    <div className="w-full h-[300px] flex justify-center items-center bg-gray-100" />
   ),
 });
 
@@ -28,13 +26,13 @@ const TextEditor = ({ value, onChange }: TextEditorProps) => {
   };
 
   return (
-    <div className="w-full min-h-[400px]">
+    <div className="w-full h-full">
       <QuillWrapper
         theme="snow"
         value={value}
         onChange={onChange}
         modules={modules}
-        className="w-full h-[350px]"
+        className="w-full h-full min-h-[300px]"
       />
     </div>
   );

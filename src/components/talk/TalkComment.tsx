@@ -13,7 +13,7 @@ const TalkComment = ({ postId }: TalkCommentProps) => {
   const { data: comments } = useTalkComments(postId);
 
   return (
-    <section className="w-full bg-gray-100 rounded-lg p-4">
+    <section className="w-full">
       <h3 className="text-2xl font-bold border-b border-gray-200 pb-4">댓글</h3>
       {comments?.map((comment) => (
         <div key={comment.id}>
